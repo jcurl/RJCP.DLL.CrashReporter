@@ -1,9 +1,9 @@
 *.user
 *.suo
+.vs/
 /packages
 distribute
 bin
 obj
 *.GhostDoc.xml
 *.userprefs
-

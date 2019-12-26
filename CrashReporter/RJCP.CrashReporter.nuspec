@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>RJCP.CrashReporter</id>
+        <version></version>
+        <authors>Jason Curl</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Library tools to allow developers to capture debug information.</description>
+        <language>en-US</language>
+    </metadata>
+    <files>
+        <file src="bin\build\net40\RJCP.Diagnostics.CrashReporter.dll" target="lib\net40" />
+        <file src="bin\build\net40\RJCP.Diagnostics.CrashReporter.pdb" target="lib\net40" />
+        <file src="bin\build\net40\RJCP.Diagnostics.CrashReporter.XML" target="lib\net40" />
+        <file src="RJCP.CrashReporter-net40.csproj" target="src" />
+        <file src="**.cs" target="src" />
+        <file src="..\*.md" target="doc" />
+    </files>
+</package>
