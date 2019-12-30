@@ -51,6 +51,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrashData\TestBlock.cs" />
+    <Compile Include="CrashData\TestBlockTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFile.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFileAsyncTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFileTest.cs" />

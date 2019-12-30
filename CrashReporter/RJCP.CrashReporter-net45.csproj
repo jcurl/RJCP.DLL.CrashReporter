@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrashExport\ICrashDataDumpFile.cs" />
+    <Compile Include="CrashExport\ICrashDataExport.cs" />
     <Compile Include="CrashExport\IDumpTable.cs" />
     <Compile Include="Dump\Core.cs" />
     <Compile Include="Dump\CoreType.cs" />
