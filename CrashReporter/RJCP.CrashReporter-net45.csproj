@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrashData\AssemblyDump.cs" />
+    <Compile Include="CrashExport\CrashDataProviders.cs" />
     <Compile Include="CrashData\EnvironmentDump.cs" />
     <Compile Include="CrashData\NetVersionDump.cs" />
     <Compile Include="CrashData\NetVersion\INetVersion.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="CrashExport\Xml\XmlDumpTable.cs" />
     <Compile Include="Dump\Core.cs" />
     <Compile Include="Dump\CoreType.cs" />
+    <Compile Include="Dump\Crash.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="Native\SafeNativeMethods.cs" />
