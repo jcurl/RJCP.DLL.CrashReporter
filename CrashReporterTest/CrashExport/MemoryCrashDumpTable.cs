@@ -1,13 +1,14 @@
 ﻿namespace RJCP.Diagnostics.CrashExport
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 #if NET45
     using System.Threading.Tasks;
 #endif
 
-    public sealed class MemoryCrashDumpTable : IDumpTable
+    public sealed class MemoryCrashDumpTable : DumpTable, IEnumerable<Dictionary<string, string>>
     {
         private readonly object m_SyncRoot = new object();
         private List<string> m_Fields = new List<string>();
@@ -43,7 +44,7 @@
         /// A header can specify a header row containing the fields. This implementation also checks that if a header is
         /// provided, then all fields are always provided.
         /// </remarks>
-        public void DumpHeader(IEnumerable<string> header)
+        public override void DumpHeader(IEnumerable<string> header)
         {
             if (header == null) throw new ArgumentNullException(nameof(header));
             if (m_Rows.Count > 0) throw new InvalidOperationException("Dump header after dumping at least one row is invalid");
@@ -93,7 +94,7 @@
         /// <remarks>
         /// This implementation can assist to ensure that dumps write proper and complete information to the table.
         /// </remarks>
-        public void DumpRow(IEnumerable<KeyValuePair<string, string>> row)
+        public override void DumpRow(IEnumerable<KeyValuePair<string, string>> row)
         {
             if (row == null) throw new ArgumentNullException(nameof(row));
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
@@ -147,7 +148,7 @@
 
         bool m_IsFlushed;
 
-        public void Flush()
+        public override void Flush()
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             if (m_IsFlushed) throw new InvalidOperationException("Flushed twice, useless operation");
@@ -157,7 +158,7 @@
         }
 
 #if NET45
-        public Task DumpHeaderAsync(IEnumerable<string> header)
+        public override Task DumpHeaderAsync(IEnumerable<string> header)
         {
             if (header == null) throw new ArgumentNullException(nameof(header));
             if (m_Rows.Count > 0) throw new InvalidOperationException("Dump header after dumping at least one row is invalid");
@@ -165,7 +166,7 @@
             return Task.Run(() => { DumpHeaderInternal(header); });
         }
 
-        public Task DumpRowAsync(IEnumerable<KeyValuePair<string, string>> row)
+        public override Task DumpRowAsync(IEnumerable<KeyValuePair<string, string>> row)
         {
             if (row == null) throw new ArgumentNullException(nameof(row));
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
@@ -175,7 +176,7 @@
 
         private readonly static Task Completed = Task.FromResult(true);    // .NET 4.6 and later has Task>Completed
 
-        public Task FlushAsync()
+        public override Task FlushAsync()
         {
             Flush();
             return Completed;
@@ -185,6 +186,8 @@
         public string TableName { get; private set; }
 
         public string RowName { get; private set; }
+
+        public IEnumerable<string> Headers { get { return m_Fields; } }
 
         /// <summary>
         /// Gets the set of properties for a specific row in the table.
@@ -219,18 +222,29 @@
                 }
             }
         }
+        public IEnumerator<Dictionary<string, string>> GetEnumerator()
+        {
+            return m_Rows.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         public bool IsDisposed { get; private set; }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            if (!m_IsFlushed) {
-                Console.WriteLine("Dispose called on memory table '{0}' without flushing. " +
-                    "Recommend flushing. Not critical, but can lead to synchronous flush",
-                    TableName);
+            if (disposing) {
+                if (!m_IsFlushed) {
+                    Console.WriteLine("Dispose called on memory table '{0}' without flushing. " +
+                        "Recommend flushing. Not critical, but can lead to synchronous flush",
+                        TableName);
+                }
+                IsDisposed = true;
+                m_IsFlushed = true;
             }
-            IsDisposed = true;
-            m_IsFlushed = true;
         }
     }
 }

@@ -15,6 +15,12 @@
         /// Writes the header for the table.
         /// </summary>
         /// <param name="header">The header.</param>
+        void DumpHeader(params string[] header);
+
+        /// <summary>
+        /// Writes the header for the table.
+        /// </summary>
+        /// <param name="header">The header.</param>
         void DumpHeader(IEnumerable<string> header);
 
         /// <summary>
@@ -29,6 +35,12 @@
         void Flush();
 
 #if NET45
+        /// <summary>
+        /// Writes the header for the table.
+        /// </summary>
+        /// <param name="header">The header.</param>
+        Task DumpHeaderAsync(params string[] header);
+
         /// <summary>
         /// Writes the header for the table asynchronously.
         /// </summary>

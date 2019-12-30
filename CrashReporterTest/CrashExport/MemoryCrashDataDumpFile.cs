@@ -1,12 +1,13 @@
 ﻿namespace RJCP.Diagnostics.CrashExport
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
 #if NET45
     using System.Threading.Tasks;
 #endif
 
-    public sealed class MemoryCrashDataDumpFile : ICrashDataDumpFile
+    public sealed class MemoryCrashDataDumpFile : ICrashDataDumpFile, IEnumerable<KeyValuePair<string, MemoryCrashDumpTable>>
     {
         private Dictionary<string, MemoryCrashDumpTable> m_Blocks = new Dictionary<string, MemoryCrashDumpTable>();
 
@@ -118,6 +119,36 @@
             {
                 lock (m_Blocks) {
                     return m_Blocks.Count;
+                }
+            }
+        }
+
+        public IEnumerator<KeyValuePair<string, MemoryCrashDumpTable>> GetEnumerator()
+        {
+            return m_Blocks.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void DumpContent()
+        {
+            foreach (var table in m_Blocks.Values) {
+                Console.WriteLine("Table: {0}", table.TableName);
+                foreach (var row in table) {
+                    Console.Write("  {0}:", table.RowName);
+                    bool first = true;
+                    foreach (string field in table.Headers) {
+                        if (first) {
+                            Console.Write(" {0}={1}", field, row[field]);
+                            first = false;
+                        } else {
+                            Console.Write(", {0}={1}", field, row[field]);
+                        }
+                    }
+                    Console.WriteLine(string.Empty);
                 }
             }
         }
