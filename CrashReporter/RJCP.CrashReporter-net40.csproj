@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrashData\EnvironmentDump.cs" />
     <Compile Include="CrashData\NetVersionDump.cs" />
     <Compile Include="CrashData\NetVersion\INetVersion.cs" />
     <Compile Include="CrashData\NetVersion\NetFx\Net45\NetFxConfig.cs" />
