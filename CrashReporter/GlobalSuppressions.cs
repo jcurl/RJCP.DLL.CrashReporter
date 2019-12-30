@@ -19,3 +19,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3217:\"Explicit\" conversions of \"foreach\" loops should not be used", Justification = "Avoid unnecessary type cast, behaviour remains the same")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3626:Jump statements should not be redundant", Justification = "Leaving 'return' may reduce copy/paste errors")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S4070:Non-flags enums should not be marked with \"FlagsAttribute\"", Justification = "The [Flags] attribute adds readability where correct")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Can make code less readable in cases were functions are split")]

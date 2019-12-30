@@ -157,7 +157,21 @@
         {
             using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
-                    Assert.That(async () => { await table.DumpRowAsync(null); }, Throws.TypeOf<ArgumentNullException>());
+                    Assert.That(async () => { await table.DumpRowAsync((IEnumerable<KeyValuePair<string, string>>)null); }, Throws.TypeOf<ArgumentNullException>());
+                    await table.FlushAsync();
+                }
+                Assert.That(dump.Count, Is.EqualTo(1));
+                Assert.That(dump["element"].Count, Is.EqualTo(0));
+                dump.Flush();
+            }
+        }
+
+        [Test]
+        public async Task SetRowNullDumpRowAsync()
+        {
+            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+                using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
+                    Assert.That(async () => { await table.DumpRowAsync((DumpRow)null); }, Throws.TypeOf<ArgumentNullException>());
                     await table.FlushAsync();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
@@ -367,7 +381,19 @@
         {
             using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
-                    Assert.That(async () => { await table.DumpHeaderAsync(null); }, Throws.TypeOf<ArgumentNullException>());
+                    Assert.That(async () => { await table.DumpHeaderAsync((IEnumerable<string>)null); }, Throws.TypeOf<ArgumentNullException>());
+                    await table.FlushAsync();
+                }
+                await dump.FlushAsync();
+            }
+        }
+
+        [Test]
+        public async Task SetTableHeaderNullDumpRowAsync()
+        {
+            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+                using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
+                    Assert.That(async () => { await table.DumpHeaderAsync((DumpRow)null); }, Throws.TypeOf<ArgumentNullException>());
                     await table.FlushAsync();
                 }
                 await dump.FlushAsync();

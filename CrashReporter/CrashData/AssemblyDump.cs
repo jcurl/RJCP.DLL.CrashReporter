@@ -1,7 +1,6 @@
 ﻿namespace RJCP.Diagnostics.CrashData
 {
     using System;
-    using System.Collections.Generic;
     using System.Reflection;
     using CrashExport;
 #if NET45
@@ -24,16 +23,9 @@
         private const string AssemblyCodeBase = "codebase";
         private const string AssemblyProcessor = "processor";
 
-        private Dictionary<string, string> m_Row = new Dictionary<string, string>() {
-                { AssemblyName, string.Empty },
-                { AssemblyVersion, string.Empty },
-                { AssemblyFullName, string.Empty },
-                { AssemblyInfoVersion, string.Empty },
-                { AssemblyFileVersion, string.Empty },
-                { AssemblyProcessor, string.Empty },
-                { AssemblyLocation, string.Empty },
-                { AssemblyCodeBase, string.Empty }
-            };
+        private DumpRow m_Row = new DumpRow(
+            AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
+            AssemblyFileVersion, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase);
 
         /// <summary>
         /// Dumps debug information using the provided dump interface.
@@ -42,10 +34,7 @@
         public void Dump(ICrashDataDumpFile dumpFile)
         {
             using (IDumpTable table = dumpFile.DumpTable(AssemblyTable, "assembly")) {
-                table.DumpHeader(
-                    AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
-                    AssemblyFileVersion, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase);
-
+                table.DumpHeader(m_Row);
 
                 AppDomain domain = AppDomain.CurrentDomain;
                 foreach (Assembly assembly in domain.GetAssemblies()) {
@@ -56,7 +45,7 @@
             }
         }
 
-        private void GetAssemblyInformation(Assembly assembly, Dictionary<string, string> assemblyRow)
+        private void GetAssemblyInformation(Assembly assembly, DumpRow assemblyRow)
         {
             assemblyRow[AssemblyName] = assembly.GetName().Name;
             assemblyRow[AssemblyFullName] = assembly.FullName;
@@ -90,9 +79,7 @@
         public async Task DumpAsync(ICrashDataDumpFile dumpFile)
         {
             using (IDumpTable table = await dumpFile.DumpTableAsync(AssemblyTable, "assembly")) {
-                await table.DumpHeaderAsync(
-                    AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
-                    AssemblyFileVersion, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase);
+                await table.DumpHeaderAsync(m_Row);
 
                 AppDomain domain = AppDomain.CurrentDomain;
                 foreach (Assembly assembly in domain.GetAssemblies()) {

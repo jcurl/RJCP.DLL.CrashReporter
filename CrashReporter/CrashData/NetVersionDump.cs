@@ -18,6 +18,9 @@
         private const string NetRunningTable = "NetVersionRunning";
         private const string NetRunning = "Running";
 
+        private DumpRow m_RowInstalled = new DumpRow(NetInstalled, NetDescription);
+        private DumpRow m_RowRunning = new DumpRow(NetRunning, NetDescription);
+
         /// <summary>
         /// Dumps debug information using the provided dump interface.
         /// </summary>
@@ -27,35 +30,24 @@
             IEnumerable<NetVersion.INetVersion> netVersions = new NetVersion.NetVersions();
             IEnumerable<KeyValuePair<string, string>> runningVersions = GetRunTime();
 
-            Dictionary<string, string> installed = new Dictionary<string, string>() {
-                { NetInstalled, string.Empty },
-                { NetDescription, string.Empty }
-            };
-
             using (IDumpTable table = dumpFile.DumpTable(NetVersionTable, "item")) {
-                table.DumpHeader(NetInstalled, NetDescription);
-
+                table.DumpHeader(m_RowInstalled);
                 foreach (var version in netVersions) {
                     if (version.IsValid) {
-                        installed[NetInstalled] = version.Version;
-                        installed[NetDescription] = version.Description;
-                        table.DumpRow(installed);
+                        m_RowInstalled[NetInstalled] = version.Version;
+                        m_RowInstalled[NetDescription] = version.Description;
+                        table.DumpRow(m_RowInstalled);
                     }
                 }
                 table.Flush();
             }
 
-            Dictionary<string, string> running = new Dictionary<string, string>() {
-                { NetRunning, string.Empty },
-                { NetDescription, string.Empty }
-            };
             using (IDumpTable table = dumpFile.DumpTable(NetRunningTable, "item")) {
-                table.DumpHeader(NetRunning, NetDescription);
-
+                table.DumpHeader(m_RowRunning);
                 foreach (var version in runningVersions) {
-                    running[NetRunning] = version.Value;
-                    running[NetDescription] = version.Key;
-                    table.DumpRow(running);
+                    m_RowRunning[NetRunning] = version.Value;
+                    m_RowRunning[NetDescription] = version.Key;
+                    table.DumpRow(m_RowRunning);
                 }
                 table.Flush();
             }
@@ -71,35 +63,25 @@
             IEnumerable<NetVersion.INetVersion> netVersions = new NetVersion.NetVersions();
             IEnumerable<KeyValuePair<string, string>> runningVersions = GetRunTime();
 
-            Dictionary<string, string> installed = new Dictionary<string, string>() {
-                { NetInstalled, string.Empty },
-                { NetDescription, string.Empty }
-            };
-
             using (IDumpTable table = await dumpFile.DumpTableAsync(NetVersionTable, "item")) {
-                await table.DumpHeaderAsync(NetInstalled, NetDescription);
-
+                await table.DumpHeaderAsync(m_RowInstalled);
                 foreach (var version in netVersions) {
                     if (version.IsValid) {
-                        installed[NetInstalled] = version.Version;
-                        installed[NetDescription] = version.Description;
-                        await table.DumpRowAsync(installed);
+                        m_RowInstalled[NetInstalled] = version.Version;
+                        m_RowInstalled[NetDescription] = version.Description;
+                        await table.DumpRowAsync(m_RowInstalled);
                     }
                 }
                 await table.FlushAsync();
             }
 
-            Dictionary<string, string> running = new Dictionary<string, string>() {
-                { NetRunning, string.Empty },
-                { NetDescription, string.Empty }
-            };
             using (IDumpTable table = await dumpFile.DumpTableAsync(NetRunningTable, "item")) {
-                await table.DumpHeaderAsync(NetRunning, NetDescription);
+                await table.DumpHeaderAsync(m_RowRunning);
 
                 foreach (var version in runningVersions) {
-                    running[NetRunning] = version.Value;
-                    running[NetDescription] = version.Key;
-                    await table.DumpRowAsync(running);
+                    m_RowRunning[NetRunning] = version.Value;
+                    m_RowRunning[NetDescription] = version.Key;
+                    await table.DumpRowAsync(m_RowRunning);
                 }
                 await table.FlushAsync();
             }

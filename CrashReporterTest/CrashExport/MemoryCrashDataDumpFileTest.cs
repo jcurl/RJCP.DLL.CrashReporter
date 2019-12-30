@@ -177,7 +177,21 @@
         {
             using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
                 using (IDumpTable table = dump.DumpTable("element", "item")) {
-                    Assert.That(() => { table.DumpRow(null); }, Throws.TypeOf<ArgumentNullException>());
+                    Assert.That(() => { table.DumpRow((IEnumerable<KeyValuePair<string, string>>)null); }, Throws.TypeOf<ArgumentNullException>());
+                    table.Flush();
+                }
+                Assert.That(dump.Count, Is.EqualTo(1));
+                Assert.That(dump["element"].Count, Is.EqualTo(0));
+                dump.Flush();
+            }
+        }
+
+        [Test]
+        public void SetRowNullDumpRow()
+        {
+            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+                using (IDumpTable table = dump.DumpTable("element", "item")) {
+                    Assert.That(() => { table.DumpRow((DumpRow)null); }, Throws.TypeOf<ArgumentNullException>());
                     table.Flush();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
@@ -385,7 +399,19 @@
         {
             using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
                 using (IDumpTable table = dump.DumpTable("element", "Item")) {
-                    Assert.That(() => { table.DumpHeader(null); }, Throws.TypeOf<ArgumentNullException>());
+                    Assert.That(() => { table.DumpHeader((IEnumerable<string>)null); }, Throws.TypeOf<ArgumentNullException>());
+                    table.Flush();
+                }
+                dump.Flush();
+            }
+        }
+
+        [Test]
+        public void SetTableHeaderNullDumpRow()
+        {
+            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+                using (IDumpTable table = dump.DumpTable("element", "Item")) {
+                    Assert.That(() => { table.DumpHeader((DumpRow)null); }, Throws.TypeOf<ArgumentNullException>());
                     table.Flush();
                 }
                 dump.Flush();
