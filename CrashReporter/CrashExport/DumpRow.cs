@@ -79,7 +79,7 @@
         /// <returns>
         /// A key/value pair, where the key is the name of the column, the value is the value assigned for this field.
         /// </returns>
-        public IEnumerable<KeyValuePair<string, string>> GetRow()
+        public IDictionary<string, string> GetRow()
         {
             return m_Row;
         }

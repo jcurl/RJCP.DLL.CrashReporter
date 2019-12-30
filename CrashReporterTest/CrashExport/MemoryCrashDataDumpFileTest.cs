@@ -177,7 +177,7 @@
         {
             using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
                 using (IDumpTable table = dump.DumpTable("element", "item")) {
-                    Assert.That(() => { table.DumpRow((IEnumerable<KeyValuePair<string, string>>)null); }, Throws.TypeOf<ArgumentNullException>());
+                    Assert.That(() => { table.DumpRow((IDictionary<string, string>)null); }, Throws.TypeOf<ArgumentNullException>());
                     table.Flush();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
@@ -195,28 +195,6 @@
                     table.Flush();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Count, Is.EqualTo(0));
-                dump.Flush();
-            }
-        }
-
-        [Test]
-        public void SetRowDoubleEntry()
-        {
-            List<KeyValuePair<string, string>> row = new List<KeyValuePair<string, string>> {
-                new KeyValuePair<string, string>("property", "value"),
-                new KeyValuePair<string, string>("property2", "value2"),
-                new KeyValuePair<string, string>("property", "value2")
-            };
-
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
-                using (IDumpTable table = dump.DumpTable("element", "item")) {
-                    Assert.That(table, Is.Not.Null);
-                    Assert.That(() => { table.DumpRow(row); }, Throws.TypeOf<ArgumentException>());
-                    table.Flush();
-                }
-                Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"], Is.Not.Null);
                 Assert.That(dump["element"].Count, Is.EqualTo(0));
                 dump.Flush();
             }

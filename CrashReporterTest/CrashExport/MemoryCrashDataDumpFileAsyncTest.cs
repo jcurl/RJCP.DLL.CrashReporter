@@ -157,7 +157,7 @@
         {
             using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
-                    Assert.That(async () => { await table.DumpRowAsync((IEnumerable<KeyValuePair<string, string>>)null); }, Throws.TypeOf<ArgumentNullException>());
+                    Assert.That(async () => { await table.DumpRowAsync((IDictionary<string, string>)null); }, Throws.TypeOf<ArgumentNullException>());
                     await table.FlushAsync();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
@@ -175,28 +175,6 @@
                     await table.FlushAsync();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Count, Is.EqualTo(0));
-                dump.Flush();
-            }
-        }
-
-        [Test]
-        public async Task SetRowDoubleEntryAsync()
-        {
-            List<KeyValuePair<string, string>> row = new List<KeyValuePair<string, string>> {
-                new KeyValuePair<string, string>("property", "value"),
-                new KeyValuePair<string, string>("property2", "value2"),
-                new KeyValuePair<string, string>("property", "value2")
-            };
-
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
-                using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
-                    Assert.That(table, Is.Not.Null);
-                    Assert.That(async () => { await table.DumpRowAsync(row); }, Throws.TypeOf<ArgumentException>());
-                    await table.FlushAsync();
-                }
-                Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"], Is.Not.Null);
                 Assert.That(dump["element"].Count, Is.EqualTo(0));
                 dump.Flush();
             }

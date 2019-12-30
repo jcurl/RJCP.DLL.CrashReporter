@@ -60,6 +60,7 @@
     <Compile Include="CrashExport\MemoryCrashDataDumpFileAsyncTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFileTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDumpTable.cs" />
+    <Compile Include="CrashExport\Xml\XmlCrashDumperTest.cs" />
     <Compile Include="Dump\DumpTest.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

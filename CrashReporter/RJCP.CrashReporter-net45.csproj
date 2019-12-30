@@ -57,6 +57,9 @@
     <Compile Include="CrashExport\ICrashDataExport.cs" />
     <Compile Include="CrashExport\ICrashDumpFactory.cs" />
     <Compile Include="CrashExport\IDumpTable.cs" />
+    <Compile Include="CrashExport\Xml\XmlCrashDumper.cs" />
+    <Compile Include="CrashExport\Xml\XmlCrashDumpFactory.cs" />
+    <Compile Include="CrashExport\Xml\XmlDumpTable.cs" />
     <Compile Include="Dump\Core.cs" />
     <Compile Include="Dump\CoreType.cs" />
     <Compile Include="GlobalSuppressions.cs" />

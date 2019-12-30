@@ -33,7 +33,7 @@
         /// Writes the row of properties/values to the current table.
         /// </summary>
         /// <param name="row">The row, a collection of key/value pairs that should be written.</param>
-        void DumpRow(IEnumerable<KeyValuePair<string, string>> row);
+        void DumpRow(IDictionary<string, string> row);
 
         /// <summary>
         /// Flushes all unwritten values to the output stream.
@@ -67,7 +67,7 @@
         /// </summary>
         /// <param name="row">The row, a collection of key/value pairs that should be written.</param>
         /// <returns>An awaitable task.</returns>
-        Task DumpRowAsync(IEnumerable<KeyValuePair<string, string>> row);
+        Task DumpRowAsync(IDictionary<string, string> row);
 
         /// <summary>
         /// Flushes all unwritten values to the output stream asynchronously.

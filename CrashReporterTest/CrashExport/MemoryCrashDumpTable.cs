@@ -80,8 +80,6 @@
         /// <exception cref="ArgumentNullException"><paramref name="row"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">MemoryCrashDumpTable</exception>
         /// <exception cref="ArgumentException">
-        /// Duplicate property provided;
-        /// <para>- or -</para>
         /// Property provided that is null or empty;
         /// <para>- or -</para>
         /// Property contains invalid character;
@@ -94,7 +92,7 @@
         /// <remarks>
         /// This implementation can assist to ensure that dumps write proper and complete information to the table.
         /// </remarks>
-        public override void DumpRow(IEnumerable<KeyValuePair<string, string>> row)
+        public override void DumpRow(IDictionary<string, string> row)
         {
             if (row == null) throw new ArgumentNullException(nameof(row));
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
@@ -102,7 +100,7 @@
             DumpRowInternal(row);
         }
 
-        private void DumpRowInternal(IEnumerable<KeyValuePair<string, string>> row)
+        private void DumpRowInternal(IDictionary<string, string> row)
         {
             lock (m_SyncRoot) {
                 Dictionary<string, string> newRow = new Dictionary<string, string>();
@@ -110,10 +108,6 @@
                     if (string.IsNullOrEmpty(property.Key)) throw new ArgumentException("Property provided that is null or empty", nameof(row));
                     if (!CheckField(property.Key)) {
                         string message = string.Format("Property '{0}' contains invalid character", property.Key);
-                        throw new ArgumentException(message, nameof(row));
-                    }
-                    if (newRow.ContainsKey(property.Key)) {
-                        string message = string.Format("Duplicate property: {0}", property.Key);
                         throw new ArgumentException(message, nameof(row));
                     }
                     if (m_Fields.Count > 0 && !m_Fields.Contains(property.Key)) {
@@ -166,7 +160,7 @@
             return Task.Run(() => { DumpHeaderInternal(header); });
         }
 
-        public override Task DumpRowAsync(IEnumerable<KeyValuePair<string, string>> row)
+        public override Task DumpRowAsync(IDictionary<string, string> row)
         {
             if (row == null) throw new ArgumentNullException(nameof(row));
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));

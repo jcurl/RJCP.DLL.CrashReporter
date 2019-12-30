@@ -1,6 +1,5 @@
 ﻿namespace RJCP.Diagnostics.CrashExport
 {
-    using System;
     using System.IO;
 #if NET45
     using System.Threading.Tasks;
@@ -11,6 +10,8 @@
     /// </summary>
     public class CrashDumpFactory : ICrashDumpFactory
     {
+        private Xml.XmlCrashDumpFactory m_XmlFactory = new Xml.XmlCrashDumpFactory();
+
         /// <summary>
         /// Creates the dump from the given file name.
         /// </summary>
@@ -19,10 +20,9 @@
         /// An <see cref="ICrashDataDumpFile" /> which can be given to dumpers implementing
         /// <see cref="ICrashDataExport" />.
         /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
         public ICrashDataDumpFile Create(string fileName)
         {
-            throw new NotImplementedException();
+            return m_XmlFactory.Create(fileName);
         }
 
         /// <summary>
@@ -34,10 +34,9 @@
         /// An <see cref="ICrashDataDumpFile" /> which can be given to dumpers implementing
         /// <see cref="ICrashDataExport" />.
         /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
         public ICrashDataDumpFile Create(Stream stream, string path)
         {
-            throw new NotImplementedException();
+            return m_XmlFactory.Create(stream, path);
         }
 
 #if NET45
@@ -49,10 +48,9 @@
         /// An <see cref="ICrashDataDumpFile" /> which can be given to dumpers implementing
         /// <see cref="ICrashDataExport" />.
         /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
         public Task<ICrashDataDumpFile> CreateAsync(string fileName)
         {
-            throw new NotImplementedException();
+            return m_XmlFactory.CreateAsync(fileName);
         }
 
         /// <summary>
@@ -64,10 +62,9 @@
         /// An <see cref="ICrashDataDumpFile" /> which can be given to dumpers implementing
         /// <see cref="ICrashDataExport" />.
         /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
         public Task<ICrashDataDumpFile> CreateAsync(Stream stream, string path)
         {
-            throw new NotImplementedException();
+            return m_XmlFactory.CreateAsync(stream, path);
         }
 #endif
     }
