@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RJCP.Diagnostics</RootNamespace>
     <AssemblyName>RJCP.Diagnostics.CrashReporterTest</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -20,22 +20,22 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\net40\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Debug\net45\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\net40\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\Release\net45\</OutputPath>
+    <DefineConstants>TRACE;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\NUnit.3.12.0\lib\net40\nunit.framework.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,13 +45,14 @@
       <Project>{a4d356f2-15ac-4ffe-b0c4-1d3d0973a124}</Project>
       <Name>RJCP.NUnitExtensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CrashReporter\RJCP.CrashReporter-net40.csproj">
+    <ProjectReference Include="..\CrashReporter\RJCP.CrashReporter-net45.csproj">
       <Project>{807b678b-ccbd-40f5-bf8c-88862c80d44e}</Project>
-      <Name>RJCP.CrashReporter-net40</Name>
+      <Name>RJCP.CrashReporter-net45</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrashExport\MemoryCrashDataDumpFile.cs" />
+    <Compile Include="CrashExport\MemoryCrashDataDumpFileAsyncTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFileTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDumpTable.cs" />
     <Compile Include="Dump\DumpTest.cs" />
@@ -60,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.RJCP.CrashReporterTest-net40.config" />
+    <None Include="packages.RJCP.CrashReporterTest-net45.config" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="$(SolutionDir)\packages\NUnit.Analyzers.0.1.0-dev-00216\analyzers\dotnet\cs\nunit.analyzers.dll" />

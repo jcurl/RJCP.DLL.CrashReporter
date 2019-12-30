@@ -3,6 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+#if NET45
+    using System.Threading.Tasks;
+#endif
 
     public sealed class MemoryCrashDumpTable : IDumpTable
     {
@@ -45,7 +48,11 @@
             if (header == null) throw new ArgumentNullException(nameof(header));
             if (m_Rows.Count > 0) throw new InvalidOperationException("Dump header after dumping at least one row is invalid");
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
+            DumpHeaderInternal(header);
+        }
 
+        private void DumpHeaderInternal(IEnumerable<string> header)
+        {
             lock (m_SyncRoot) {
                 HashSet<string> fields = new HashSet<string>();
                 foreach (string field in header) {
@@ -91,6 +98,11 @@
             if (row == null) throw new ArgumentNullException(nameof(row));
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
+            DumpRowInternal(row);
+        }
+
+        private void DumpRowInternal(IEnumerable<KeyValuePair<string, string>> row)
+        {
             lock (m_SyncRoot) {
                 Dictionary<string, string> newRow = new Dictionary<string, string>();
                 foreach (KeyValuePair<string, string> property in row) {
@@ -143,6 +155,32 @@
             /* Nothing to flush, as we're memory only */
             m_IsFlushed = true;
         }
+
+#if NET45
+        public Task DumpHeaderAsync(IEnumerable<string> header)
+        {
+            if (header == null) throw new ArgumentNullException(nameof(header));
+            if (m_Rows.Count > 0) throw new InvalidOperationException("Dump header after dumping at least one row is invalid");
+            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
+            return Task.Run(() => { DumpHeaderInternal(header); });
+        }
+
+        public Task DumpRowAsync(IEnumerable<KeyValuePair<string, string>> row)
+        {
+            if (row == null) throw new ArgumentNullException(nameof(row));
+            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
+            if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
+            return Task.Run(() => { DumpRowInternal(row); });
+        }
+
+        private readonly static Task Completed = Task.FromResult(true);    // .NET 4.6 and later has Task>Completed
+
+        public Task FlushAsync()
+        {
+            Flush();
+            return Completed;
+        }
+#endif
 
         public string TableName { get; private set; }
 

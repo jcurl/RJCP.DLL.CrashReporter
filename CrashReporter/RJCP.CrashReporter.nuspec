@@ -12,7 +12,11 @@
         <file src="bin\build\net40\RJCP.Diagnostics.CrashReporter.dll" target="lib\net40" />
         <file src="bin\build\net40\RJCP.Diagnostics.CrashReporter.pdb" target="lib\net40" />
         <file src="bin\build\net40\RJCP.Diagnostics.CrashReporter.XML" target="lib\net40" />
+        <file src="bin\build\net45\RJCP.Diagnostics.CrashReporter.dll" target="lib\net45" />
+        <file src="bin\build\net45\RJCP.Diagnostics.CrashReporter.pdb" target="lib\net45" />
+        <file src="bin\build\net45\RJCP.Diagnostics.CrashReporter.XML" target="lib\net45" />
         <file src="RJCP.CrashReporter-net40.csproj" target="src" />
+        <file src="RJCP.CrashReporter-net45.csproj" target="src" />
         <file src="**.cs" target="src" />
         <file src="..\*.md" target="doc" />
     </files>

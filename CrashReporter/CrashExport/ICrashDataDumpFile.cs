@@ -1,6 +1,9 @@
 ﻿namespace RJCP.Diagnostics.CrashExport
 {
     using System;
+#if NET45
+    using System.Threading.Tasks;
+#endif
 
     /// <summary>
     /// An interface that describes how to write to a dump file.
@@ -44,5 +47,21 @@
         /// Writes all pending data to disk. This should be called before disposing the object.
         /// </summary>
         void Flush();
+
+#if NET45
+        /// <summary>
+        /// Allocates a region for dumping information in a table asynchronously.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="rowName">The name for each individual row to be written.</param>
+        /// <returns>An awaitable task that returns a block which can be used to write properties of the block.</returns>
+        Task<IDumpTable> DumpTableAsync(string tableName, string rowName);
+
+        /// <summary>
+        /// Asynchronously writes all pending data to disk. This should be called before disposing the object.
+        /// </summary>
+        /// <returns>An object that can be awaited on.</returns>
+        Task FlushAsync();
+#endif
     }
 }

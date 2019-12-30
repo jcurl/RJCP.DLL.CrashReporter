@@ -2,6 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+#if NET45
+    using System.Threading.Tasks;
+#endif
 
     public sealed class MemoryCrashDataDumpFile : ICrashDataDumpFile
     {
@@ -73,6 +76,29 @@
             /* Nothing to flush, as this is memory only */
             m_IsFlushed = true;
         }
+
+#if NET45
+        public Task<IDumpTable> DumpTableAsync(string tableName, string rowName)
+        {
+            if (tableName == null) throw new ArgumentNullException(nameof(tableName));
+            if (rowName == null) throw new ArgumentNullException(nameof(rowName));
+            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
+            lock (m_Blocks) {
+                if (m_Blocks.ContainsKey(tableName)) throw new ArgumentException("Duplicate element", nameof(tableName));
+            }
+            if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
+
+            return Task.Run(() => { return DumpTableInternal(tableName, rowName); });
+        }
+
+        private readonly static Task Completed = Task.FromResult(true);    // .NET 4.6 and later has Task>Completed
+
+        public Task FlushAsync()
+        {
+            Flush();
+            return Completed;
+        }
+#endif
 
         public MemoryCrashDumpTable this[string table]
         {

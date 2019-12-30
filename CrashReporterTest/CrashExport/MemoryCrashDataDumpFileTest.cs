@@ -9,6 +9,8 @@
     {
         // The purpose of these tests is to ensure that the MemoryCrashDataDumpFile can be used to find common errors.
 
+        // NOTE: Test cases here should probably have similar tests in MemoryCrashDataDumpFileAsyncTest
+
         [Test]
         public void Default()
         {
