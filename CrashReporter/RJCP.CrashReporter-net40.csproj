@@ -50,10 +50,12 @@
     <Compile Include="CrashData\NetVersion\NetVersions.cs" />
     <Compile Include="CrashData\NetVersion\Runtime\Mono.cs" />
     <Compile Include="CrashData\NetVersion\Runtime\NetFx.cs" />
+    <Compile Include="CrashExport\CrashDumpFactory.cs" />
     <Compile Include="CrashExport\DumpRow.cs" />
     <Compile Include="CrashExport\DumpTable.cs" />
     <Compile Include="CrashExport\ICrashDataDumpFile.cs" />
     <Compile Include="CrashExport\ICrashDataExport.cs" />
+    <Compile Include="CrashExport\ICrashDumpFactory.cs" />
     <Compile Include="CrashExport\IDumpTable.cs" />
     <Compile Include="Dump\Core.cs" />
     <Compile Include="Dump\CoreType.cs" />
