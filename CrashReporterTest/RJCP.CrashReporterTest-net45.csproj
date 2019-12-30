@@ -51,6 +51,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrashData\AssemblyDumpTest.cs" />
     <Compile Include="CrashData\EnvironmentDumpTest.cs" />
     <Compile Include="CrashData\NetVersionDumpTest.cs" />
     <Compile Include="CrashData\TestBlock.cs" />
