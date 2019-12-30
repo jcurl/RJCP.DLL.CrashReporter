@@ -25,13 +25,11 @@
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
             if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
 
+            Path = System.IO.Path.GetDirectoryName(fileName);
             try {
-                string directory = System.IO.Path.GetDirectoryName(fileName);
-                if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-
-                m_OwnsStream = true;
-                m_Stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
-                CreateFile(m_Stream, System.IO.Path.GetDirectoryName(fileName));
+                m_Writer = CreateFileInternal(fileName, false);
+                m_Writer.WriteStartElement(RootName);
+                m_IsFlushed = false;
             } catch {
                 Close();
                 throw;
@@ -44,26 +42,47 @@
             if (path == null) throw new ArgumentNullException(nameof(path));
             if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
 
-            if (!Directory.Exists(path)) {
-                string message = string.Format("Directory '{0}' not found", path);
-                throw new DirectoryNotFoundException(message);
-            }
-
             m_Stream = stream;
-            try {
-                m_Writer = XmlWriter.Create(stream, SaveXmlSettings());
-                Path = path;
+            Path = path;
 
-                WriteRoot(m_Writer);
+            try {
+                m_Writer = CreateFileInternal(stream, path, false);
+                m_Writer.WriteStartElement(RootName);
+                m_IsFlushed = false;
             } catch {
                 Close();
                 throw;
             }
         }
 
-        private XmlWriterSettings SaveXmlSettings()
+        private XmlWriter CreateFileInternal(string fileName, bool isAsync)
+        {
+            string directory = System.IO.Path.GetDirectoryName(fileName);
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+
+            m_OwnsStream = true;
+            m_Stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+            return CreateFileInternal(m_Stream, directory, isAsync);
+        }
+
+        private XmlWriter CreateFileInternal(Stream stream, string path, bool isAsync)
+        {
+            if (!Directory.Exists(path)) {
+                string message = string.Format("Directory '{0}' not found", path);
+                throw new DirectoryNotFoundException(message);
+            }
+
+            return XmlWriter.Create(stream, SaveXmlSettings(isAsync));
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed",
+            Justification = "Compiler conditional uses isAsync")]
+        private XmlWriterSettings SaveXmlSettings(bool isAsync)
         {
             return new XmlWriterSettings {
+#if NET45
+                Async = isAsync,     // Defined in .NET 4.5 and later only.
+#endif
                 CloseOutput = false,
                 ConformanceLevel = ConformanceLevel.Document,
                 Encoding = Encoding.UTF8,
@@ -71,12 +90,6 @@
                 IndentChars = "  ",
                 NewLineOnAttributes = false
             };
-        }
-
-        private void WriteRoot(XmlWriter xmlWriter)
-        {
-            xmlWriter.WriteStartElement(RootName);
-            m_IsFlushed = false;
         }
 
         /// <summary>
@@ -142,26 +155,73 @@
         public Task CreateFileAsync(string fileName)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            Path = System.IO.Path.GetDirectoryName(fileName);
+            return CreateFileInternalAsync(fileName);
+        }
 
-            throw new NotImplementedException();
+        private async Task CreateFileInternalAsync(string fileName)
+        {
+            try {
+                m_Writer = await Task.Run(() => { return CreateFileInternal(fileName, true); });
+                await m_Writer.WriteStartElementAsync(null, RootName, null);
+                m_IsFlushed = false;
+            } catch {
+                Close();
+                throw;
+            }
         }
 
         public Task CreateFileAsync(Stream stream, string path)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
             if (path == null) throw new ArgumentNullException(nameof(path));
+            if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
 
-            throw new NotImplementedException();
+            m_Stream = stream;
+            Path = path;
+
+            return CreateFileInternalAsync(stream, path);
+        }
+
+        private async Task CreateFileInternalAsync(Stream stream, string path)
+        {
+            try {
+                m_Writer = await Task.Run(() => { return CreateFileInternal(stream, path, true); });
+                await m_Writer.WriteStartElementAsync(null, RootName, null);
+                m_IsFlushed = false;
+            } catch {
+                Close();
+                throw;
+            }
         }
 
         public Task<IDumpTable> DumpTableAsync(string tableName, string rowName)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentException("Table Name may not be null or whitespace", nameof(tableName));
+            if (string.IsNullOrWhiteSpace(rowName)) throw new ArgumentException("Row Name may not be null or whitespace", nameof(rowName));
+            return DumpTableInternalAsync(tableName, rowName);
         }
 
-        public Task FlushAsync()
+        private async Task<IDumpTable> DumpTableInternalAsync(string tableName, string rowName)
         {
-            throw new NotImplementedException();
+            await m_Writer.WriteStartElementAsync(null, tableName, null);
+
+            // Update the variables after writing, so when we flush, we close that element. If writing the element would
+            // raise an exception, we wouldn't close something that probably wasn't written.
+            m_TableName = tableName;
+            return new XmlDumpTable(rowName, m_Writer);
+        }
+
+        public async Task FlushAsync()
+        {
+            if (!m_IsFlushed) {
+                if (m_TableName != null) await m_Writer.WriteEndElementAsync();
+
+                await m_Writer.WriteEndElementAsync();
+                await m_Writer.FlushAsync();
+                await m_Stream.FlushAsync();
+                m_IsFlushed = true;
+            }
         }
 #endif
     }
