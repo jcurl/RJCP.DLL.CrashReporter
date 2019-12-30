@@ -51,10 +51,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrashExport\MemoryCrashDataDumpFile.cs" />
+    <Compile Include="CrashExport\MemoryCrashDataDumpFileTest.cs" />
+    <Compile Include="CrashExport\MemoryCrashDumpTable.cs" />
     <Compile Include="Dump\DumpTest.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.RJCP.CrashReporterTest-net40.config" />
   </ItemGroup>
   <ItemGroup>
