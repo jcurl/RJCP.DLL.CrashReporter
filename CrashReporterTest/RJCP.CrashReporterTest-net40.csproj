@@ -66,6 +66,7 @@
     <Compile Include="Dump\DumpTest.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Trace\SimplePrioMemoryLogTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
