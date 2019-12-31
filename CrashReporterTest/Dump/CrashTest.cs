@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Dump
 {
     using System.IO;
+    using CrashExport;
     using NUnit.Framework;
 #if NET45
     using System.Threading.Tasks;
@@ -28,6 +29,28 @@
             }
         }
 
+        [Test]
+        public void AsynchronousDump()
+        {
+            // Set up our test factory to allow asynchronous dumps. The implementation may, or may not, do the dump
+            // asynchronously.
+
+            ICrashDumpFactory origFactory = Crash.Data.CrashDumpFactory;
+            MemoryCrashDumpFactory factory = new MemoryCrashDumpFactory {
+                IsSynchronous = false
+            };
+            Crash.Data.CrashDumpFactory = factory;
+
+            try {
+                string path = Crash.Data.Dump();
+                Assert.That(path, Is.Not.Null);
+                if (Directory.Exists(path)) Deploy.DeleteDirectory(path);
+            } finally {
+                // The factory is a singleton, so it must be restored for default behaviour with other test cases.
+                Crash.Data.CrashDumpFactory = origFactory;
+            }
+        }
+
 #if NET45
         [Test]
         public async Task PerformCrashDumpAsync()
@@ -45,6 +68,26 @@
                 await Crash.Data.DumpAsync(Path.Combine(scratch.Path, Crash.Data.CrashDumpFactory.FileName));
 
                 Assert.That(File.Exists(Path.Combine(scratch.Path, Crash.Data.CrashDumpFactory.FileName)), Is.True);
+            }
+        }
+
+        [Test]
+        public async Task AsynchronousDumpAsync()
+        {
+            // Set up our test factory to allow asynchronous dumps
+            ICrashDumpFactory origFactory = Crash.Data.CrashDumpFactory;
+            MemoryCrashDumpFactory factory = new MemoryCrashDumpFactory {
+                IsSynchronous = false
+            };
+            Crash.Data.CrashDumpFactory = factory;
+
+            try {
+                string path = await Crash.Data.DumpAsync();
+                Assert.That(path, Is.Not.Null);
+                if (Directory.Exists(path)) Deploy.DeleteDirectory(path);
+            } finally {
+                // The factory is a singleton, so it must be restored for default behaviour with other test cases.
+                Crash.Data.CrashDumpFactory = origFactory;
             }
         }
 #endif

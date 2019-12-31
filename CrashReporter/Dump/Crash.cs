@@ -198,8 +198,16 @@
 
         private async Task DumpAsync(ICrashDataDumpFile dump)
         {
-            foreach (ICrashDataExport dumper in Providers) {
-                await dumper.DumpAsync(dump);
+            if (dump.IsSynchronous) {
+                foreach (ICrashDataExport dumper in Providers) {
+                    await dumper.DumpAsync(dump);
+                }
+            } else {
+                List<Task> dumpers = new List<Task>(Providers.Count);
+                foreach (ICrashDataExport dumper in Providers) {
+                    dumpers.Add(dumper.DumpAsync(dump));
+                }
+                await Task.WhenAll(dumpers);
             }
             await dump.FlushAsync();
         }

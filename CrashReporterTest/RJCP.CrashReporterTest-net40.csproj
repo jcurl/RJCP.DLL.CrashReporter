@@ -58,6 +58,7 @@
     <Compile Include="CrashData\TestBlockTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFile.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFileTest.cs" />
+    <Compile Include="CrashExport\MemoryCrashDumpFactory.cs" />
     <Compile Include="CrashExport\MemoryCrashDumpTable.cs" />
     <Compile Include="CrashExport\Xml\XmlCrashDumperTest.cs" />
     <Compile Include="Dump\CrashDataProvidersTest.cs" />
