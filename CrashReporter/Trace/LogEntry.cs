@@ -15,6 +15,7 @@
         /// <param name="message">The event message.</param>
         public LogEntry(TraceEventType eventType, int id, string message)
         {
+            Clock = InternalClock.Instance.GetClock();
             EventType = eventType;
             Id = id;
             Message = message;
