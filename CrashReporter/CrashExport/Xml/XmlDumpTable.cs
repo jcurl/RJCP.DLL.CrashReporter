@@ -25,6 +25,8 @@
 
         public override void DumpRow(IDictionary<string, string> row)
         {
+            if (m_IsFlushed) return;
+
             m_Writer.WriteStartElement(m_RowName);
             try {
                 IEnumerable<string> fields = m_Fields ?? row.Keys;
@@ -36,9 +38,14 @@
             }
         }
 
+        private bool m_IsFlushed;
+
         public override void Flush()
         {
-            /* Nothing to flush */
+            if (!m_IsFlushed) {
+                m_Writer.WriteEndElement();
+                m_IsFlushed = true;
+            }
         }
 
 #if NET45
@@ -52,6 +59,8 @@
 
         public async override Task DumpRowAsync(IDictionary<string, string> row)
         {
+            if (m_IsFlushed) return;
+
             await m_Writer.WriteStartElementAsync(null, m_RowName, null);
             try {
                 IEnumerable<string> fields = m_Fields ?? row.Keys;
@@ -63,11 +72,22 @@
             }
         }
 
-        public override Task FlushAsync()
+        public async override Task FlushAsync()
         {
-            /* Nothing to flush */
-            return Completed;
+            if (!m_IsFlushed) {
+                await m_Writer.WriteEndElementAsync();
+                m_IsFlushed = true;
+            }
         }
 #endif
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) {
+                try {
+                    Flush();
+                } catch { /* Ignore errors when disposing */ }
+            }
+        }
     }
 }

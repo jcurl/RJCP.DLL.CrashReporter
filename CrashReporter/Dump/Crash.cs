@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using CrashExport;
     using CrashExport.Xml;
@@ -96,18 +97,23 @@
         /// <summary>
         /// Dumps debugging information to disk, using an automatically generated path.
         /// </summary>
-        public void Dump()
+        public string Dump()
         {
-            throw new NotImplementedException();
+            string fileName = GetCrashPath();
+            Dump(fileName);
+            return fileName;
         }
 
         /// <summary>
         /// Dumps debugging information to disk, writing to the file provided.
         /// </summary>
         /// <param name="fileName">Name of the dump file to generate.</param>
-        public void Dump(string fileName)
+        public string Dump(string fileName)
         {
-            throw new NotImplementedException();
+            using (ICrashDataDumpFile dump = CrashDumpFactory.Create(fileName)) {
+                Dump(dump);
+            }
+            return fileName;
         }
 
         /// <summary>
@@ -117,7 +123,40 @@
         /// <param name="path">The path to add debug information to.</param>
         public void Dump(Stream stream, string path)
         {
-            throw new NotImplementedException();
+            using (ICrashDataDumpFile dump = CrashDumpFactory.Create(stream, path)) {
+                Dump(dump);
+            }
+        }
+
+        private void Dump(ICrashDataDumpFile dump)
+        {
+            foreach (ICrashDataExport dumper in Providers) {
+                dumper.Dump(dump);
+            }
+            dump.Flush();
+        }
+
+        private string GetCrashPath()
+        {
+            Process current = Process.GetCurrentProcess();
+            string name = string.Format("{0}-{1:yyyyMMddHHmmss}.{2}", current.ProcessName, DateTime.Now, Guid.NewGuid().ToString());
+            string basepath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string path;
+
+            path = Path.Combine(basepath, "CrashData", name);
+            if (!Directory.Exists(path)) {
+                try {
+                    Directory.CreateDirectory(path);
+                    return Path.Combine(path, CrashDumpFactory.FileName);
+                } catch (PathTooLongException) {  // Creation failed
+                } catch (DirectoryNotFoundException) {  // Creation failed
+                } catch (NotSupportedException) { // Creation failed
+                } catch (IOException) { // Creation failed
+                } catch (UnauthorizedAccessException) {  // Creation failed
+                }
+            }
+
+            return Path.Combine(Environment.CurrentDirectory, name);
         }
 
 #if NET45
@@ -125,9 +164,10 @@
         /// Dumps debugging information to disk, using an automatically generated path.
         /// </summary>
         /// <returns>An object that can be awaited on.</returns>
-        public Task DumpAsync()
+        public Task<string> DumpAsync()
         {
-            throw new NotImplementedException();
+            string fileName = GetCrashPath();
+            return DumpAsync(fileName);
         }
 
         /// <summary>
@@ -135,9 +175,12 @@
         /// </summary>
         /// <param name="fileName">Name of the dump file to generate.</param>
         /// <returns>An object that can be awaited on.</returns>
-        public Task DumpAsync(string fileName)
+        public async Task<string> DumpAsync(string fileName)
         {
-            throw new NotImplementedException();
+            using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(fileName)) {
+                await DumpAsync(dump);
+            }
+            return fileName;
         }
 
         /// <summary>
@@ -146,9 +189,19 @@
         /// <param name="stream">The stream to write debug information to.</param>
         /// <param name="path">The path to add debug information to.</param>
         /// <returns>An object that can be awaited on.</returns>
-        public Task DumpAsync(Stream stream, string path)
+        public async Task DumpAsync(Stream stream, string path)
         {
-            throw new NotImplementedException();
+            using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(stream, path)) {
+                await DumpAsync(dump);
+            }
+        }
+
+        private async Task DumpAsync(ICrashDataDumpFile dump)
+        {
+            foreach (ICrashDataExport dumper in Providers) {
+                await dumper.DumpAsync(dump);
+            }
+            await dump.FlushAsync();
         }
 #endif
     }

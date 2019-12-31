@@ -11,6 +11,14 @@
     public interface ICrashDumpFactory
     {
         /// <summary>
+        /// Provides a recommended file name for the factory.
+        /// </summary>
+        /// <value>
+        /// A recommended file name for creating a file with the factory.
+        /// </value>
+        string FileName { get; }
+
+        /// <summary>
         /// Creates the dump from the given file name.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>

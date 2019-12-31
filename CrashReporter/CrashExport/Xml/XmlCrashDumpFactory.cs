@@ -12,6 +12,14 @@
     public class XmlCrashDumpFactory : ICrashDumpFactory
     {
         /// <summary>
+        /// Provides a recommended file name for the factory.
+        /// </summary>
+        /// <value>
+        /// A recommended file name for creating a file with the factory.
+        /// </value>
+        public string FileName { get { return "CrashDump.xml"; } }
+
+        /// <summary>
         /// Creates the dump from the given file name.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>

@@ -10,7 +10,15 @@
     /// </summary>
     public class CrashDumpFactory : ICrashDumpFactory
     {
-        private Xml.XmlCrashDumpFactory m_XmlFactory = new Xml.XmlCrashDumpFactory();
+        private ICrashDumpFactory m_XmlFactory = new Xml.XmlCrashDumpFactory();
+
+        /// <summary>
+        /// Provides a recommended file name for the factory.
+        /// </summary>
+        /// <value>
+        /// A recommended file name for creating a file with the factory.
+        /// </value>
+        public string FileName { get { return m_XmlFactory.FileName; } }
 
         /// <summary>
         /// Creates the dump from the given file name.

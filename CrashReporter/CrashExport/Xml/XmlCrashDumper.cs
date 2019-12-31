@@ -16,8 +16,6 @@
         private Stream m_Stream;
         private XmlWriter m_Writer;
 
-        private string m_TableName;
-
         internal XmlCrashDumper() { }
 
         public void CreateFile(string fileName)
@@ -115,7 +113,6 @@
 
             // Update the variables after writing, so when we flush, we close that element. If writing the element would
             // raise an exception, we wouldn't close something that probably wasn't written.
-            m_TableName = tableName;
             return new XmlDumpTable(rowName, m_Writer);
         }
 
@@ -124,31 +121,11 @@
         public void Flush()
         {
             if (!m_IsFlushed) {
-                if (m_TableName != null) m_Writer.WriteEndElement();
-
                 m_Writer.WriteEndElement();
                 m_Writer.Flush();
                 m_Stream.Flush();
                 m_IsFlushed = true;
             }
-        }
-
-        private void Close()
-        {
-            if (!m_IsFlushed) Flush();
-
-            if (m_Writer != null) ((IDisposable)m_Writer).Dispose();
-            m_Writer = null;
-
-            if (m_OwnsStream && m_Stream != null) m_Stream.Dispose();
-            m_Stream = null;
-        }
-
-        public void Dispose()
-        {
-            try {
-                Close();
-            } catch { /* Ignore all errors when disposing, we might be disposing because of an error */ }
         }
 
 #if NET45
@@ -208,15 +185,12 @@
 
             // Update the variables after writing, so when we flush, we close that element. If writing the element would
             // raise an exception, we wouldn't close something that probably wasn't written.
-            m_TableName = tableName;
             return new XmlDumpTable(rowName, m_Writer);
         }
 
         public async Task FlushAsync()
         {
             if (!m_IsFlushed) {
-                if (m_TableName != null) await m_Writer.WriteEndElementAsync();
-
                 await m_Writer.WriteEndElementAsync();
                 await m_Writer.FlushAsync();
                 await m_Stream.FlushAsync();
@@ -224,5 +198,23 @@
             }
         }
 #endif
+
+        private void Close()
+        {
+            if (!m_IsFlushed) Flush();
+
+            if (m_Writer != null) ((IDisposable)m_Writer).Dispose();
+            m_Writer = null;
+
+            if (m_OwnsStream && m_Stream != null) m_Stream.Dispose();
+            m_Stream = null;
+        }
+
+        public void Dispose()
+        {
+            try {
+                Close();
+            } catch { /* Ignore all errors when disposing, we might be disposing because of an error */ }
+        }
     }
 }
