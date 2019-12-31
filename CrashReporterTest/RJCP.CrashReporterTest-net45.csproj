@@ -54,6 +54,7 @@
     <Compile Include="CrashData\AssemblyDumpTest.cs" />
     <Compile Include="CrashData\EnvironmentDumpTest.cs" />
     <Compile Include="CrashData\NetVersionDumpTest.cs" />
+    <Compile Include="CrashData\NetworkDumpTest.cs" />
     <Compile Include="CrashData\TestBlock.cs" />
     <Compile Include="CrashData\TestBlockTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDumpFactory.cs" />

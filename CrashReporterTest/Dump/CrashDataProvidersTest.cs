@@ -10,10 +10,11 @@
         [Test]
         public void DefaultListOfProviders()
         {
-            Assert.That(Crash.Data.Providers.Count, Is.EqualTo(3));
+            Assert.That(Crash.Data.Providers.Count, Is.EqualTo(4));
             Assert.That(HasProviderType(typeof(CrashData.NetVersionDump)), Is.True);
             Assert.That(HasProviderType(typeof(CrashData.AssemblyDump)), Is.True);
             Assert.That(HasProviderType(typeof(CrashData.EnvironmentDump)), Is.True);
+            Assert.That(HasProviderType(typeof(CrashData.NetworkDump)), Is.True);
         }
 
         private bool HasProviderType(Type provider)

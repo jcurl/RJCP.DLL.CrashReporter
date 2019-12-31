@@ -85,7 +85,8 @@
                             m_Providers = new CrashDataProviders() {
                                 new CrashData.NetVersionDump(),
                                 new CrashData.AssemblyDump(),
-                                new CrashData.EnvironmentDump()
+                                new CrashData.EnvironmentDump(),
+                                new CrashData.NetworkDump()
                             };
                         }
                     }

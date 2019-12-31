@@ -50,6 +50,7 @@
     <Compile Include="CrashData\NetVersion\NetVersions.cs" />
     <Compile Include="CrashData\NetVersion\Runtime\Mono.cs" />
     <Compile Include="CrashData\NetVersion\Runtime\NetFx.cs" />
+    <Compile Include="CrashData\NetworkDump.cs" />
     <Compile Include="CrashExport\CrashDataProviders.cs" />
     <Compile Include="CrashExport\CrashDumpFactory.cs" />
     <Compile Include="CrashExport\DumpRow.cs" />
