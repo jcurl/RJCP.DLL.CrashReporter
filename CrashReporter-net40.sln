@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frameworks", "Frameworks", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJCP.NUnitExtensions", "..\nunitextensions\NUnitExtensions\RJCP.NUnitExtensions.csproj", "{A4D356F2-15AC-4FFE-B0C4-1D3D0973A124}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestApplication", "TestApplication", "{F8D0926E-F960-443D-BE22-31FB98C4EB1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrashReportApp-net40", "CrashReportApp\CrashReportApp-net40.csproj", "{93706C19-D30E-422D-8BCF-7AF81F4B1504}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,12 +33,17 @@ Global
 		{A4D356F2-15AC-4FFE-B0C4-1D3D0973A124}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4D356F2-15AC-4FFE-B0C4-1D3D0973A124}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4D356F2-15AC-4FFE-B0C4-1D3D0973A124}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93706C19-D30E-422D-8BCF-7AF81F4B1504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93706C19-D30E-422D-8BCF-7AF81F4B1504}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93706C19-D30E-422D-8BCF-7AF81F4B1504}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93706C19-D30E-422D-8BCF-7AF81F4B1504}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A4D356F2-15AC-4FFE-B0C4-1D3D0973A124} = {7A9DE728-787D-4594-81E4-C225E37CA1A2}
+		{93706C19-D30E-422D-8BCF-7AF81F4B1504} = {F8D0926E-F960-443D-BE22-31FB98C4EB1A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9CBA3046-9C30-4A25-BDA0-EE4EB1BBEB24}
