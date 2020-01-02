@@ -86,7 +86,8 @@
                                 new CrashData.NetVersionDump(),
                                 new CrashData.AssemblyDump(),
                                 new CrashData.EnvironmentDump(),
-                                new CrashData.NetworkDump()
+                                new CrashData.NetworkDump(),
+                                new CrashData.ThreadDump()
                             };
                         }
                     }

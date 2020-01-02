@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="CrashData\AssemblyDump.cs" />
     <Compile Include="CrashData\NetworkDump.cs" />
+    <Compile Include="CrashData\ThreadDump.cs" />
     <Compile Include="CrashExport\CrashDataProviders.cs" />
     <Compile Include="CrashData\EnvironmentDump.cs" />
     <Compile Include="CrashData\NetVersionDump.cs" />

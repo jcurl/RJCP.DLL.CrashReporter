@@ -10,7 +10,6 @@
     /// <summary>
     /// Dumps details of all loaded assemblies in the current domain.
     /// </summary>
-    /// <seealso cref="RJCP.Diagnostics.CrashExport.ICrashDataExport" />
     public class AssemblyDump : ICrashDataExport
     {
         private const string AssemblyTable = "Assemblies";
