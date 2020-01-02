@@ -73,8 +73,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Trace\IMemoryLog.cs" />
     <Compile Include="Trace\InternalClock.cs" />
+    <Compile Include="Trace\LineSplitter.cs" />
     <Compile Include="Trace\LogEntry.cs" />
+    <Compile Include="Trace\MemoryTraceListener.cs" />
     <Compile Include="Trace\SimplePrioMemoryLog.cs" />
+    <Compile Include="Trace\SimplePrioMemoryTraceListener.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

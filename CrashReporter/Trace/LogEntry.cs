@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Trace
 {
+    using System;
     using System.Diagnostics;
 
     /// <summary>
@@ -69,12 +70,20 @@
         public int Id { get; private set; }
 
         /// <summary>
+        /// Gets or sets the date and time of the event.
+        /// </summary>
+        /// <value>
+        /// The date and time of the event.
+        /// </value>
+        public DateTime DateTime { get; set; }
+
+        /// <summary>
         /// Gets the thread identifier on which the event occurred.
         /// </summary>
         /// <value>
         /// The thread identifier on which the event occurred.
         /// </value>
-        public int ThreadId { get; set; }
+        public string ThreadId { get; set; }
 
         /// <summary>
         /// Gets the event message.

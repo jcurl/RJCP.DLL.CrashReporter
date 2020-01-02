@@ -70,6 +70,10 @@
     <Compile Include="Dump\DumpTest.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Trace\AppConfigLogTest.cs" />
+    <Compile Include="Trace\MemoryList.cs" />
+    <Compile Include="Trace\MemoryListListener.cs" />
+    <Compile Include="Trace\MemoryListListenerTest.cs" />
     <Compile Include="Trace\SimplePrioMemoryLogTest.cs" />
   </ItemGroup>
   <ItemGroup>
