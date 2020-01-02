@@ -39,8 +39,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrashData\AssemblyDump.cs" />
+    <Compile Include="CrashData\WinVerDump.cs" />
     <Compile Include="CrashData\OSDump.cs" />
     <Compile Include="CrashData\NetworkDump.cs" />
+    <Compile Include="CrashData\OSVersion\OSArchitecture.cs" />
+    <Compile Include="CrashData\OSVersion\OSPlatformId.cs" />
+    <Compile Include="CrashData\OSVersion\OSProductInfo.cs" />
+    <Compile Include="CrashData\OSVersion\OSProductType.cs" />
+    <Compile Include="CrashData\OSVersion\OSSuites.cs" />
+    <Compile Include="CrashData\OSVersion\OSVersion.cs" />
     <Compile Include="CrashData\ProcessDump.cs" />
     <Compile Include="CrashData\ModuleDump.cs" />
     <Compile Include="CrashData\ThreadDump.cs" />

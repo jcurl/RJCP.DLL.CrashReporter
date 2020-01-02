@@ -5,7 +5,7 @@
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase",
         Justification = "Native Methods match the style used in Native header files")]
-    internal class NativeMethods
+    internal static class NativeMethods
     {
         [Flags]
         public enum MINIDUMP_TYPE
@@ -35,6 +35,79 @@
             public uint ThreadId;
             public IntPtr ExceptionPointers;
             public bool ClientPointers;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public class OSVERSIONINFO
+        {
+            public int OSVersionInfoSize;
+            public int MajorVersion;
+            public int MinorVersion;
+            public int BuildNumber;
+            public int PlatformId;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x80)]
+            public string CSDVersion;
+
+            public OSVERSIONINFO()
+            {
+                OSVersionInfoSize = Marshal.SizeOf(this);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public class OSVERSIONINFOEX
+        {
+            public int OSVersionInfoSize;
+            public int MajorVersion;
+            public int MinorVersion;
+            public int BuildNumber;
+            public int PlatformId;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x80)]
+            public string CSDVersion;
+            public short ServicePackMajor;
+            public short ServicePackMinor;
+            public ushort SuiteMask;
+            public byte ProductType;
+            public byte Reserved;
+
+            public OSVERSIONINFOEX()
+            {
+                OSVersionInfoSize = Marshal.SizeOf(this);
+            }
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct _PROCESSOR_INFO_UNION
+        {
+            [FieldOffset(0)]
+            internal uint dwOemId;
+            [FieldOffset(0)]
+            internal ushort wProcessorArchitecture;
+            [FieldOffset(2)]
+            internal ushort wReserved;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SYSTEM_INFO
+        {
+            public _PROCESSOR_INFO_UNION uProcessorInfo;
+            public uint dwPageSize;
+            public IntPtr lpMinimumApplicationAddress;
+            public IntPtr lpMaximumApplicationAddress;
+            public IntPtr dwActiveProcessorMask;
+            public uint dwNumberOfProcessors;
+            public uint dwProcessorType;
+            public uint dwAllocationGranularity;
+            public ushort dwProcessorLevel;
+            public ushort dwProcessorRevision;
+        }
+
+        public static class SystemMetrics
+        {
+            public const int SM_TABLETPC = 86;
+            public const int SM_MEDIACENTER = 87;
+            public const int SM_STARTER = 88;
+            public const int SM_SERVERR2 = 89;
         }
     }
 }
