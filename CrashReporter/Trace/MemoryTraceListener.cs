@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.Text;
     using CrashExport;
+    using Dump;
 #if NET45
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -31,6 +32,7 @@
         {
             if (logCollection == null) throw new ArgumentNullException(nameof(logCollection));
             InternalClock.Instance.Initialize();
+            Crash.Data.Providers.Add(this);
             MemoryLog = logCollection;
         }
 

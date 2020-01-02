@@ -15,47 +15,6 @@
         }
 
         [Test]
-        public void AddEntryOrdered1()
-        {
-            SimplePrioMemoryLog log = new SimplePrioMemoryLog {
-                new LogEntry(TraceEventType.Critical, 0, "Critical", 0),
-                new LogEntry(TraceEventType.Error, 0, "Error", 1),
-                new LogEntry(TraceEventType.Warning, 0, "Warning", 2),
-                new LogEntry(TraceEventType.Information, 0, "Information", 3),
-                new LogEntry(TraceEventType.Verbose, 0, "Verbose", 4),
-                new LogEntry(TraceEventType.Suspend, 0, "Suspend", 5),
-                new LogEntry(TraceEventType.Resume, 0, "Resume", 6)
-            };
-
-            Assert.That(log.Count, Is.EqualTo(7));
-
-            var source = from entry in log select entry.Message;
-            Assert.That(source, Is.EqualTo(new string[] { "Critical", "Error", "Warning", "Information", "Verbose", "Suspend", "Resume" }));
-        }
-
-        [Test]
-        public void AddEntryOrdered2()
-        {
-            SimplePrioMemoryLog log = new SimplePrioMemoryLog {
-                new LogEntry(TraceEventType.Critical, 6, "Critical", 6),
-                new LogEntry(TraceEventType.Error, 5, "Error", 5),
-                new LogEntry(TraceEventType.Warning, 4, "Warning", 4),
-                new LogEntry(TraceEventType.Information, 3, "Information", 3),
-                new LogEntry(TraceEventType.Verbose, 2, "Verbose", 2),
-                new LogEntry(TraceEventType.Suspend, 1, "Suspend", 1),
-                new LogEntry(TraceEventType.Resume, 0, "Resume", 0)
-            };
-
-            Assert.That(log.Count, Is.EqualTo(7));
-
-            // The order might be different to what might at first glance be expected. Ordering is sorted by clock
-            // across priority. If the clock for a given priority entry is reversed, it may delay printing of other
-            // objects by clock. So output is not strictly ordered by clock if ordering is exchanged.
-            var source = from entry in log select entry.Message;
-            Assert.That(source, Is.EqualTo(new string[] { "Suspend", "Resume", "Verbose", "Information", "Warning", "Error", "Critical" }));
-        }
-
-        [Test]
         public void DiscardLowerPriority()
         {
             SimplePrioMemoryLog log = new SimplePrioMemoryLog {

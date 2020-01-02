@@ -401,7 +401,7 @@
                     if (log.IsValid) {
                         if (next == null) {
                             next = log;
-                        } else if (log.Current.Clock < next.Current.Clock) {
+                        } else if (log.Current.DateTime < next.Current.DateTime) {
                             next = log;
                         }
                     }
