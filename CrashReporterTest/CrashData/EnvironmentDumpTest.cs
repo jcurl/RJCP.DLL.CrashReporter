@@ -24,7 +24,7 @@
         private bool CheckDump(MemoryCrashDataDumpFile dumpFile)
         {
             dumpFile.DumpContent();
-            Assert.That(dumpFile["EnvironmentVariables"].Count, Is.Not.EqualTo(0));
+            Assert.That(dumpFile["EnvironmentVariables"].Table.Count, Is.Not.EqualTo(0));
             return true;
         }
 

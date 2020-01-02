@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.CrashExport
+﻿namespace RJCP.Diagnostics.CrashExport.MemoryDump
 {
     using System;
     using System.Collections;
@@ -8,11 +8,11 @@
     using System.Threading.Tasks;
 #endif
 
-    public sealed class MemoryCrashDumpTable : DumpTable, IEnumerable<Dictionary<string, string>>
+    public sealed class MemoryCrashDumpTable : DumpTable, IEnumerable<IFields>
     {
         private readonly object m_SyncRoot = new object();
         private List<string> m_Fields = new List<string>();
-        private List<Dictionary<string, string>> m_Rows = new List<Dictionary<string, string>>();
+        private List<IFields> m_Rows = new List<IFields>();
 
         internal MemoryCrashDumpTable(string tableName, string rowName)
         {
@@ -103,7 +103,7 @@
         private void DumpRowInternal(IDictionary<string, string> row)
         {
             lock (m_SyncRoot) {
-                Dictionary<string, string> newRow = new Dictionary<string, string>();
+                IFields newRow = new Fields(new Dictionary<string, string>());
                 foreach (KeyValuePair<string, string> property in row) {
                     if (string.IsNullOrEmpty(property.Key)) throw new ArgumentException("Property provided that is null or empty", nameof(row));
                     if (!CheckField(property.Key)) {
@@ -114,12 +114,12 @@
                         string message = string.Format("Field not defined: {0}", property.Key);
                         throw new ArgumentException(message, nameof(row));
                     }
-                    newRow.Add(property.Key, property.Value);
+                    newRow.Field.Add(property.Key, property.Value);
                 }
 
                 if (m_Fields.Count > 0) {
                     foreach (string field in m_Fields) {
-                        if (!newRow.ContainsKey(field)) {
+                        if (!newRow.Field.ContainsKey(field)) {
                             string message = string.Format("Missing property for field: {0}", field);
                             throw new ArgumentException(message, nameof(row));
                         }
@@ -183,40 +183,27 @@
 
         public IEnumerable<string> Headers { get { return m_Fields; } }
 
-        /// <summary>
-        /// Gets the set of properties for a specific row in the table.
-        /// </summary>
-        /// <value>
-        /// The set of properties for the specific row requested in the table.
-        /// </value>
-        /// <param name="row">The row id to get, from 0 to <see cref="Count"/> - 1.</param>
-        /// <returns>The set of properties for the specific row requested in the table.</returns>
-        public IDictionary<string, string> this[int row]
+        private class Fields : IFields
         {
-            get
-            {
-                lock (m_SyncRoot) {
-                    return m_Rows[row];
-                }
-            }
+            public Fields(IDictionary<string, string> row) { Field = row; }
+
+            public IDictionary<string, string> Field { get; private set; }
         }
 
-        /// <summary>
-        /// Gets the number of rows in this table.
-        /// </summary>
-        /// <value>
-        /// The number of rows in this table.
-        /// </value>
-        public int Count
+        private class Rows : IRows
         {
-            get
-            {
-                lock (m_SyncRoot) {
-                    return m_Rows.Count;
-                }
-            }
+            private IList<IFields> m_Rows;
+
+            public Rows(IList<IFields> rows) { m_Rows = rows; }
+
+            public IFields this[int index] { get { return m_Rows[index]; } }
+
+            public int Count { get { return m_Rows.Count; } }
         }
-        public IEnumerator<Dictionary<string, string>> GetEnumerator()
+
+        public IRows Row { get { return new Rows(m_Rows); } }
+
+        public IEnumerator<IFields> GetEnumerator()
         {
             return m_Rows.GetEnumerator();
         }

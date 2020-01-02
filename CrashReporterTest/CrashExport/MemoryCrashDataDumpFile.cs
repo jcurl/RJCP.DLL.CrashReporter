@@ -1,15 +1,15 @@
 ﻿namespace RJCP.Diagnostics.CrashExport
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
+    using MemoryDump;
 #if NET45
     using System.Threading.Tasks;
 #endif
 
-    public sealed class MemoryCrashDataDumpFile : ICrashDataDumpFile, IEnumerable<KeyValuePair<string, MemoryCrashDumpTable>>
+    public sealed class MemoryCrashDataDumpFile : ICrashDataDumpFile
     {
-        private Dictionary<string, MemoryCrashDumpTable> m_Blocks = new Dictionary<string, MemoryCrashDumpTable>();
+        private Dictionary<string, List<MemoryCrashDumpTable>> m_Blocks = new Dictionary<string, List<MemoryCrashDumpTable>>();
 
         /// <summary>
         /// Gets a value indicating if this instance can support writing blocks asynchronously.
@@ -44,9 +44,6 @@
             if (tableName == null) throw new ArgumentNullException(nameof(tableName));
             if (rowName == null) throw new ArgumentNullException(nameof(rowName));
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
-            lock (m_Blocks) {
-                if (m_Blocks.ContainsKey(tableName)) throw new ArgumentException("Duplicate element", nameof(tableName));
-            }
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
 
             return DumpTableInternal(tableName, rowName);
@@ -56,15 +53,30 @@
         {
             MemoryCrashDumpTable block = new MemoryCrashDumpTable(tableName, rowName);
             lock (m_Blocks) {
-                if (IsSynchronous) {
-                    foreach (var knownBlock in m_Blocks) {
-                        if (!knownBlock.Value.IsDisposed)
-                            throw new InvalidOperationException("DumpBlock requested while another DumpBlock is active in synchronous mode");
-                    }
+                if (IsSynchronous && CheckIncomplete(out string _))
+                    throw new InvalidOperationException("DumpBlock requested while another DumpBlock is active in synchronous mode");
+                if (!m_Blocks.TryGetValue(tableName, out List<MemoryCrashDumpTable> blockList)) {
+                    blockList = new List<MemoryCrashDumpTable>();
+                    m_Blocks.Add(tableName, blockList);
                 }
-                m_Blocks.Add(tableName, block);
+                blockList.Add(block);
             }
             return block;
+        }
+
+        private bool CheckIncomplete(out string name)
+        {
+            foreach (List<MemoryCrashDumpTable> blockList in m_Blocks.Values) {
+                for (int i = 0; i < blockList.Count; i++) {
+                    MemoryCrashDumpTable knownBlock = blockList[i];
+                    if (!knownBlock.IsDisposed) {
+                        name = string.Format("{0}[{1}]", knownBlock.TableName, i);
+                        return true;
+                    }
+                }
+            }
+            name = string.Empty;
+            return false;
         }
 
         bool m_IsFlushed;
@@ -84,9 +96,6 @@
             if (tableName == null) throw new ArgumentNullException(nameof(tableName));
             if (rowName == null) throw new ArgumentNullException(nameof(rowName));
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
-            lock (m_Blocks) {
-                if (m_Blocks.ContainsKey(tableName)) throw new ArgumentException("Duplicate element", nameof(tableName));
-            }
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
 
             return Task.Run(() => { return DumpTableInternal(tableName, rowName); });
@@ -101,12 +110,19 @@
         }
 #endif
 
-        public MemoryCrashDumpTable this[string table]
+        private class TableEntry : ITables
+        {
+            public TableEntry(IList<MemoryCrashDumpTable> tables) { Table = tables; }
+
+            public IList<MemoryCrashDumpTable> Table { get; private set; }
+        }
+
+        public ITables this[string table]
         {
             get
             {
                 lock (m_Blocks) {
-                    if (m_Blocks.ContainsKey(table)) return m_Blocks[table];
+                    if (m_Blocks.ContainsKey(table)) return new TableEntry(m_Blocks[table]);
                 }
                 string message = string.Format("Table '{0}' not found", table);
                 throw new KeyNotFoundException(message);
@@ -123,32 +139,24 @@
             }
         }
 
-        public IEnumerator<KeyValuePair<string, MemoryCrashDumpTable>> GetEnumerator()
-        {
-            return m_Blocks.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
         public void DumpContent()
         {
-            foreach (var table in m_Blocks.Values) {
-                Console.WriteLine("Table: {0}", table.TableName);
-                foreach (var row in table) {
-                    Console.Write("  {0}:", table.RowName);
-                    bool first = true;
-                    foreach (string field in table.Headers) {
-                        if (first) {
-                            Console.Write(" {0}={1}", field, row[field]);
-                            first = false;
-                        } else {
-                            Console.Write(", {0}={1}", field, row[field]);
+            foreach (IList<MemoryCrashDumpTable> tableList in m_Blocks.Values) {
+                foreach (MemoryCrashDumpTable table in tableList) {
+                    Console.WriteLine("Table: {0}", table.TableName);
+                    foreach (IFields row in table) {
+                        Console.Write("  {0}:", table.RowName);
+                        bool first = true;
+                        foreach (string field in table.Headers) {
+                            if (first) {
+                                Console.Write(" {0}={1}", field, row.Field[field]);
+                                first = false;
+                            } else {
+                                Console.Write(", {0}={1}", field, row.Field[field]);
+                            }
                         }
+                        Console.WriteLine(string.Empty);
                     }
-                    Console.WriteLine(string.Empty);
                 }
             }
         }
@@ -167,11 +175,9 @@
 
             bool properlyDisposed = true;
             lock (m_Blocks) {
-                foreach (var block in m_Blocks) {
-                    if (!block.Value.IsDisposed) {
-                        Console.WriteLine("Dispose called with table '{0}' not disposed.", block.Key);
-                        properlyDisposed = false;
-                    }
+                if (CheckIncomplete(out string name)) {
+                    Console.WriteLine("Dispose called with table '{0}' not disposed.", name);
+                    properlyDisposed = false;
                 }
             }
             if (!properlyDisposed) throw new InvalidOperationException("DumpTable not disposed prior");

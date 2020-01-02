@@ -21,8 +21,8 @@
                 await dump.FlushAsync();
                 Assert.That(dump.Count, Is.EqualTo(1));
                 Assert.That(dump["element"], Is.Not.Null);
-                Assert.That(dump["element"].TableName, Is.EqualTo("element"));
-                Assert.That(dump["element"].RowName, Is.EqualTo("item"));
+                Assert.That(dump["element"].Table[0].TableName, Is.EqualTo("element"));
+                Assert.That(dump["element"].Table[0].RowName, Is.EqualTo("item"));
             }
         }
 
@@ -88,9 +88,17 @@
                     Assert.That(table, Is.Not.Null);
                     await table.FlushAsync();
                 }
-                await dump.FlushAsync();
+                using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
+                    Assert.That(table, Is.Not.Null);
+                    await table.FlushAsync();
+                }
 
-                Assert.That(async () => { _ = await dump.DumpTableAsync("element", "item"); }, Throws.TypeOf<ArgumentException>());
+                Assert.That(dump.Count, Is.EqualTo(1));
+                Assert.That(dump["element"], Is.Not.Null);
+                Assert.That(dump["element"].Table.Count, Is.EqualTo(2));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
+                Assert.That(dump["element"].Table[1].Row.Count, Is.EqualTo(0));
+                await dump.FlushAsync();
             }
         }
 
@@ -146,8 +154,8 @@
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
                 Assert.That(dump["element"], Is.Not.Null);
-                Assert.That(dump["element"].Count, Is.EqualTo(1));
-                Assert.That(dump["element"][0]["property"], Is.EqualTo("value"));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(1));
+                Assert.That(dump["element"].Table[0].Row[0].Field["property"], Is.EqualTo("value"));
                 await dump.FlushAsync();
             }
         }
@@ -161,7 +169,7 @@
                     await table.FlushAsync();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Count, Is.EqualTo(0));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
                 dump.Flush();
             }
         }
@@ -175,7 +183,7 @@
                     await table.FlushAsync();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Count, Is.EqualTo(0));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
                 dump.Flush();
             }
         }
@@ -198,7 +206,7 @@
                     await table.FlushAsync();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Count, Is.EqualTo(0));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
                 await dump.FlushAsync();
             }
         }
@@ -222,8 +230,8 @@
 
                 Assert.That(dump.Count, Is.EqualTo(1));
                 Assert.That(dump["element"], Is.Not.Null);
-                Assert.That(dump["element"].Count, Is.EqualTo(1));
-                Assert.That(dump["element"][0]["property"], Is.EqualTo("value"));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(1));
+                Assert.That(dump["element"].Table[0].Row[0].Field["property"], Is.EqualTo("value"));
                 dump.Flush();
             }
         }
@@ -324,10 +332,10 @@
                 }
                 await dump.FlushAsync();
                 Assert.That(dump["element"], Is.Not.Null);
-                Assert.That(dump["element"].Count, Is.EqualTo(1));
-                Assert.That(dump["element"][0].Count, Is.EqualTo(2));
-                Assert.That(dump["element"][0]["property"], Is.EqualTo("value"));
-                Assert.That(dump["element"][0]["property2"], Is.EqualTo("value2"));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(1));
+                Assert.That(dump["element"].Table[0].Row[0].Field.Count, Is.EqualTo(2));
+                Assert.That(dump["element"].Table[0].Row[0].Field["property"], Is.EqualTo("value"));
+                Assert.That(dump["element"].Table[0].Row[0].Field["property2"], Is.EqualTo("value2"));
             }
         }
 
@@ -347,10 +355,10 @@
                 }
                 await dump.FlushAsync();
                 Assert.That(dump["element"], Is.Not.Null);
-                Assert.That(dump["element"].Count, Is.EqualTo(1));
-                Assert.That(dump["element"][0].Count, Is.EqualTo(2));
-                Assert.That(dump["element"][0]["property"], Is.EqualTo("value"));
-                Assert.That(dump["element"][0]["property2"], Is.EqualTo("value2"));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(1));
+                Assert.That(dump["element"].Table[0].Row[0].Field.Count, Is.EqualTo(2));
+                Assert.That(dump["element"].Table[0].Row[0].Field["property"], Is.EqualTo("value"));
+                Assert.That(dump["element"].Table[0].Row[0].Field["property2"], Is.EqualTo("value2"));
             }
         }
 
@@ -406,7 +414,7 @@
                 }
                 await dump.FlushAsync();
                 Assert.That(dump["element"], Is.Not.Null);
-                Assert.That(dump["element"].Count, Is.EqualTo(0));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
             }
         }
 
@@ -426,7 +434,7 @@
                 }
                 await dump.FlushAsync();
                 Assert.That(dump["element"], Is.Not.Null);
-                Assert.That(dump["element"].Count, Is.EqualTo(0));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
             }
         }
 
@@ -478,7 +486,7 @@
                     await table.FlushAsync();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Count, Is.EqualTo(0));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
                 await dump.FlushAsync();
             }
         }
@@ -491,7 +499,7 @@
                     await table.FlushAsync();
                 }
                 Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Count, Is.EqualTo(0));
+                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
                 await dump.FlushAsync();
             }
         }

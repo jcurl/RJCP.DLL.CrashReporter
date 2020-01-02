@@ -37,9 +37,9 @@
 
         private static bool CheckDumpTestBlock(MemoryCrashDataDumpFile dump)
         {
-            Assert.That(dump["TestBlock"].Count, Is.EqualTo(1));
-            Assert.That(dump["TestBlock"][0]["Property"], Is.EqualTo("TestProperty"));
-            Assert.That(dump["TestBlock"][0]["Value"], Is.EqualTo("TestValue"));
+            Assert.That(dump["TestBlock"].Table.Count, Is.EqualTo(1));
+            Assert.That(dump["TestBlock"].Table[0].Row[0].Field["Property"], Is.EqualTo("TestProperty"));
+            Assert.That(dump["TestBlock"].Table[0].Row[0].Field["Value"], Is.EqualTo("TestValue"));
             return true;
         }
     }

@@ -60,7 +60,10 @@
     <Compile Include="CrashExport\MemoryCrashDataDumpFile.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFileTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDumpFactory.cs" />
-    <Compile Include="CrashExport\MemoryCrashDumpTable.cs" />
+    <Compile Include="CrashExport\MemoryDump\IFields.cs" />
+    <Compile Include="CrashExport\MemoryDump\IRows.cs" />
+    <Compile Include="CrashExport\MemoryDump\ITables.cs" />
+    <Compile Include="CrashExport\MemoryDump\MemoryCrashDumpTable.cs" />
     <Compile Include="CrashExport\Xml\XmlCrashDumperTest.cs" />
     <Compile Include="Dump\CrashDataProvidersTest.cs" />
     <Compile Include="Dump\CrashTest.cs" />
