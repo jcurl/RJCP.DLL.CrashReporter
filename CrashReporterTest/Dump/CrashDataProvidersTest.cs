@@ -11,7 +11,7 @@
         public void DefaultListOfProviders()
         {
             // Listeners are dynamically added. We can't know if a TraceListener test was run before or after this test.
-            Assert.That(Crash.Data.Providers.Count - Listeners(), Is.EqualTo(7));
+            Assert.That(Crash.Data.Providers.Count - Listeners(), Is.EqualTo(8));
             Assert.That(HasProviderType(typeof(CrashData.NetVersionDump)), Is.True);
             Assert.That(HasProviderType(typeof(CrashData.AssemblyDump)), Is.True);
             Assert.That(HasProviderType(typeof(CrashData.EnvironmentDump)), Is.True);
@@ -19,6 +19,7 @@
             Assert.That(HasProviderType(typeof(CrashData.ThreadDump)), Is.True);
             Assert.That(HasProviderType(typeof(CrashData.OSDump)), Is.True);
             Assert.That(HasProviderType(typeof(CrashData.ProcessDump)), Is.True);
+            Assert.That(HasProviderType(typeof(CrashData.ModuleDump)), Is.True);
         }
 
         private bool HasProviderType(Type provider)
