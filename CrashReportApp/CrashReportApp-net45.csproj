@@ -42,7 +42,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.net45.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrashReporter\RJCP.CrashReporter-net45.csproj">
@@ -51,4 +51,8 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Delete Files="$(TargetDir)$(TargetFileName).config" />
+    <Copy SourceFiles="$(ProjectDir)\App.net45.config" DestinationFiles="$(TargetDir)$(TargetFileName).config" />
+  </Target>
 </Project>

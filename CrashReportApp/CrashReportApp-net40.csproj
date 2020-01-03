@@ -42,13 +42,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\CrashReporter\RJCP.CrashReporter-net40.csproj">
       <Project>{807b678b-ccbd-40f5-bf8c-88862c80d44e}</Project>
       <Name>RJCP.CrashReporter-net40</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="App.net40.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Delete Files="$(TargetDir)$(TargetFileName).config" />
+    <Copy SourceFiles="$(ProjectDir)\App.net40.config" DestinationFiles="$(TargetDir)$(TargetFileName).config" />
+  </Target>
 </Project>
