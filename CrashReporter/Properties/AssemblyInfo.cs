@@ -7,9 +7,24 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("CrashReporter")]
 [assembly: AssemblyDescription("Crash Report Support Library")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CrashReporter")]
+#if NET45
+#if DEBUG
+[assembly: AssemblyConfiguration("debug-net45")]
+[assembly: AssemblyProduct("CrashReporter NET 4.5 (Debug)")]
+#else
+[assembly: AssemblyConfiguration("net45")]
+[assembly: AssemblyProduct("CrashReporter NET 4.5")]
+#endif
+#else
+#if DEBUG
+[assembly: AssemblyConfiguration("debug-net40")]
+[assembly: AssemblyProduct("CrashReporter NET 4.0 (Debug)")]
+#else
+[assembly: AssemblyConfiguration("net40")]
+[assembly: AssemblyProduct("CrashReporter NET 4.0")]
+#endif
+#endif
+[assembly: AssemblyCompany("Jason Curl")]
 [assembly: AssemblyCopyright("Copyright © Jason Curl 2019-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

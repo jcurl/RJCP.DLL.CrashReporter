@@ -6,10 +6,25 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("CrashReportApp")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
+#if NET45
+#if DEBUG
+[assembly: AssemblyConfiguration("debug-net45")]
+[assembly: AssemblyProduct("CrashReporter NET 4.5 (Debug)")]
+#else
+[assembly: AssemblyConfiguration("net45")]
+[assembly: AssemblyProduct("CrashReporter NET 4.5")]
+#endif
+#else
+#if DEBUG
+[assembly: AssemblyConfiguration("debug-net40")]
+[assembly: AssemblyProduct("CrashReporter NET 4.0 (Debug)")]
+#else
+[assembly: AssemblyConfiguration("net40")]
+[assembly: AssemblyProduct("CrashReporter NET 4.0")]
+#endif
+#endif
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CrashReportApp")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Copyright © Jason Curl, 2019-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
