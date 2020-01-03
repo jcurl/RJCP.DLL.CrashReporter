@@ -48,7 +48,7 @@
         protected override IEnumerable<ProcessThread> GetRows()
         {
             foreach (ProcessThread thread in Process.GetCurrentProcess().Threads) {
-                yield return thread;
+                if (thread != null) yield return thread;
             }
         }
 

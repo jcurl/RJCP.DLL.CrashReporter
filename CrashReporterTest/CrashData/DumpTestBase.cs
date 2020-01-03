@@ -21,13 +21,13 @@
                 dump.Dump(dumpFile);
                 dumpFile.Flush();
 
+                dumpFile.DumpContent();
                 Assert.That(CheckDump(dumpFile), Is.True);
             }
         }
 
-        private bool CheckDump(MemoryCrashDataDumpFile dumpFile)
+        protected virtual bool CheckDump(MemoryCrashDataDumpFile dumpFile)
         {
-            dumpFile.DumpContent();
             Assert.That(dumpFile[TableName].Table.Count, Is.Not.EqualTo(0));
             return true;
         }
@@ -41,6 +41,7 @@
                 await dump.DumpAsync(dumpFile);
                 await dumpFile.FlushAsync();
 
+                dumpFile.DumpContent();
                 Assert.That(CheckDump(dumpFile), Is.True);
             }
         }
