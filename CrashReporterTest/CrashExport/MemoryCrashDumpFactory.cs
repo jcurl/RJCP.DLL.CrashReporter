@@ -23,8 +23,9 @@
 
         private ICrashDataDumpFile CreateDefault()
         {
-            MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile();
-            dump.IsSynchronous = IsSynchronous;
+            MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile {
+                IsSynchronous = IsSynchronous
+            };
             return dump;
         }
 

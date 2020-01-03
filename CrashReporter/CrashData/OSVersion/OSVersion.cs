@@ -1,8 +1,10 @@
 ﻿namespace RJCP.Diagnostics.CrashData.OSVersion
 {
     using System;
-    using System.Runtime.InteropServices;
     using Native;
+#if DEBUG
+    using System.Runtime.InteropServices;
+#endif
 
     internal class OSVersion
     {
