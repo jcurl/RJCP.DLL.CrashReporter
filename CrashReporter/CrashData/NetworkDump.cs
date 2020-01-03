@@ -1,16 +1,14 @@
 ﻿namespace RJCP.Diagnostics.CrashData
 {
+    using System.Collections.Generic;
     using System.Net.NetworkInformation;
     using System.Text;
     using CrashExport;
-#if NET45
-    using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Dump network information to a dump file.
     /// </summary>
-    public class NetworkDump : ICrashDataExport
+    public class NetworkDump : CrashDataExport<NetworkInterface>
     {
         private const string NetworkTable = "Network";
         private const string AdapterName = "name";
@@ -31,43 +29,53 @@
         private const string AdapterIpAnycast = "anycastaddr";
         private const string AdapterIpMulticastAddr = "multicastaddr";
 
-        private DumpRow m_Row = new DumpRow(
-            AdapterName, AdapterStatus, AdapterDescription, AdapterId,
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NetworkDump"/> class.
+        /// </summary>
+        public NetworkDump() : base(new DumpRow(AdapterName, AdapterStatus, AdapterDescription, AdapterId,
             AdapterInterfaceType, AdapterSpeed, AdapterMulticastEnabled, AdapterMac,
             AdapterIpDnsSuffix, AdapterIpDnsEnabled, AdapterIpDynDnsEnabled,
             AdapterIpDhcp, AdapterIpUnicast, AdapterIpDns, AdapterIpGateway,
-            AdapterIpAnycast, AdapterIpMulticastAddr);
+            AdapterIpAnycast, AdapterIpMulticastAddr)) { }
 
         /// <summary>
-        /// Dumps debug information using the provided dump interface.
+        /// Gets the name of the table.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public void Dump(ICrashDataDumpFile dumpFile)
-        {
-            using (IDumpTable table = dumpFile.DumpTable(NetworkTable, "item")) {
-                table.DumpHeader(m_Row);
+        /// <value>The name of the table.</value>
+        protected override string TableName { get { return NetworkTable; } }
 
-                NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-                foreach (NetworkInterface adapter in adapters) {
-                    GetRow(adapter, m_Row);
-                    table.DumpRow(m_Row);
-                }
-                table.Flush();
-            }
+        /// <summary>
+        /// Gets the name of the row.
+        /// </summary>
+        /// <value>The name of the row.</value>
+        protected override string RowName { get { return "item"; } }
+
+        /// <summary>
+        /// An enumerable to get the objects that should be dumped.
+        /// </summary>
+        /// <returns>An enumerable object.</returns>
+        protected override IEnumerable<NetworkInterface> GetRows()
+        {
+            return NetworkInterface.GetAllNetworkInterfaces();
         }
 
-        private void GetRow(NetworkInterface adapter, DumpRow row)
+        /// <summary>
+        /// Updates the row given an item.
+        /// </summary>
+        /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
+        /// <param name="row">The row that should be updated.</param>
+        protected override void UpdateRow(NetworkInterface item, DumpRow row)
         {
-            row[AdapterName] = adapter.Name;
-            row[AdapterDescription] = adapter.Description;
-            row[AdapterId] = adapter.Id;
-            row[AdapterInterfaceType] = adapter.NetworkInterfaceType.ToString();
-            row[AdapterStatus] = adapter.OperationalStatus.ToString();
-            row[AdapterSpeed] = adapter.Speed.ToString();
-            row[AdapterMulticastEnabled] = adapter.SupportsMulticast.ToString();
-            row[AdapterMac] = adapter.GetPhysicalAddress().ToString();
+            row[AdapterName] = item.Name;
+            row[AdapterDescription] = item.Description;
+            row[AdapterId] = item.Id;
+            row[AdapterInterfaceType] = item.NetworkInterfaceType.ToString();
+            row[AdapterStatus] = item.OperationalStatus.ToString();
+            row[AdapterSpeed] = item.Speed.ToString();
+            row[AdapterMulticastEnabled] = item.SupportsMulticast.ToString();
+            row[AdapterMac] = item.GetPhysicalAddress().ToString();
 
-            IPInterfaceProperties properties = adapter.GetIPProperties();
+            IPInterfaceProperties properties = item.GetIPProperties();
             row[AdapterIpDnsEnabled] = properties.IsDnsEnabled.ToString();
             row[AdapterIpDynDnsEnabled] = properties.IsDynamicDnsEnabled.ToString();
             row[AdapterIpDnsSuffix] = properties.DnsSuffix;
@@ -128,25 +136,5 @@
             }
             return addresses.ToString();
         }
-
-#if NET45
-        /// <summary>
-        /// Asynchronously dumps debug information using the provided dump interface.
-        /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public async Task DumpAsync(ICrashDataDumpFile dumpFile)
-        {
-            using (IDumpTable table = await dumpFile.DumpTableAsync(NetworkTable, "item")) {
-                await table.DumpHeaderAsync(m_Row);
-
-                NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-                foreach (NetworkInterface adapter in adapters) {
-                    GetRow(adapter, m_Row);
-                    await table.DumpRowAsync(m_Row);
-                }
-                await table.FlushAsync();
-            }
-        }
-#endif
     }
 }

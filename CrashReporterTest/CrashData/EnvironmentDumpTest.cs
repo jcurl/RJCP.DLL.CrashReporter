@@ -2,44 +2,15 @@
 {
     using CrashExport;
     using NUnit.Framework;
-#if NET45
-    using System.Threading.Tasks;
-#endif
 
     [TestFixture(Category = "CrashReporter.CrashData")]
-    public class EnvironmentDumpTest
+    public class EnvironmentDumpTest : DumpTestBase
     {
-        [Test]
-        public void EnvVarDump()
+        protected override ICrashDataExport GetDumper()
         {
-            using (MemoryCrashDataDumpFile dumpFile = new MemoryCrashDataDumpFile()) {
-                EnvironmentDump dump = new EnvironmentDump();
-                dump.Dump(dumpFile);
-                dumpFile.Flush();
-
-                Assert.That(CheckDump(dumpFile), Is.True);
-            }
+            return new EnvironmentDump();
         }
 
-        private bool CheckDump(MemoryCrashDataDumpFile dumpFile)
-        {
-            dumpFile.DumpContent();
-            Assert.That(dumpFile["EnvironmentVariables"].Table.Count, Is.Not.EqualTo(0));
-            return true;
-        }
-
-#if NET45
-        [Test]
-        public async Task EnvVarDumpAsync()
-        {
-            using (MemoryCrashDataDumpFile dumpFile = new MemoryCrashDataDumpFile()) {
-                EnvironmentDump dump = new EnvironmentDump();
-                await dump.DumpAsync(dumpFile);
-                await dumpFile.FlushAsync();
-
-                Assert.That(CheckDump(dumpFile), Is.True);
-            }
-        }
-#endif
+        protected override string TableName { get { return "EnvironmentVariables"; } }
     }
 }

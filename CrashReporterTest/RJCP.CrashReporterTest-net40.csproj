@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrashData\AssemblyDumpTest.cs" />
+    <Compile Include="CrashData\DumpTestBase.cs" />
     <Compile Include="CrashData\EnvironmentDumpTest.cs" />
     <Compile Include="CrashData\ModuleDumpTest.cs" />
     <Compile Include="CrashData\NetworkDumpTest.cs" />

@@ -2,40 +2,47 @@
 {
     using System.Collections.Generic;
     using CrashExport;
-#if NET45
-    using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Dump some basic information about the OS.
     /// </summary>
-    public class WinVerDump : ICrashDataExport
+    public class WinVerDump : CrashDataExport<KeyValuePair<string, string>>
     {
         private const string OSInfoTable = "WinOSInfo";
         private const string OSInfoItem = "property";
         private const string OSInfoValue = "value";
 
-        private DumpRow m_Row = new DumpRow(OSInfoItem, OSInfoValue);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WinVerDump"/> class.
+        /// </summary>
+        public WinVerDump() : base(new DumpRow(OSInfoItem, OSInfoValue)) { }
 
         /// <summary>
-        /// Dumps debug information using the provided dump interface.
+        /// Gets the name of the table.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public void Dump(ICrashDataDumpFile dumpFile)
-        {
-            if (!Platform.IsWinNT()) return;
-            using (IDumpTable table = dumpFile.DumpTable(OSInfoTable, "item")) {
-                table.DumpHeader(m_Row);
-                foreach (var item in GetOsInfo()) {
-                    m_Row[OSInfoItem] = item.Key;
-                    m_Row[OSInfoValue] = item.Value;
-                    table.DumpRow(m_Row);
-                }
-                table.Flush();
-            }
-        }
+        /// <value>The name of the table.</value>
+        protected override string TableName { get { return OSInfoTable; } }
 
-        private IList<KeyValuePair<string, string>> GetOsInfo()
+        /// <summary>
+        /// Gets the name of the row.
+        /// </summary>
+        /// <value>The name of the row.</value>
+        protected override string RowName { get { return "item"; } }
+
+        /// <summary>
+        /// Returns true if ... is valid.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> if this instance is valid and data should be dumped; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        protected override bool IsValid() { return Platform.IsWinNT(); }
+
+        /// <summary>
+        /// An enumerable to get the objects that should be dumped.
+        /// </summary>
+        /// <returns>An enumerable object.</returns>
+        protected override IEnumerable<KeyValuePair<string, string>> GetRows()
         {
             OSVersion.OSVersion winVer = new OSVersion.OSVersion();
             return new List<KeyValuePair<string, string>>() {
@@ -51,24 +58,15 @@
             };
         }
 
-#if NET45
         /// <summary>
-        /// Asynchronously dumps debug information using the provided dump interface.
+        /// Updates the row given an item.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public async Task DumpAsync(ICrashDataDumpFile dumpFile)
+        /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
+        /// <param name="row">The row that should be updated.</param>
+        protected override void UpdateRow(KeyValuePair<string, string> item, DumpRow row)
         {
-            if (!Platform.IsWinNT()) return;
-            using (IDumpTable table = await dumpFile.DumpTableAsync(OSInfoTable, "item")) {
-                await table.DumpHeaderAsync(m_Row);
-                foreach (var item in GetOsInfo()) {
-                    m_Row[OSInfoItem] = item.Key;
-                    m_Row[OSInfoValue] = item.Value;
-                    await table.DumpRowAsync(m_Row);
-                }
-                await table.FlushAsync();
-            }
+            row[OSInfoItem] = item.Key;
+            row[OSInfoValue] = item.Value;
         }
-#endif
     }
 }

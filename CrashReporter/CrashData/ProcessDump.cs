@@ -3,39 +3,38 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using CrashExport;
-#if NET45
-    using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Dump details of the running process.
     /// </summary>
-    public class ProcessDump : ICrashDataExport
+    public class ProcessDump : CrashDataExport<KeyValuePair<string, string>>
     {
         private const string ProcInfoTable = "ProcessInfo";
         private const string ProcInfoItem = "property";
         private const string ProcInfoValue = "value";
 
-        private DumpRow m_Row = new DumpRow(ProcInfoItem, ProcInfoValue);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProcessDump" /> class.
+        /// </summary>
+        public ProcessDump() : base(new DumpRow(ProcInfoItem, ProcInfoValue)) { }
 
         /// <summary>
-        /// Dumps debug information using the provided dump interface.
+        /// Gets the name of the table.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public void Dump(ICrashDataDumpFile dumpFile)
-        {
-            using (IDumpTable table = dumpFile.DumpTable(ProcInfoTable, "item")) {
-                table.DumpHeader(m_Row);
-                foreach (var item in GetOsInfo()) {
-                    m_Row[ProcInfoItem] = item.Key;
-                    m_Row[ProcInfoValue] = item.Value;
-                    table.DumpRow(m_Row);
-                }
-                table.Flush();
-            }
-        }
+        /// <value>The name of the table.</value>
+        protected override string TableName { get { return ProcInfoTable; } }
 
-        private IList<KeyValuePair<string, string>> GetOsInfo()
+        /// <summary>
+        /// Gets the name of the row.
+        /// </summary>
+        /// <value>The name of the row.</value>
+        protected override string RowName { get { return "item"; } }
+
+        /// <summary>
+        /// An enumerable to get the objects that should be dumped.
+        /// </summary>
+        /// <returns>An enumerable object.</returns>
+        protected override IEnumerable<KeyValuePair<string, string>> GetRows()
         {
             Process process = Process.GetCurrentProcess();
             return new List<KeyValuePair<string, string>>() {
@@ -57,23 +56,15 @@
             };
         }
 
-#if NET45
         /// <summary>
-        /// Asynchronously dumps debug information using the provided dump interface.
+        /// Updates the row given an item.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public async Task DumpAsync(ICrashDataDumpFile dumpFile)
+        /// <param name="item">The item returned from <see cref="GetRows()" />.</param>
+        /// <param name="row">The row that should be updated.</param>
+        protected override void UpdateRow(KeyValuePair<string, string> item, DumpRow row)
         {
-            using (IDumpTable table = await dumpFile.DumpTableAsync(ProcInfoTable, "item")) {
-                await table.DumpHeaderAsync(m_Row);
-                foreach (var item in GetOsInfo()) {
-                    m_Row[ProcInfoItem] = item.Key;
-                    m_Row[ProcInfoValue] = item.Value;
-                    await table.DumpRowAsync(m_Row);
-                }
-                await table.FlushAsync();
-            }
+            row[ProcInfoItem] = item.Key;
+            row[ProcInfoValue] = item.Value;
         }
-#endif
     }
 }

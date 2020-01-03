@@ -1,16 +1,14 @@
 ﻿namespace RJCP.Diagnostics.CrashData
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
     using CrashExport;
-#if NET45
-    using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Dumps details of all loaded assemblies in the current domain.
     /// </summary>
-    public class AssemblyDump : ICrashDataExport
+    public class AssemblyDump : CrashDataExport<Assembly>
     {
         private const string AssemblyTable = "Assemblies";
         private const string AssemblyName = "name";
@@ -22,39 +20,50 @@
         private const string AssemblyCodeBase = "codebase";
         private const string AssemblyProcessor = "processor";
 
-        private DumpRow m_Row = new DumpRow(
-            AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
-            AssemblyFileVersion, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyDump"/> class.
+        /// </summary>
+        public AssemblyDump() : base(new DumpRow(AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
+            AssemblyFileVersion, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase)) { }
 
         /// <summary>
-        /// Dumps debug information using the provided dump interface.
+        /// Gets the name of the table.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public void Dump(ICrashDataDumpFile dumpFile)
-        {
-            using (IDumpTable table = dumpFile.DumpTable(AssemblyTable, "assembly")) {
-                table.DumpHeader(m_Row);
+        /// <value>The name of the table.</value>
+        protected override string TableName { get { return AssemblyTable; } }
 
-                AppDomain domain = AppDomain.CurrentDomain;
-                foreach (Assembly assembly in domain.GetAssemblies()) {
-                    GetAssemblyInformation(assembly, m_Row);
-                    table.DumpRow(m_Row);
-                }
-                table.Flush();
-            }
+        /// <summary>
+        /// Gets the name of the row.
+        /// </summary>
+        /// <value>The name of the row.</value>
+        protected override string RowName { get { return "assembly"; } }
+
+        /// <summary>
+        /// An enumerable to get the objects that should be dumped.
+        /// </summary>
+        /// <returns>An enumerable object.</returns>
+        protected override IEnumerable<Assembly> GetRows()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies();
         }
 
-        private void GetAssemblyInformation(Assembly assembly, DumpRow assemblyRow)
+        /// <summary>
+        /// Updates the row given an item.
+        /// </summary>
+        /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
+        /// <param name="row">The row that should be updated.</param>
+        protected override void UpdateRow(Assembly item, DumpRow row)
         {
-            assemblyRow[AssemblyName] = assembly.GetName().Name;
-            assemblyRow[AssemblyFullName] = assembly.FullName;
-            assemblyRow[AssemblyVersion] = assembly.GetName().Version.ToString();
-            assemblyRow[AssemblyInfoVersion] = GetAssemblyInformationalVersion(assembly);
-            assemblyRow[AssemblyFileVersion] = GetAssemblyFileVersion(assembly);
-            assemblyRow[AssemblyLocation] = assembly.Location;
-            assemblyRow[AssemblyCodeBase] = assembly.CodeBase;
-            assemblyRow[AssemblyProcessor] = assembly.GetName().ProcessorArchitecture.ToString();
+            row[AssemblyName] = item.GetName().Name;
+            row[AssemblyFullName] = item.FullName;
+            row[AssemblyVersion] = item.GetName().Version.ToString();
+            row[AssemblyInfoVersion] = GetAssemblyInformationalVersion(item);
+            row[AssemblyFileVersion] = GetAssemblyFileVersion(item);
+            row[AssemblyLocation] = item.Location;
+            row[AssemblyCodeBase] = item.CodeBase;
+            row[AssemblyProcessor] = item.GetName().ProcessorArchitecture.ToString();
         }
+
 
         private string GetAssemblyInformationalVersion(Assembly assembly)
         {
@@ -69,25 +78,5 @@
                 is AssemblyFileVersionAttribute fileVersion)) return null;
             return fileVersion.Version;
         }
-
-#if NET45
-        /// <summary>
-        /// Asynchronously dumps debug information using the provided dump interface.
-        /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public async Task DumpAsync(ICrashDataDumpFile dumpFile)
-        {
-            using (IDumpTable table = await dumpFile.DumpTableAsync(AssemblyTable, "assembly")) {
-                await table.DumpHeaderAsync(m_Row);
-
-                AppDomain domain = AppDomain.CurrentDomain;
-                foreach (Assembly assembly in domain.GetAssemblies()) {
-                    GetAssemblyInformation(assembly, m_Row);
-                    await table.DumpRowAsync(m_Row);
-                }
-                await table.FlushAsync();
-            }
-        }
-#endif
     }
 }

@@ -2,56 +2,55 @@
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using CrashExport;
-#if NET45
-    using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Dump all environment variables for the current process.
     /// </summary>
-    public class EnvironmentDump : ICrashDataExport
+    public class EnvironmentDump : CrashDataExport<KeyValuePair<string, string>>
     {
         private const string EnvTable = "EnvironmentVariables";
         private const string EnvName = "name";
         private const string EnvValue = "value";
 
-        private DumpRow m_Row = new DumpRow(EnvName, EnvValue);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnvironmentDump"/> class.
+        /// </summary>
+        public EnvironmentDump() : base(new DumpRow(EnvName, EnvValue)) { }
 
         /// <summary>
-        /// Dumps debug information using the provided dump interface.
+        /// Gets the name of the table.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public void Dump(ICrashDataDumpFile dumpFile)
+        /// <value>The name of the table.</value>
+        protected override string TableName { get { return EnvTable; } }
+
+        /// <summary>
+        /// Gets the name of the row.
+        /// </summary>
+        /// <value>The name of the row.</value>
+        protected override string RowName { get { return "item"; } }
+
+        /// <summary>
+        /// An enumerable to get the objects that should be dumped.
+        /// </summary>
+        /// <returns>An enumerable object.</returns>
+        protected override IEnumerable<KeyValuePair<string, string>> GetRows()
         {
-            using (IDumpTable table = dumpFile.DumpTable(EnvTable, "item")) {
-                table.DumpHeader(m_Row);
-                foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables()) {
-                    m_Row[EnvName] = variable.Key.ToString();
-                    m_Row[EnvValue] = variable.Value.ToString();
-                    table.DumpRow(m_Row);
-                }
-                table.Flush();
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables()) {
+                yield return new KeyValuePair<string, string>(variable.Key.ToString(), variable.Value.ToString());
             }
         }
 
-#if NET45
         /// <summary>
-        /// Asynchronously dumps debug information using the provided dump interface.
+        /// Updates the row given an item.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public async Task DumpAsync(ICrashDataDumpFile dumpFile)
+        /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
+        /// <param name="row">The row that should be updated.</param>
+        protected override void UpdateRow(KeyValuePair<string, string> item, DumpRow row)
         {
-            using (IDumpTable table = await dumpFile.DumpTableAsync(EnvTable, "item")) {
-                await table.DumpHeaderAsync(m_Row);
-                foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables()) {
-                    m_Row[EnvName] = variable.Key.ToString();
-                    m_Row[EnvValue] = variable.Value.ToString();
-                    await table.DumpRowAsync(m_Row);
-                }
-                await table.FlushAsync();
-            }
+            row[EnvName] = item.Key;
+            row[EnvValue] = item.Value;
         }
-#endif
     }
 }

@@ -1,10 +1,8 @@
 ﻿namespace RJCP.Diagnostics.CrashData
 {
+    using System.Collections.Generic;
     using System.Diagnostics;
     using CrashExport;
-#if NET45
-    using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Dumps all the OS threads to the log file.
@@ -13,7 +11,7 @@
     /// This dumper is not very useful, as it's difficult to map the OS threads to the .NET threads. Use WinDbg on the
     /// core and get the relevant information that way.
     /// </remarks>
-    public class ModuleDump : ICrashDataExport
+    public class ModuleDump : CrashDataExport<ProcessModule>
     {
         private const string ModuleTable = "Modules";
         private const string ModName = "name";
@@ -26,54 +24,51 @@
         private const string ModMemSize = "memorySize";
         private const string ModBaseAddress = "baseAddress";
 
-        private DumpRow m_Row = new DumpRow(
-            ModName, ModFileVersion, ModFileName, ModProdVersion,
-            ModProdName, ModOrigFileName, ModFileDesc, ModMemSize, ModBaseAddress);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModuleDump"/> class.
+        /// </summary>
+        public ModuleDump() : base(new DumpRow(ModName, ModFileVersion, ModFileName, ModProdVersion,
+            ModProdName, ModOrigFileName, ModFileDesc, ModMemSize, ModBaseAddress)) { }
 
         /// <summary>
-        /// Dumps debug information using the provided dump interface.
+        /// Gets the name of the table.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public void Dump(ICrashDataDumpFile dumpFile)
+        /// <value>The name of the table.</value>
+        protected override string TableName { get { return ModuleTable; } }
+
+        /// <summary>
+        /// Gets the name of the row.
+        /// </summary>
+        /// <value>The name of the row.</value>
+        protected override string RowName { get { return "module"; } }
+
+        /// <summary>
+        /// An enumerable to get the objects that should be dumped.
+        /// </summary>
+        /// <returns>An enumerable object.</returns>
+        protected override IEnumerable<ProcessModule> GetRows()
         {
-            using (IDumpTable table = dumpFile.DumpTable(ModuleTable, "module")) {
-                table.DumpHeader(m_Row);
-                foreach (ProcessModule module in Process.GetCurrentProcess().Modules) {
-                    table.DumpRow(GetModuleInfo(module, m_Row));
-                }
-                table.Flush();
+            foreach (ProcessModule module in Process.GetCurrentProcess().Modules) {
+                yield return module;
             }
         }
 
-        private DumpRow GetModuleInfo(ProcessModule module, DumpRow row)
-        {
-            row[ModName] = module.ModuleName;
-            row[ModFileVersion] = module.FileVersionInfo.FileVersion;
-            row[ModFileName] = module.FileVersionInfo.FileName;
-            row[ModProdVersion] = module.FileVersionInfo.ProductVersion;
-            row[ModProdName] = module.FileVersionInfo.ProductName;
-            row[ModOrigFileName] = module.FileVersionInfo.OriginalFilename;
-            row[ModFileDesc] = module.FileVersionInfo.FileDescription;
-            row[ModMemSize] = module.ModuleMemorySize.ToString();
-            row[ModBaseAddress] = module.BaseAddress.ToString();
-            return row;
-        }
-
-#if NET45
         /// <summary>
-        /// Asynchronously dumps debug information using the provided dump interface.
+        /// Updates the row given an item.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public async Task DumpAsync(ICrashDataDumpFile dumpFile)
+        /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
+        /// <param name="row">The row that should be updated.</param>
+        protected override void UpdateRow(ProcessModule item, DumpRow row)
         {
-            using (IDumpTable table = await dumpFile.DumpTableAsync(ModuleTable, "module")) {
-                await table.DumpHeaderAsync(m_Row);
-                foreach (ProcessModule module in Process.GetCurrentProcess().Modules) {
-                    await table.DumpRowAsync(GetModuleInfo(module, m_Row));
-                }
-                await table.FlushAsync();
-            }
+            row[ModName] = item.ModuleName;
+            row[ModFileVersion] = item.FileVersionInfo.FileVersion;
+            row[ModFileName] = item.FileVersionInfo.FileName;
+            row[ModProdVersion] = item.FileVersionInfo.ProductVersion;
+            row[ModProdName] = item.FileVersionInfo.ProductName;
+            row[ModOrigFileName] = item.FileVersionInfo.OriginalFilename;
+            row[ModFileDesc] = item.FileVersionInfo.FileDescription;
+            row[ModMemSize] = item.ModuleMemorySize.ToString();
+            row[ModBaseAddress] = item.BaseAddress.ToString();
         }
-#endif
     }
 }

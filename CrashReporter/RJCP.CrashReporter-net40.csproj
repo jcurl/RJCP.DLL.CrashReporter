@@ -62,6 +62,7 @@
     <Compile Include="CrashData\ProcessDump.cs" />
     <Compile Include="CrashData\ThreadDump.cs" />
     <Compile Include="CrashData\WinVerDump.cs" />
+    <Compile Include="CrashExport\CrashDataExport.cs" />
     <Compile Include="CrashExport\CrashDataProviders.cs" />
     <Compile Include="CrashExport\CrashDumpFactory.cs" />
     <Compile Include="CrashExport\DumpRow.cs" />
