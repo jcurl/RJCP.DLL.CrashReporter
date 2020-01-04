@@ -17,9 +17,10 @@
 
         private const string NetRunningTable = "NetVersionRunning";
         private const string NetRunning = "Running";
+        private const string NetRunningVersion = "Version";
 
         private DumpRow m_RowInstalled = new DumpRow(NetInstalled, NetDescription);
-        private DumpRow m_RowRunning = new DumpRow(NetRunning, NetDescription);
+        private DumpRow m_RowRunning = new DumpRow(NetRunning, NetRunningVersion, NetDescription);
 
         /// <summary>
         /// Dumps debug information using the provided dump interface.
@@ -28,7 +29,7 @@
         public void Dump(ICrashDataDumpFile dumpFile)
         {
             IEnumerable<NetVersion.INetVersion> netVersions = new NetVersion.NetVersions();
-            IEnumerable<KeyValuePair<string, string>> runningVersions = GetRunTime();
+            IEnumerable<KeyValuePair<string, NetVersion.INetVersion>> runningVersions = GetRunTime();
 
             using (IDumpTable table = dumpFile.DumpTable(NetVersionTable, "item")) {
                 table.DumpHeader(m_RowInstalled);
@@ -45,8 +46,9 @@
             using (IDumpTable table = dumpFile.DumpTable(NetRunningTable, "item")) {
                 table.DumpHeader(m_RowRunning);
                 foreach (var version in runningVersions) {
-                    m_RowRunning[NetRunning] = version.Value;
-                    m_RowRunning[NetDescription] = version.Key;
+                    m_RowRunning[NetRunning] = version.Key;
+                    m_RowRunning[NetRunningVersion] = version.Value.Version;
+                    m_RowRunning[NetDescription] = version.Value.Description;
                     table.DumpRow(m_RowRunning);
                 }
                 table.Flush();
@@ -61,7 +63,7 @@
         public async Task DumpAsync(ICrashDataDumpFile dumpFile)
         {
             IEnumerable<NetVersion.INetVersion> netVersions = new NetVersion.NetVersions();
-            IEnumerable<KeyValuePair<string, string>> runningVersions = GetRunTime();
+            IEnumerable<KeyValuePair<string, NetVersion.INetVersion>> runningVersions = GetRunTime();
 
             using (IDumpTable table = await dumpFile.DumpTableAsync(NetVersionTable, "item")) {
                 await table.DumpHeaderAsync(m_RowInstalled);
@@ -79,8 +81,9 @@
                 await table.DumpHeaderAsync(m_RowRunning);
 
                 foreach (var version in runningVersions) {
-                    m_RowRunning[NetRunning] = version.Value;
-                    m_RowRunning[NetDescription] = version.Key;
+                    m_RowRunning[NetRunning] = version.Key;
+                    m_RowRunning[NetRunningVersion] = version.Value.Version;
+                    m_RowRunning[NetDescription] = version.Value.Description;
                     await table.DumpRowAsync(m_RowRunning);
                 }
                 await table.FlushAsync();
@@ -88,14 +91,14 @@
         }
 #endif
 
-        private IEnumerable<KeyValuePair<string, string>> GetRunTime()
+        private IEnumerable<KeyValuePair<string, NetVersion.INetVersion>> GetRunTime()
         {
-            List<KeyValuePair<string, string>> running = new List<KeyValuePair<string, string>>();
+            List<KeyValuePair<string, NetVersion.INetVersion>> running = new List<KeyValuePair<string, NetVersion.INetVersion>>();
 
             NetVersion.INetVersion fxRunTime = new NetVersion.Runtime.NetFx();
-            if (fxRunTime.IsValid) running.Add(new KeyValuePair<string, string>("netfx", fxRunTime.Version));
+            if (fxRunTime.IsValid) running.Add(new KeyValuePair<string, NetVersion.INetVersion>("netfx", fxRunTime));
             NetVersion.INetVersion monoRunTime = new NetVersion.Runtime.Mono();
-            if (monoRunTime.IsValid) running.Add(new KeyValuePair<string, string>("mono", fxRunTime.Version));
+            if (monoRunTime.IsValid) running.Add(new KeyValuePair<string, NetVersion.INetVersion>("mono", monoRunTime));
 
             return running;
         }
