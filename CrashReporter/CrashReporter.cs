@@ -220,20 +220,32 @@
                 StackTrace stack = new StackTrace(true);
                 Source.TraceEvent(TraceEventType.Critical, 0, stack.ToString());
             }
-            string dumpDir = CreateDump();
-            try {
-                if (Dump.Archive.Compress.CompressFolder(dumpDir)) {
-                    // Only delete if compression was successful.
-                    Dump.Archive.FileSystem.DeleteFolder(dumpDir);
-                }
-            } catch (IOException) {
-                // Problem compressing or deleting. Ignore
-            } catch (PlatformNotSupportedException) {
-                // Can't delete the folder...
-            }
+            CreateDump();
         }
 
-        private static string CreateDump()
+        /// <summary>
+        /// Creates a dump with a mini dump according to <see cref="CoreType"/>.
+        /// </summary>
+        /// <returns>The name of the file that was created</returns>
+        /// <remarks>
+        /// You can use this method to generate your own core dump as required, for example, if an exception is caught
+        /// (so that the <see cref="AppDomain.UnhandledException"/> won't be raised).
+        /// </remarks>
+        public static string CreateDump()
+        {
+            return CreateDump(CoreType);
+        }
+
+        /// <summary>
+        /// Creates a dump with with the minidump specified.
+        /// </summary>
+        /// <param name="coreType">Type of the core dump to create.</param>
+        /// <returns>The name of the file that was generated, so the user might be notified.</returns>
+        /// <remarks>
+        /// You can use this method to generate your own core dump as required, for example, if an exception is caught
+        /// (so that the <see cref="AppDomain.UnhandledException"/> won't be raised).
+        /// </remarks>
+        public static string CreateDump(CoreType coreType)
         {
             string path = Crash.Data.Dump();
             if (path == null) return null;
@@ -250,8 +262,21 @@
 
             string dumpName = string.Format("{0}.{1}.dmp", Process.GetCurrentProcess().ProcessName, Process.GetCurrentProcess().Id);
             string coreName = Path.Combine(dumpDir, dumpName);
-            Core.MiniDump(coreName, CoreType);
-            return dumpDir;
+            Core.MiniDump(coreName, coreType);
+
+            string dumpFileName = null;
+            try {
+                dumpFileName = Dump.Archive.Compress.CompressFolder(dumpDir);
+                if (dumpFileName != null && File.Exists(dumpFileName)) {
+                    // Only delete if compression was successful.
+                    Dump.Archive.FileSystem.DeleteFolder(dumpDir);
+                }
+            } catch (IOException) {
+                // Problem compressing or deleting. Ignore
+            } catch (PlatformNotSupportedException) {
+                // Can't delete the folder...
+            }
+            return dumpFileName;
         }
     }
 }

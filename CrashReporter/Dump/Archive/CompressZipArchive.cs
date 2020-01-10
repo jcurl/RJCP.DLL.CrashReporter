@@ -6,19 +6,17 @@
 
     internal static class Compress
     {
-        public static bool CompressFolder(string path)
+        public static string CompressFolder(string path)
         {
-            if (path == null) return false;
-            if (!Directory.Exists(path)) return false;
+            if (path == null) return null;
+            if (!Directory.Exists(path)) return null;
 
             DirectoryInfo sourceDir = new DirectoryInfo(path);
             string zipFileName = string.Format("{0}.zip", path);
-
             using (ZipArchive archive = ZipFile.Open(zipFileName, ZipArchiveMode.Create)) {
                 ZipDirectoryTree(archive, sourceDir, Path.GetFileName(path));
             }
-
-            return true;
+            return zipFileName;
         }
 
         private static void ZipDirectoryTree(ZipArchive archive, DirectoryInfo sourceDir, string zipDir)
