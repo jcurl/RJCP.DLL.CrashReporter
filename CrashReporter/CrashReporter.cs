@@ -220,27 +220,38 @@
                 StackTrace stack = new StackTrace(true);
                 Source.TraceEvent(TraceEventType.Critical, 0, stack.ToString());
             }
-            CreateDump();
+            string dumpDir = CreateDump();
+            try {
+                if (Dump.Archive.Compress.CompressFolder(dumpDir)) {
+                    // Only delete if compression was successful.
+                    Dump.Archive.FileSystem.DeleteFolder(dumpDir);
+                }
+            } catch (IOException) {
+                // Problem compressing or deleting. Ignore
+            } catch (PlatformNotSupportedException) {
+                // Can't delete the folder...
+            }
         }
 
-        private static void CreateDump()
+        private static string CreateDump()
         {
             string path = Crash.Data.Dump();
-            if (path == null) return;
+            if (path == null) return null;
 
-            string corePath;
+            string dumpDir;
             if (File.Exists(path)) {
                 // This is a file, not a directory, so we get the directory portion.
-                corePath = Path.GetDirectoryName(path);
+                dumpDir = Path.GetDirectoryName(path);
             } else if (Directory.Exists(path)) {
-                corePath = path;
+                dumpDir = path;
             } else {
-                return;
+                return null;
             }
 
             string dumpName = string.Format("{0}.{1}.dmp", Process.GetCurrentProcess().ProcessName, Process.GetCurrentProcess().Id);
-            string coreName = Path.Combine(corePath, dumpName);
+            string coreName = Path.Combine(dumpDir, dumpName);
             Core.MiniDump(coreName, CoreType);
+            return dumpDir;
         }
     }
 }

@@ -77,6 +77,8 @@
     <Compile Include="CrashExport\Xml\XmlCrashDumpFactory.cs" />
     <Compile Include="CrashExport\Xml\XmlDumpTable.cs" />
     <Compile Include="CrashReporter.cs" />
+    <Compile Include="Dump\Archive\CompressDisabled.cs" />
+    <Compile Include="Dump\Archive\FileSystem.cs" />
     <Compile Include="Dump\Core.cs" />
     <Compile Include="Dump\CoreType.cs" />
     <Compile Include="Dump\Crash.cs" />

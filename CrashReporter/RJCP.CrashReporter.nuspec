@@ -7,6 +7,11 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Library tools to allow developers to capture debug information.</description>
         <language>en-US</language>
+        <dependencies>
+            <group targetFramework=".NETFramework4.0">
+                <dependency id="DotNetZip" version="1.13.5" />
+            </group>
+        </dependencies>
     </metadata>
     <files>
         <file src="bin\build\net40\RJCP.Diagnostics.CrashReporter.dll" target="lib\net40" />

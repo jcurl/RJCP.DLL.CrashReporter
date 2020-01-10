@@ -34,6 +34,9 @@
     <DocumentationFile>bin\Release\net40\RJCP.Diagnostics.CrashReporter.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetZip, Version=1.13.5.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\DotNetZip.1.13.5\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -77,6 +80,8 @@
     <Compile Include="CrashExport\Xml\XmlCrashDumper.cs" />
     <Compile Include="CrashExport\Xml\XmlCrashDumpFactory.cs" />
     <Compile Include="CrashReporter.cs" />
+    <Compile Include="Dump\Archive\CompressZipFile.cs" />
+    <Compile Include="Dump\Archive\FileSystem.cs" />
     <Compile Include="Dump\Core.cs" />
     <Compile Include="Dump\CoreType.cs" />
     <Compile Include="Dump\Crash.cs" />
@@ -94,6 +99,9 @@
     <Compile Include="Trace\MemoryTraceListener.cs" />
     <Compile Include="Trace\SimplePrioMemoryLog.cs" />
     <Compile Include="Trace\SimplePrioMemoryTraceListener.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.RJCP.CrashReporter-net40.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
