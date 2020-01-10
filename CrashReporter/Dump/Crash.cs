@@ -149,7 +149,7 @@
             string basepath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string path;
 
-            path = Path.Combine(basepath, "CrashData", name);
+            path = Path.Combine(basepath, "CrashDumps", name);
             if (!Directory.Exists(path)) {
                 try {
                     Directory.CreateDirectory(path);

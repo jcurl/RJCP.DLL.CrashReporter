@@ -76,10 +76,12 @@
     <Compile Include="CrashExport\Xml\XmlCrashDumper.cs" />
     <Compile Include="CrashExport\Xml\XmlCrashDumpFactory.cs" />
     <Compile Include="CrashExport\Xml\XmlDumpTable.cs" />
+    <Compile Include="CrashReporter.cs" />
     <Compile Include="Dump\Core.cs" />
     <Compile Include="Dump\CoreType.cs" />
     <Compile Include="Dump\Crash.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Native\AppDomainAccessor.cs" />
     <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="Native\SafeNativeMethods.cs" />
     <Compile Include="Native\UnsafeNativeMethods.cs" />

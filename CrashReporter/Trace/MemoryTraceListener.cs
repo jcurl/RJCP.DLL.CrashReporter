@@ -46,6 +46,15 @@
         /// </remarks>
         protected IMemoryLog MemoryLog { get; private set; }
 
+        /// <summary>
+        /// Indicates if this is a default logging source.
+        /// </summary>
+        /// <value>
+        /// If <see langword="true"/> the first registered logger will be used for crash logging by default. Otherwise
+        /// if <see langword="false"/>, it may be used only if there are no defaults.
+        /// </value>
+        public bool DefaultSource { get; protected set; }
+
         private bool m_Init;
 
         private void CheckInit()

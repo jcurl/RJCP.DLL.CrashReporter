@@ -51,6 +51,7 @@
         {
             if (!Platform.IsWinNT()) return false;
             if (path == null) return false;
+            if (dumpType == CoreType.None) return false;
 
             // For some useful information about making dumps:
             //  http://www.debuginfo.com/articles/effminidumps.html
