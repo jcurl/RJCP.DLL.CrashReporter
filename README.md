@@ -14,17 +14,20 @@ This section lists the features supported by this library.
 
 Functionality which is available for all your software:
 
-* [TODO] Supports .NET 4.0 and .NET 4.5
-* [TODO] Dump various types of information to an XML file, that the user can
-  send in addition to their bug reports.
-  * [TODO] Collects OS information
-  * [TODO] Collects all process environment variables
-  * [TODO] Gets the current .NET version installed
-  * [TODO] Lists all assemblies loaded into the program
-  * [TODO] Lists all DLLs mapped into the program
-  * [TODO] Dump thread information
-* [TODO] Log information to a memory backed logger, that is only written to disk
-  when triggered by this library.
+* Supports .NET 4.0 and .NET 4.5
+  * Uses multitargetting, there are two solutions, one for .NET 4.0 and one for
+    .NET 4.5.
+* Dump various types of information to an XML file, that the user can send in
+  addition to their bug reports.
+  * Collects OS information (mostly Windows)
+  * Collects all process environment variables
+  * Gets the current .NET version installed and running
+  * Lists all assemblies loaded into the program at the time of the crash
+  * Lists all DLLs (modules) mapped into the program
+  * Dump native thread information (there's no easy way to get .NET thread
+    information)
+* Log information to a memory backed logger, that is only written to disk when
+  triggered by this library.
 
 ### Windows Specific
 
@@ -35,16 +38,14 @@ Functionality found on Windows only:
 
 ## Data Collection
 
-[TODO] This must be implemented.
-
 The library is intended to capture information that is useful for the developer
 to further analyze the reason why software might not be working as expected. It
 doesn't upload any data to any remote webserver on its own, and allows the user
 to decide if they wish to provide this data as part of their bug report.
 
-## Logging
+It puts the data in the folder `%LOCALAPPDATA%\CrashDumps`.
 
-[TODO] This must be implemented.
+## Logging
 
 A Trace Listener is implemented that uses memory for backing. This allows
 tracing to occur, but without writing to disk. The only reason that traces are
@@ -58,9 +59,9 @@ may be of more importance than the most recent.
 
 ## Extensibility
 
-[TODO] This must be implemented.
-
 The software is designed to allow user provided data collection classes to
 collect additional information that is not part of this library. You would
 instantiate the class on start up and add it to the collection of crash data
 collectors, so that when the time comes, it is called to dump the data to disk.
+
+Create your own `ICrashProvider` and then add it to the list of providers.
