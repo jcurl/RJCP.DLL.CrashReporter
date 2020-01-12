@@ -181,9 +181,10 @@
         {
             if (Source == null) return;
             if (Source.Switch.ShouldTrace(TraceEventType.Information)) {
-                Source.TraceEvent(TraceEventType.Information, 0, "First Chance Exception: {0}", args.Exception.Message);
                 StackTrace stack = new StackTrace(true);
-                Source.TraceEvent(TraceEventType.Information, 0, stack.ToString());
+                Source.TraceEvent(TraceEventType.Information, 0,
+                    "First Chance Exception: {0}\nFirst Chance Exception: Stack Trace:\n{1}",
+                    args.Exception.Message, stack.ToString());
             }
         }
 
@@ -211,14 +212,16 @@
                 if (args.IsTerminating) {
                     Source.TraceEvent(TraceEventType.Critical, 0, "Unhandled Exception: Terminating!");
                 }
-                Exception ex = args.ExceptionObject as Exception;
-                if (ex == null) {
-                    Source.TraceEvent(TraceEventType.Critical, 0, "Unhandled Exception: {0}", args.ExceptionObject.ToString());
-                } else {
-                    Source.TraceEvent(TraceEventType.Critical, 0, "Unhandled Exception: {0}", ex.Message);
-                }
                 StackTrace stack = new StackTrace(true);
-                Source.TraceEvent(TraceEventType.Critical, 0, stack.ToString());
+                if (!(args.ExceptionObject is Exception ex)) {
+                    Source.TraceEvent(TraceEventType.Critical, 0,
+                        "Unhandled Exception: {0}\nUnhandled Exception: Stack Trace:\n{1}",
+                        args.ExceptionObject.ToString(), stack.ToString());
+                } else {
+                    Source.TraceEvent(TraceEventType.Critical, 0,
+                        "Unhandled Exception: {0}\nUnhandled Exception: Stack Trace:\n{1}",
+                        ex.Message, stack.ToString());
+                }
             }
             CreateDump();
         }

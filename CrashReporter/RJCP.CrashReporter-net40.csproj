@@ -103,5 +103,8 @@
   <ItemGroup>
     <None Include="packages.RJCP.CrashReporter-net40.config" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CrashExport\Xml\CrashDump.xsl" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

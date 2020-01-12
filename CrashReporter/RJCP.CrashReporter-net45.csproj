@@ -99,5 +99,8 @@
     <Compile Include="Trace\SimplePrioMemoryLog.cs" />
     <Compile Include="Trace\SimplePrioMemoryTraceListener.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CrashExport\Xml\CrashDump.xsl" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -16,8 +16,6 @@
         private Stream m_Stream;
         private XmlWriter m_Writer;
 
-        internal XmlCrashDumper() { }
-
         public void CreateFile(string fileName)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
@@ -44,7 +42,7 @@
             Path = path;
 
             try {
-                m_Writer = CreateFileInternal(stream, path, false);
+                m_Writer = CreateFileInternal(stream, path, null, false);
                 m_Writer.WriteStartElement(RootName);
                 m_IsFlushed = false;
             } catch {
@@ -58,19 +56,28 @@
             string directory = System.IO.Path.GetDirectoryName(fileName);
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
+            string styleSheetName = string.Format("{0}.xsl", System.IO.Path.GetFileNameWithoutExtension(fileName));
+            string styleSheetPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(fileName), styleSheetName);
+            CopyTransform(styleSheetPath);
+
             m_OwnsStream = true;
             m_Stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
-            return CreateFileInternal(m_Stream, directory, isAsync);
+            return CreateFileInternal(m_Stream, directory, styleSheetName, isAsync);
         }
 
-        private XmlWriter CreateFileInternal(Stream stream, string path, bool isAsync)
+        private XmlWriter CreateFileInternal(Stream stream, string dirPath, string styleSheet, bool isAsync)
         {
-            if (!Directory.Exists(path)) {
-                string message = string.Format("Directory '{0}' not found", path);
+            if (!Directory.Exists(dirPath)) {
+                string message = string.Format("Directory '{0}' not found", dirPath);
                 throw new DirectoryNotFoundException(message);
             }
 
-            return XmlWriter.Create(stream, SaveXmlSettings(isAsync));
+            XmlWriter xmlWriter = XmlWriter.Create(stream, SaveXmlSettings(isAsync));
+            if (styleSheet != null) {
+                string stylesheetInstruction = string.Format("type=\"text/xsl\" href=\"{0}\"", styleSheet);
+                xmlWriter.WriteProcessingInstruction("xml-stylesheet", stylesheetInstruction);
+            }
+            return xmlWriter;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed",
@@ -128,6 +135,14 @@
             }
         }
 
+        private void CopyTransform(string outFileName)
+        {
+            using (Stream stream = typeof(XmlCrashDumper).Assembly.GetManifestResourceStream("RJCP.Diagnostics.CrashExport.Xml.CrashDump.xsl"))
+            using (FileStream fileCopyStream = new FileStream(outFileName, FileMode.Create, FileAccess.Write, FileShare.None)) {
+                stream.CopyTo(fileCopyStream);
+            }
+        }
+
 #if NET45
         public Task CreateFileAsync(string fileName)
         {
@@ -163,7 +178,7 @@
         private async Task CreateFileInternalAsync(Stream stream, string path)
         {
             try {
-                m_Writer = await Task.Run(() => { return CreateFileInternal(stream, path, true); });
+                m_Writer = await Task.Run(() => { return CreateFileInternal(stream, path, null, true); });
                 await m_Writer.WriteStartElementAsync(null, RootName, null);
                 m_IsFlushed = false;
             } catch {
