@@ -85,6 +85,7 @@
     <Compile Include="Dump\CoreType.cs" />
     <Compile Include="Dump\Crash.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Native\AppDomainAccessor.cs" />
     <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="Native\SafeNativeMethods.cs" />

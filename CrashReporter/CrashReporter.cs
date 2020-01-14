@@ -223,7 +223,13 @@
                         ex.Message, stack.ToString());
                 }
             }
-            CreateDump();
+
+            try {
+                string path = CreateDump();
+                Log.CrashLog.TraceEvent(TraceEventType.Information, 0, "Crash dump created at: {0}", path);
+            } catch {
+                Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Crash dump failed");
+            }
         }
 
         /// <summary>
@@ -250,22 +256,33 @@
         /// </remarks>
         public static string CreateDump(CoreType coreType)
         {
-            string path = Crash.Data.Dump();
-            if (path == null) return null;
-
-            string dumpDir;
-            if (File.Exists(path)) {
-                // This is a file, not a directory, so we get the directory portion.
-                dumpDir = Path.GetDirectoryName(path);
-            } else if (Directory.Exists(path)) {
-                dumpDir = path;
-            } else {
-                return null;
+            string path;
+            try {
+                path = Crash.Data.Dump();
+                if (path == null) return null;
+            } catch (Exception ex) {
+                Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Error creating dump: {0}", ex.ToString());
+                throw;
             }
 
-            string dumpName = string.Format("{0}.{1}.dmp", Process.GetCurrentProcess().ProcessName, Process.GetCurrentProcess().Id);
-            string coreName = Path.Combine(dumpDir, dumpName);
-            Core.MiniDump(coreName, coreType);
+            string dumpDir;
+            try {
+                if (File.Exists(path)) {
+                    // This is a file, not a directory, so we get the directory portion.
+                    dumpDir = Path.GetDirectoryName(path);
+                } else if (Directory.Exists(path)) {
+                    dumpDir = path;
+                } else {
+                    return null;
+                }
+
+                string dumpName = string.Format("{0}.{1}.dmp", Process.GetCurrentProcess().ProcessName, Process.GetCurrentProcess().Id);
+                string coreName = Path.Combine(dumpDir, dumpName);
+                Core.MiniDump(coreName, coreType);
+            } catch (Exception ex) {
+                Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Error creating core: {0}", ex.ToString());
+                throw;
+            }
 
             string dumpFileName = null;
             try {
@@ -274,10 +291,15 @@
                     // Only delete if compression was successful.
                     Dump.Archive.FileSystem.DeleteFolder(dumpDir);
                 }
-            } catch (IOException) {
+            } catch (IOException ex) {
                 // Problem compressing or deleting. Ignore
-            } catch (PlatformNotSupportedException) {
+                Log.CrashLog.TraceEvent(TraceEventType.Warning, 0, "Compressing folder (IOException): {0}", ex.ToString());
+            } catch (PlatformNotSupportedException ex) {
                 // Can't delete the folder...
+                Log.CrashLog.TraceEvent(TraceEventType.Warning, 0, "Compressing folder (PlatformNotSupported): {0}", ex.ToString());
+            } catch (Exception ex) {
+                Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Compressing folder Exception: {0}", ex.ToString());
+                throw;
             }
             return dumpFileName;
         }

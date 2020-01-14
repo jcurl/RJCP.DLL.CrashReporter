@@ -26,7 +26,8 @@
                 m_Writer = CreateFileInternal(fileName, false);
                 m_Writer.WriteStartElement(RootName);
                 m_IsFlushed = false;
-            } catch {
+            } catch (Exception ex) {
+                Log.CrashLog.TraceEvent(System.Diagnostics.TraceEventType.Error, 0, "Error creating crash file: {0}", ex.ToString());
                 Close();
                 throw;
             }
@@ -45,7 +46,8 @@
                 m_Writer = CreateFileInternal(stream, path, null, false);
                 m_Writer.WriteStartElement(RootName);
                 m_IsFlushed = false;
-            } catch {
+            } catch (Exception ex) {
+                Log.CrashLog.TraceEvent(System.Diagnostics.TraceEventType.Error, 0, "Error creating crash stream: {0}", ex.ToString());
                 Close();
                 throw;
             }
@@ -157,7 +159,8 @@
                 m_Writer = await Task.Run(() => { return CreateFileInternal(fileName, true); });
                 await m_Writer.WriteStartElementAsync(null, RootName, null);
                 m_IsFlushed = false;
-            } catch {
+            } catch (Exception ex) {
+                Log.CrashLog.TraceEvent(System.Diagnostics.TraceEventType.Error, 0, "Error creating async crash file: {0}", ex.ToString());
                 Close();
                 throw;
             }
@@ -181,7 +184,8 @@
                 m_Writer = await Task.Run(() => { return CreateFileInternal(stream, path, null, true); });
                 await m_Writer.WriteStartElementAsync(null, RootName, null);
                 m_IsFlushed = false;
-            } catch {
+            } catch (Exception ex) {
+                Log.CrashLog.TraceEvent(System.Diagnostics.TraceEventType.Error, 0, "Error creating async crash stream: {0}", ex.ToString());
                 Close();
                 throw;
             }
@@ -229,7 +233,10 @@
         {
             try {
                 Close();
-            } catch { /* Ignore all errors when disposing, we might be disposing because of an error */ }
+            } catch (Exception ex) {
+                Log.CrashLog.TraceEvent(System.Diagnostics.TraceEventType.Warning, 0, "XmlCrashDumper Disposing: Ignore exception {0}", ex.ToString());
+                /* Ignore all errors when disposing, we might be disposing because of an error */
+            }
         }
     }
 }

@@ -24,9 +24,16 @@ modify the `App.config` file to include the following:
   <system.diagnostics>
     <sharedListeners>
       <add name="myListener" type="RJCP.Diagnostics.Trace.SimplePrioMemoryTraceListener, RJCP.Diagnostics.CrashReporter"/>
+      <add name="console" type="System.Diagnostics.ConsoleTraceListener"/>
     </sharedListeners>
 
     <sources>
+      <source name="RJCP.CrashReporter" switchValue = "Warning">
+        <listeners>
+          <remove name="Default"/>
+          <add name="console"/>
+        </listeners>
+      </source>
       <source name="CrashReporterApp" switchValue="Verbose">
         <listeners>
           <remove name="Default"/>
@@ -37,6 +44,10 @@ modify the `App.config` file to include the following:
     <trace autoflush="true" useGlobalLock="false"/>
   </system.diagnostics>
 ```
+
+Replace `CrashReporterApp` with the name of your applications TraceSource name.
+The `RJCP.CrashReporter` should be present, so that when there is a problem
+performing a crash dump, details will be printed to the console.
 
 This will capture all traces internally in RAM, and only output them to disk
 when instructed to by your program.
@@ -103,7 +114,8 @@ logged in the `App.config` file.
 
 ```xml
     <sharedListeners>
-      <add name="myListener" type="RJCP.Diagnostics.Trace.SimplePrioMemoryTraceListener, RJCP.Diagnostics.CrashReporter" Critical="100" Error="150" Warning="200" Information="250" Verbose="300" Other="100" Total="1500"/>
+      <add name="myListener" type="RJCP.Diagnostics.Trace.SimplePrioMemoryTraceListener, RJCP.Diagnostics.CrashReporter"
+        Critical="100" Error="150" Warning="200" Information="250" Verbose="300" Other="100" Total="1500"/>
     </sharedListeners>
 ```
 
