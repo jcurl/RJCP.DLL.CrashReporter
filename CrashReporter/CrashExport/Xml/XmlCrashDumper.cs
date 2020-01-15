@@ -137,9 +137,49 @@
             }
         }
 
+        private Stream GetStyleSheetResource()
+        {
+            string resource = Config.CrashReporter.AppConfig.Config.XmlCrashDumper.StyleSheetName;
+            if (string.IsNullOrWhiteSpace(resource)) return GetDefaultStyleSheetResource();
+
+            System.Reflection.Assembly assembly;
+            string resourceName;
+            int resourceClassPos = resource.LastIndexOf(',');
+            if (resourceClassPos == -1) {
+                // Assume that the user wants the executable (entry)
+                assembly = System.Reflection.Assembly.GetEntryAssembly();
+                resourceName = resource.Trim();
+            } else {
+                string assemblyName = resource.Substring(0, resourceClassPos).Trim();
+                resourceName = resource.Substring(resourceClassPos + 1).Trim();
+
+                assembly = GetAssemblyByName(assemblyName);
+                if (assembly == null) return GetDefaultStyleSheetResource();
+            }
+
+            Stream stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null) return GetDefaultStyleSheetResource();
+            return stream;
+        }
+
+        private System.Reflection.Assembly GetAssemblyByName(string name)
+        {
+            foreach (System.Reflection.Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
+                System.Reflection.AssemblyName assemblyName = assembly.GetName();
+                if (name.Equals(assemblyName.FullName, StringComparison.OrdinalIgnoreCase)) return assembly;
+                if (name.Equals(assemblyName.Name, StringComparison.OrdinalIgnoreCase)) return assembly;
+            }
+            return null;
+        }
+
+        private Stream GetDefaultStyleSheetResource()
+        {
+            return typeof(XmlCrashDumper).Assembly.GetManifestResourceStream("RJCP.Diagnostics.CrashExport.Xml.CrashDump.xsl");
+        }
+
         private void CopyTransform(string outFileName)
         {
-            using (Stream stream = typeof(XmlCrashDumper).Assembly.GetManifestResourceStream("RJCP.Diagnostics.CrashExport.Xml.CrashDump.xsl"))
+            using (Stream stream = GetStyleSheetResource())
             using (FileStream fileCopyStream = new FileStream(outFileName, FileMode.Create, FileAccess.Write, FileShare.None)) {
                 stream.CopyTo(fileCopyStream);
             }

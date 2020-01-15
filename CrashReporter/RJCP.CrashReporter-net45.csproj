@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.IO.Compression" />
@@ -42,6 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\CrashReporter\AppConfig.cs" />
+    <Compile Include="Config\CrashReporter\XmlCrashDumper.cs" />
+    <Compile Include="Config\StyleSheetElement.cs" />
+    <Compile Include="Config\XmlCrashDumper.cs" />
     <Compile Include="CrashData\AssemblyDump.cs" />
     <Compile Include="CrashData\WinVerDump.cs" />
     <Compile Include="CrashData\OSDump.cs" />
