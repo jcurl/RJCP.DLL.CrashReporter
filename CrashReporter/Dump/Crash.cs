@@ -148,14 +148,19 @@
             dump.Flush();
         }
 
+        internal const string CrashPathRegEx = @"-\d{14}\.[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+
+        internal static string GetCrashFolder()
+        {
+            string basepath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return Path.Combine(basepath, "CrashDumps");
+        }
+
         private string GetCrashPath()
         {
             Process current = Process.GetCurrentProcess();
             string name = string.Format("{0}-{1:yyyyMMddHHmmss}.{2}", current.ProcessName, DateTime.Now, Guid.NewGuid().ToString());
-            string basepath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string path;
-
-            path = Path.Combine(basepath, "CrashDumps", name);
+            string path = Path.Combine(GetCrashFolder(), name);
             if (!Directory.Exists(path)) {
                 try {
                     Directory.CreateDirectory(path);

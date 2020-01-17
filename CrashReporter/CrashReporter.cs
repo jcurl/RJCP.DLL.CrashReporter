@@ -1,10 +1,12 @@
 ﻿namespace RJCP.Diagnostics
 {
     using System;
-    using System.Configuration;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Runtime.ExceptionServices;
+    using System.Text.RegularExpressions;
     using Dump;
 
     /// <summary>
@@ -247,7 +249,7 @@
         }
 
         /// <summary>
-        /// Creates a dump with with the minidump specified.
+        /// Creates a dump with the minidump specified.
         /// </summary>
         /// <param name="coreType">Type of the core dump to create.</param>
         /// <returns>The name of the file that was generated, so the user might be notified.</returns>
@@ -257,6 +259,10 @@
         /// </remarks>
         public static string CreateDump(CoreType coreType)
         {
+            try {
+                CleanUpDump();
+            } catch { /* Ignore any errors while trying to clean up the dump, so we can continue to crash */ }
+
             string path;
             try {
                 path = Crash.Data.Dump();
@@ -285,24 +291,209 @@
                 throw;
             }
 
-            string dumpFileName = null;
+            string dumpFileName;
             try {
                 dumpFileName = Dump.Archive.Compress.CompressFolder(dumpDir);
                 if (dumpFileName != null && File.Exists(dumpFileName)) {
                     // Only delete if compression was successful.
                     Dump.Archive.FileSystem.DeleteFolder(dumpDir);
+
+                    if (Directory.Exists(dumpDir))
+                        Log.CrashLog.TraceEvent(TraceEventType.Warning, 0, "Couldn't complete remove folder {0}", dumpDir);
                 }
-            } catch (IOException ex) {
-                // Problem compressing or deleting. Ignore
-                Log.CrashLog.TraceEvent(TraceEventType.Warning, 0, "Compressing folder (IOException): {0}", ex.ToString());
-            } catch (PlatformNotSupportedException ex) {
-                // Can't delete the folder...
-                Log.CrashLog.TraceEvent(TraceEventType.Warning, 0, "Compressing folder (PlatformNotSupported): {0}", ex.ToString());
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Compressing folder Exception: {0}", ex.ToString());
                 throw;
             }
             return dumpFileName;
+        }
+
+        private static Regex s_CrashFileRegex;
+
+        private static Regex CrashFileRegEx
+        {
+            get
+            {
+                if (s_CrashFileRegex == null) {
+                    s_CrashFileRegex = new Regex(Crash.CrashPathRegEx);
+                }
+                return s_CrashFileRegex;
+            }
+        }
+
+        private const long GbMultiplier = 1024 * 1024 * 1024;
+
+        /// <summary>
+        /// Removes old dump files from the default dump directory created when using <see cref="CreateDump()"/>.
+        /// </summary>
+        /// <exception cref="PlatformNotSupportedException">
+        /// The platform is not supported, so delete operations can't be performed.
+        /// </exception>
+        /// <remarks>
+        /// Over time, the number of files in the dump may take a significant amount of space. This method allows to
+        /// programmatically remove old dumps and large dumps as disk space is reduced.
+        /// <para>
+        /// A log might be required to be deleted, but if there is a file system error, it will be skipped.
+        /// </para>
+        /// </remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1854:Unused assignments should be removed",
+            Justification = "Kept in case ordering is changed to reduce possible bugs")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value",
+            Justification = "Kept in case ordering is changed to reduce possible bugs")]
+        public static void CleanUpDump()
+        {
+            string dumpFolder;
+            try {
+                dumpFolder = Crash.GetCrashFolder();
+            } catch (PlatformNotSupportedException) {
+                return;
+            }
+            if (!Directory.Exists(dumpFolder)) return;
+
+            Regex crashFileRegex = CrashFileRegEx;
+            IList<FileSystemInfo> crashCandidates = new List<FileSystemInfo>();
+
+            DirectoryInfo directory;
+            try {
+                directory = new DirectoryInfo(dumpFolder);
+            } catch (PathTooLongException) {
+                return;
+            }
+            DriveInfo drive = new DriveInfo(directory.Root.FullName);
+
+            DirectoryInfo[] subDirs = directory.GetDirectories();
+            if (subDirs != null) {
+                foreach (DirectoryInfo subDir in subDirs) {
+                    if (crashFileRegex.IsMatch(subDir.Name)) {
+                        crashCandidates.Add(subDir);
+                    }
+                }
+            }
+
+            FileInfo[] files = directory.GetFiles();
+            if (files != null) {
+                foreach (FileInfo file in files) {
+                    string nameNoExt = Path.GetFileNameWithoutExtension(file.Name);
+                    if (crashFileRegex.IsMatch(nameNoExt)) {
+                        crashCandidates.Add(file);
+                    }
+                }
+            }
+
+            // Delete everything more than 45 days old
+            crashCandidates = CleanUpDumpOld(45, crashCandidates);
+
+            // Keep the 40 newest sets of logs
+            crashCandidates = CleanUpDumpKeepNewest(40, crashCandidates);
+
+            // 1000MB or 10% should be minimum free space, but keep the last 5 files always
+            crashCandidates = CleanUpKeepSpace(
+                drive,
+                5 * GbMultiplier, 1,     // Reserve is 5GB or 4% whichever is larger (e.g. 100GB = 5GB reserve; 1000GB = 10GB)
+                1 * GbMultiplier, 5,     // Don't exceed 1GB if more than 5 files
+                crashCandidates);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3241:Methods should not return values that are never used",
+            Justification = "General function, return value should remain in case ordering changes in caller")]
+        private static IList<FileSystemInfo> CleanUpDumpOld(int ageDays, IList<FileSystemInfo> candidates)
+        {
+            if (candidates.Count == 0) return candidates;
+
+            // Remove all logs/directories that are older than 45 days old
+            IList<FileSystemInfo> remaining = new List<FileSystemInfo>();
+            DateTime now = DateTime.UtcNow;
+            foreach (var candidate in candidates) {
+                if (now.Subtract(candidate.CreationTimeUtc).TotalDays > ageDays) {
+                    Dump.Archive.FileSystem.Delete(candidate);
+                } else {
+                    remaining.Add(candidate);
+                }
+            }
+            return remaining;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3241:Methods should not return values that are never used",
+            Justification = "General function, return value should remain in case ordering changes in caller")]
+        private static IList<FileSystemInfo> CleanUpDumpKeepNewest(int count, IList<FileSystemInfo> candidates)
+        {
+            if (candidates.Count == 0) return candidates;
+
+            IList<FileSystemInfo> remaining = new List<FileSystemInfo>();
+            int candidateCount = candidates.Count;
+            var created = from candidate in candidates orderby candidate.CreationTime select candidate;
+            foreach (var candidate in created) {
+                if (candidateCount > count) {
+                    Dump.Archive.FileSystem.Delete(candidate);
+                    --candidateCount;
+                } else {
+                    remaining.Add(candidate);
+                }
+            }
+            return remaining;
+        }
+
+        /// <summary>
+        /// Removes candidates from disk based on the amount of space required and disk free.
+        /// </summary>
+        /// <param name="drive">The drive to use for the amount of free space.</param>
+        /// <param name="minDiskFree">The minimum disk free space required in bytes.</param>
+        /// <param name="minPercent">The minimum percent of the disk total size as a value from 0 to 100.</param>
+        /// <param name="maxUsage">The maximum number of bytes allowed.</param>
+        /// <param name="minFiles">The minimum files that can be kept.</param>
+        /// <param name="candidates">The file candidates that should be checked and deleted.</param>
+        /// <returns>The list of files remaining on disk (those not removed).</returns>
+        /// <remarks>
+        /// Files are removed based on their size. Files are removed if:
+        /// <list>
+        /// <item>
+        /// The amount of disk space required exceeds the <paramref name="minDiskFree"/> or the
+        /// <paramref name="minPercent"/> (whichever is higher), so that there should be a "reserve" number of bytes
+        /// of disk space, regardless of how much space is required.
+        /// </item>
+        /// <item>
+        /// THe amount of space the logs require exceeds the <paramref name="maxUsage"/>, regardless of the amount of
+        /// disk space that is free. This puts an upper limit on the amount of logs in use always. But we're allowed
+        /// to keep <paramref name="minFiles"/> and exceed the <paramref name="maxUsage"/> in this case.
+        /// </item>
+        /// </list>
+        /// Logs are always deleted in the order of the oldest first (based on the creation time).
+        /// </remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3241:Methods should not return values that are never used",
+            Justification = "General function, return value should remain in case ordering changes in caller")]
+        private static IList<FileSystemInfo> CleanUpKeepSpace(DriveInfo drive, long minDiskFree, int minPercent, long maxUsage, int minFiles, IList<FileSystemInfo> candidates)
+        {
+            if (candidates.Count == 0) return candidates;
+
+            Dictionary<FileSystemInfo, long> sizes = new Dictionary<FileSystemInfo, long>();
+            long totalSize = 0;
+            foreach (var candidate in candidates) {
+                long size = Dump.Archive.FileSystem.GetSize(candidate);
+                sizes[candidate] = size;
+                totalSize += size;
+            }
+
+            // Don't need to delete files if the total size is under the maxUsage and there is enough disk reserve.
+            long diskReserve = Math.Max(minDiskFree, drive.TotalSize * minPercent / 100);
+            if (totalSize < maxUsage && drive.AvailableFreeSpace > diskReserve) return candidates;
+
+            // Remove from oldest to newest first if:
+            // * the reserve is exceeded; or
+            // * if max usage exceeded and there are more than minFiles
+            IList<FileSystemInfo> remaining = new List<FileSystemInfo>();
+            int candidateCount = candidates.Count;
+            var created = from candidate in candidates orderby candidate.CreationTime select candidate;
+            foreach (var candidate in created) {
+                if (drive.AvailableFreeSpace < diskReserve ||
+                    candidateCount > minFiles && totalSize >= maxUsage) {
+                    Dump.Archive.FileSystem.Delete(candidate);
+                    totalSize -= sizes[candidate];
+                    --candidateCount;
+                } else {
+                    remaining.Add(candidate);
+                }
+            }
+            return remaining;
         }
     }
 }

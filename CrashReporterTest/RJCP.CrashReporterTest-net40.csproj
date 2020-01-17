@@ -73,6 +73,7 @@
     <Compile Include="CrashExport\MemoryDump\ITables.cs" />
     <Compile Include="CrashExport\MemoryDump\MemoryCrashDumpTable.cs" />
     <Compile Include="CrashExport\Xml\XmlCrashDumperTest.cs" />
+    <Compile Include="CrashReporterTest.cs" />
     <Compile Include="Dump\CrashDataProvidersTest.cs" />
     <Compile Include="Dump\CrashTest.cs" />
     <Compile Include="Dump\DumpTest.cs" />

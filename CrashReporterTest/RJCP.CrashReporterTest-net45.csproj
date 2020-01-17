@@ -70,6 +70,7 @@
     <Compile Include="CrashExport\MemoryDump\IRows.cs" />
     <Compile Include="CrashExport\MemoryDump\ITables.cs" />
     <Compile Include="CrashExport\MemoryDump\MemoryCrashDumpTable.cs" />
+    <Compile Include="CrashReporterTest.cs" />
     <Compile Include="Dump\CrashDataProvidersTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFile.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFileAsyncTest.cs" />
