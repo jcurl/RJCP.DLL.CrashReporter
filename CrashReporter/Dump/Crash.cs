@@ -103,6 +103,9 @@
         /// <summary>
         /// Dumps debugging information to disk, using an automatically generated path.
         /// </summary>
+        /// <returns>
+        /// Returns a path to a directory or a file where the crash dump was generated.
+        /// </returns>
         public string Dump()
         {
             string fileName = GetCrashPath();
@@ -114,6 +117,9 @@
         /// Dumps debugging information to disk, writing to the file provided.
         /// </summary>
         /// <param name="fileName">Name of the dump file to generate.</param>
+        /// <returns>
+        /// Returns a path to a directory or a file where the crash dump was generated.
+        /// </returns>
         public string Dump(string fileName)
         {
             using (ICrashDataDumpFile dump = CrashDumpFactory.Create(fileName)) {

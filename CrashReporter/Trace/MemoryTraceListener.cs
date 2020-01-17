@@ -345,6 +345,7 @@
         /// Asynchronously dumps debug information using the provided dump interface.
         /// </summary>
         /// <param name="dumpFile">The dump interface to write properties to.</param>
+        /// <returns>An awaitable task.</returns>
         public async Task DumpAsync(ICrashDataDumpFile dumpFile)
         {
             using (IDumpTable table = await dumpFile.DumpTableAsync(LogTable, "entry")) {
