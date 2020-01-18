@@ -5,7 +5,6 @@
     using System.Diagnostics;
     using System.IO;
     using CrashExport;
-    using CrashExport.Xml;
 #if NET45
     using System.Threading.Tasks;
 #endif
@@ -54,7 +53,7 @@
                 if (m_CrashFactory == null) {
                     lock (s_SyncRoot) {
                         if (m_CrashFactory == null) {
-                            m_CrashFactory = new XmlCrashDumpFactory();
+                            m_CrashFactory = new CrashDumpFactory();
                         }
                     }
                 }
