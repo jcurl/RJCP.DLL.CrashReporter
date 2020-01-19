@@ -40,12 +40,34 @@
         /// </summary>
         /// <param name="path">The path to write the dump file.</param>
         /// <param name="dumpType">Select the type of crash dump to perform.</param>
-        /// <returns><see langword="true" /> if the mini-dump was successful.</returns>
+        /// <returns><see langword="true"/> if the mini-dump was successful.</returns>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="path"/> is a zero-length string, contains only white space, or contains one or more
+        /// invalid characters as defined by InvalidPathChars.
+        /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length. For example, on
+        /// Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260
+        /// characters.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// The caller does not have the required permission.
+        /// <para>- or -</para>
+        /// <paramref name="path"/> specified a file that is read-only
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        /// The specified <paramref name="path"/> is invalid (for example, it is on an unmapped drive).
+        /// </exception>
+        /// <exception cref="IOException">
+        /// An I/O error occurred while creating the file given by <paramref name="path"/>.
+        /// </exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
         /// <remarks>
-        /// This method is only supported on Windows. On other operating systems, the call is ignored and no crash dump
-        /// is created. No exception is raised to keep the same behavior as if the program worked (i.e. a crash dump
-        /// would be made for debugging purposes and then continue, it stands to reason on foreign operating systems we
-        /// can't debug, so just let the program continue).
+        /// This method is only supported on Windows. On other operating systems, the call is ignored and no crash
+        /// dump is created. No exception is raised to keep the same behavior as if the program worked (i.e. a crash
+        /// dump would be made for debugging purposes and then continue, it stands to reason on foreign operating
+        /// systems we can't debug, so just let the program continue).
         /// </remarks>
         public static bool MiniDump(string path, CoreType dumpType)
         {

@@ -15,9 +15,7 @@
         /// <summary>
         /// Provides a recommended file name for the factory.
         /// </summary>
-        /// <value>
-        /// A recommended file name for creating a file with the factory.
-        /// </value>
+        /// <value>A recommended file name for creating a file with the factory.</value>
         public string FileName { get { return m_XmlFactory.FileName; } }
 
         /// <summary>
@@ -25,8 +23,8 @@
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>
-        /// An <see cref="ICrashDataDumpFile" /> which can be given to dumpers implementing
-        /// <see cref="ICrashDataExport" />.
+        /// An <see cref="ICrashDataDumpFile"/> which can be given to dumpers implementing
+        /// <see cref="ICrashDataExport"/>.
         /// </returns>
         public ICrashDataDumpFile Create(string fileName)
         {
@@ -39,8 +37,8 @@
         /// <param name="stream">The stream to write dump information to.</param>
         /// <param name="path">The path where additional dump files can be copied to.</param>
         /// <returns>
-        /// An <see cref="ICrashDataDumpFile" /> which can be given to dumpers implementing
-        /// <see cref="ICrashDataExport" />.
+        /// An <see cref="ICrashDataDumpFile"/> which can be given to dumpers implementing
+        /// <see cref="ICrashDataExport"/>.
         /// </returns>
         public ICrashDataDumpFile Create(Stream stream, string path)
         {
@@ -53,8 +51,8 @@
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>
-        /// An <see cref="ICrashDataDumpFile" /> which can be given to dumpers implementing
-        /// <see cref="ICrashDataExport" />.
+        /// An <see cref="ICrashDataDumpFile"/> which can be given to dumpers implementing
+        /// <see cref="ICrashDataExport"/>.
         /// </returns>
         public Task<ICrashDataDumpFile> CreateAsync(string fileName)
         {
@@ -67,8 +65,8 @@
         /// <param name="stream">The stream to write dump information to.</param>
         /// <param name="path">The path where additional dump files can be copied to.</param>
         /// <returns>
-        /// An <see cref="ICrashDataDumpFile" /> which can be given to dumpers implementing
-        /// <see cref="ICrashDataExport" />.
+        /// An <see cref="ICrashDataDumpFile"/> which can be given to dumpers implementing
+        /// <see cref="ICrashDataExport"/>.
         /// </returns>
         public Task<ICrashDataDumpFile> CreateAsync(Stream stream, string path)
         {

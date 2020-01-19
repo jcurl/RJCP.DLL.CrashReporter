@@ -15,7 +15,7 @@
         /// Writes the header for the table.
         /// </summary>
         /// <param name="row">The row which also contains the list of headers.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="row"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         public void DumpHeader(DumpRow row)
         {
             if (row == null) throw new ArgumentNullException(nameof(row));
@@ -32,7 +32,7 @@
         /// Writes the row of properties/values to the current table.
         /// </summary>
         /// <param name="row">The row, a collection of key/value pairs that should be written.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="row"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         public void DumpRow(DumpRow row)
         {
             if (row == null) throw new ArgumentNullException(nameof(row));
@@ -57,7 +57,7 @@
         /// </summary>
         /// <param name="row">The row which also contains the list of headers.</param>
         /// <returns>An awaitable task.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="row"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         public Task DumpHeaderAsync(DumpRow row)
         {
             if (row == null) throw new ArgumentNullException(nameof(row));
@@ -76,7 +76,7 @@
         /// </summary>
         /// <param name="row">The row, a collection of key/value pairs that should be written.</param>
         /// <returns>An awaitable task.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="row"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         public Task DumpRowAsync(DumpRow row)
         {
             if (row == null) throw new ArgumentNullException(nameof(row));

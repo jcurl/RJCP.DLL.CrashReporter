@@ -15,9 +15,7 @@
         /// Initializes a new instance of the <see cref="DumpRow"/> class.
         /// </summary>
         /// <param name="header">The headers for each column in the table.</param>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="header"/> may not be <see langword="null"/>.
-        /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="header"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">
         /// Header must have at least one field;
         /// <para>- or -</para>
@@ -43,9 +41,7 @@
         /// <summary>
         /// Gets or sets the value of a particular field for this row.
         /// </summary>
-        /// <value>
-        /// The value of a particular field for this row.
-        /// </value>
+        /// <value>The value of a particular field for this row.</value>
         /// <param name="key">The name of the column (defined in the headers).</param>
         /// <returns>The value of the particular field for this row.</returns>
         public string this[string key]

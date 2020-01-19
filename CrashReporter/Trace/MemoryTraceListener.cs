@@ -22,7 +22,7 @@
         /// </summary>
         /// <param name="logCollection">The log collection.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="logCollection"/> may not be <see langword="null"/>.
+        /// <paramref name="logCollection"/> is <see langword="null"/>.
         /// </exception>
         /// <remarks>
         /// This object implements thread safe locking around access to <paramref name="logCollection"/>. To maintain

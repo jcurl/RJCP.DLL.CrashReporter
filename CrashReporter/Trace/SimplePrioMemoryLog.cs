@@ -40,7 +40,7 @@
                 set
                 {
 
-                    if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "Buffer count may not be negative");
+                    if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "Buffer count is negative");
                     m_Minimum = value;
                 }
             }
@@ -87,7 +87,7 @@
         /// <value>
         /// The minimum number of allowed critical log entries in the memory buffer.
         /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">Buffer count may not be negative</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Buffer count is negative.</exception>
         public int Critical
         {
             get { return m_Critical.Minimum; }
@@ -104,7 +104,7 @@
         /// <value>
         /// The minimum number of allowed error log entries in the memory buffer.
         /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">Buffer count may not be negative</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Buffer count is negative.</exception>
         public int Error
         {
             get { return m_Error.Minimum; }
@@ -121,7 +121,7 @@
         /// <value>
         /// The minimum number of allowed warning log entries in the memory buffer.
         /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">Buffer count may not be negative</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Buffer count is negative.</exception>
         public int Warning
         {
             get { return m_Warning.Minimum; }
@@ -138,7 +138,7 @@
         /// <value>
         /// The minimum number of allowed informational log entries in the memory buffer.
         /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">Buffer count may not be negative</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Buffer count is negative.</exception>
         public int Info
         {
             get { return m_Info.Minimum; }
@@ -155,7 +155,7 @@
         /// <value>
         /// The minimum number of allowed verbose log entries in the memory buffer.
         /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">Buffer count may not be negative</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Buffer count is negative.</exception>
         public int Verbose
         {
             get { return m_Verbose.Minimum; }
@@ -172,7 +172,7 @@
         /// <value>
         /// The minimum number of allowed other log entries in the memory buffer.
         /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">Buffer count may not be negative</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Buffer count is negative.</exception>
         public int Other
         {
             get { return m_Other.Minimum; }
@@ -191,7 +191,7 @@
         /// <value>
         /// The maximum number of allowed log entries in the memory buffer.
         /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">Buffer count may not be negative</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Buffer count is negative.</exception>
         public int Total
         {
             get { return m_Max; }
@@ -287,11 +287,9 @@
         /// </summary>
         /// <param name="array">The array to copy to.</param>
         /// <param name="arrayIndex">Index in the array to start copying to.</param>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="array"/> may not be <see langword="null"/>.
-        /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="arrayIndex"/> must not be less than zero;
+        /// <paramref name="arrayIndex"/> is less than zero;
         /// <para>- or -</para>
         /// <paramref name="arrayIndex"/> offset and collection length would exceed boundaries of
         /// <paramref name="array"/>.
@@ -299,7 +297,7 @@
         public void CopyTo(LogEntry[] array, int arrayIndex)
         {
             if (array == null) throw new ArgumentNullException(nameof(array));
-            if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Array Index must not be less than 0");
+            if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Array Index is less than 0");
 
             int requiredLength = 0;
             foreach (var log in m_Log) {

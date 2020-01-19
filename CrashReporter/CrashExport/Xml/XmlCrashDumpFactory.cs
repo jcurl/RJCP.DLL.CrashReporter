@@ -28,7 +28,7 @@
         /// <see cref="ICrashDataExport"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="fileName"/> may not be <see langword="null"/>.
+        /// <paramref name="fileName"/> is <see langword="null"/>.
         /// </exception>
         public ICrashDataDumpFile Create(string fileName)
         {
@@ -54,9 +54,9 @@
         /// <see cref="ICrashDataExport"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="path"/> may not be <see langword="null"/>;
+        /// <paramref name="path"/> is <see langword="null"/>;
         /// <para>- or -</para>
-        /// <paramref name="stream"/> may not be <see langword="null"/>.
+        /// <paramref name="stream"/> is <see langword="null"/>.
         /// </exception>
         public ICrashDataDumpFile Create(Stream stream, string path)
         {
@@ -110,9 +110,9 @@
         /// <see cref="ICrashDataExport" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="path"/> may not be <see langword="null"/>;
+        /// <paramref name="path"/> is <see langword="null"/>;
         /// <para>- or -</para>
-        /// <paramref name="stream"/> may not be <see langword="null"/>.
+        /// <paramref name="stream"/> is <see langword="null"/>.
         /// </exception>
         public Task<ICrashDataDumpFile> CreateAsync(Stream stream, string path)
         {

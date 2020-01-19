@@ -20,7 +20,7 @@
         /// <param name="row">
         /// The row predefined with the headers, that will be passed while iterating over the dump data.
         /// </param>
-        /// <exception cref="ArgumentNullException"><paramref name="row"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         protected CrashDataExport(DumpRow row)
         {
             if (row == null) throw new ArgumentNullException(nameof(row));
