@@ -46,6 +46,7 @@
         /// Gets or sets the crash dump factory which implements the file format for the crash file.
         /// </summary>
         /// <value>The crash dump factory.</value>
+        /// <exception cref="ArgumentNullException">Value is <see langword="null"/>.</exception>
         public ICrashDumpFactory CrashDumpFactory
         {
             get
@@ -61,6 +62,7 @@
             }
             set
             {
+                if (value == null) throw new ArgumentNullException(nameof(value));
                 lock (s_SyncRoot) {
                     m_CrashFactory = value;
                 }
@@ -115,9 +117,10 @@
         /// Dumps debugging information to disk, writing to the file provided.
         /// </summary>
         /// <param name="fileName">Name of the dump file to generate.</param>
-        /// <returns>
-        /// Returns a path to a directory or a file where the crash dump was generated.
-        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="fileName"/> is <see langword="null"/>.
+        /// </exception>
+        /// <returns>Returns a path to a directory or a file where the crash dump was generated.</returns>
         public string Dump(string fileName)
         {
             using (ICrashDataDumpFile dump = CrashDumpFactory.Create(fileName)) {
@@ -131,6 +134,11 @@
         /// </summary>
         /// <param name="stream">The stream to write debug information to.</param>
         /// <param name="path">The path to add debug information to.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="stream"/> is <see langword="null"/>.
+        /// <para>- or -</para>
+        /// <paramref name="path"/> is <see langword="null"/>.
+        /// </exception>"
         public void Dump(Stream stream, string path)
         {
             using (ICrashDataDumpFile dump = CrashDumpFactory.Create(stream, path)) {
@@ -199,6 +207,9 @@
         /// </summary>
         /// <param name="fileName">Name of the dump file to generate.</param>
         /// <returns>An object that can be awaited on.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="fileName"/> is <see langword="null"/>.
+        /// </exception>
         public async Task<string> DumpAsync(string fileName)
         {
             using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(fileName)) {
@@ -213,6 +224,11 @@
         /// <param name="stream">The stream to write debug information to.</param>
         /// <param name="path">The path to add debug information to.</param>
         /// <returns>An object that can be awaited on.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="stream"/> is <see langword="null"/>.
+        /// <para>- or -</para>
+        /// <paramref name="path"/> is <see langword="null"/>.
+        /// </exception>"
         public async Task DumpAsync(Stream stream, string path)
         {
             using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(stream, path)) {

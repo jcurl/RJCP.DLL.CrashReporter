@@ -115,8 +115,8 @@
 
         public IDumpTable DumpTable(string tableName, string rowName)
         {
-            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentException("Table Name may not be null or whitespace", nameof(tableName));
-            if (string.IsNullOrWhiteSpace(rowName)) throw new ArgumentException("Row Name may not be null or whitespace", nameof(rowName));
+            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentException("Table Name is null or whitespace", nameof(tableName));
+            if (string.IsNullOrWhiteSpace(rowName)) throw new ArgumentException("Row Name may is or whitespace", nameof(rowName));
 
             m_Writer.WriteStartElement(tableName);
 
@@ -233,8 +233,8 @@
 
         public Task<IDumpTable> DumpTableAsync(string tableName, string rowName)
         {
-            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentException("Table Name may not be null or whitespace", nameof(tableName));
-            if (string.IsNullOrWhiteSpace(rowName)) throw new ArgumentException("Row Name may not be null or whitespace", nameof(rowName));
+            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentException("Table Name is null or whitespace", nameof(tableName));
+            if (string.IsNullOrWhiteSpace(rowName)) throw new ArgumentException("Row Name is null or whitespace", nameof(rowName));
             return DumpTableInternalAsync(tableName, rowName);
         }
 

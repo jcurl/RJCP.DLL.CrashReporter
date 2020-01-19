@@ -107,6 +107,9 @@
         /// </summary>
         /// <param name="handler">The handler that should be called.</param>
         /// <returns>Returns <see langword="true"/> if it was set, <see langword="false"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="handler"/> is <see langword="null"/>.
+        /// </exception>
         /// <remarks>
         /// Mono does not implement the event for setting the first chance exception, so when compiling on Mono,
         /// compilation fails. This method abstracts that and uses reflection to determine if the method exists, and
@@ -139,6 +142,11 @@
         /// </param>
         /// <param name="handler">The handler that should be called.</param>
         /// <returns>Returns <see langword="true"/> if it was set, <see langword="false"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="handler"/> is <see langword="null"/>.
+        /// <para>- or -</para>
+        /// <paramref name="appDomain"/> is <see langword="null"/>.
+        /// </exception>
         /// <remarks>
         /// Mono does not implement the event for setting the first chance exception, so when compiling on Mono,
         /// compilation fails. This method abstracts that and uses reflection to determine if the method exists, and
@@ -159,6 +167,9 @@
         /// </example>
         public static bool SetFirstChanceException(this AppDomain appDomain, EventHandler<FirstChanceExceptionEventArgs> handler)
         {
+            if (appDomain == null) throw new ArgumentNullException(nameof(appDomain));
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+
             Native.AppDomainAccessor accessor = new Native.AppDomainAccessor(appDomain);
             return accessor.SetFirstChanceException(handler);
         }
@@ -188,8 +199,7 @@
         /// </example>
         public static void FirstChanceExceptionHandler(object sender, FirstChanceExceptionEventArgs args)
         {
-            if (Source == null) return;
-            if (Source.Switch.ShouldTrace(TraceEventType.Information)) {
+            if (Source != null && Source.Switch.ShouldTrace(TraceEventType.Information)) {
                 StackTrace stack = new StackTrace(true);
                 Source.TraceEvent(TraceEventType.Information, 0,
                     "First Chance Exception: {0}\nFirst Chance Exception: Stack Trace:\n{1}",

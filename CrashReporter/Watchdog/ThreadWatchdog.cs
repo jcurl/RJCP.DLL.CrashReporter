@@ -28,11 +28,9 @@
         /// <param name="timerSource">The timer source providing the 32-bit clock.</param>
         /// <param name="timer">The timer object that raises events on timer changes.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="timerSource"/> may not be <see langword="null"/>.
+        /// <paramref name="timerSource"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="timer"/> may not be <see langword="null"/>.
-        /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="timer"/> is be <see langword="null"/>.</exception>
         /// <remarks>
         /// Using custom timer objects allow to virtualize timers, or to provide higher resolution timers than the
         /// defaults. Virtualized timers allow for test cases to run independently of the system clock, making test
@@ -65,8 +63,11 @@
         /// Returns <see langword="true"/> if the watchdog was registered, <see langword="false"/> if the watchdog was
         /// already registered.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public bool Register(string name, int warning, int critical)
         {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+
             lock (m_TimerSyncLock) {
                 bool added = m_Watchdog.Add(name, warning, critical);
                 if (added) {
@@ -98,8 +99,11 @@
         /// Returns <see langword="true"/> if the watchdog was registered and is now deregistered,
         /// <see langword="false"/> otherwise as the watchdog was not previously registered.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public bool Unregister(string name)
         {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+
             lock (m_TimerSyncLock) {
                 bool removed = m_Watchdog.Remove(name);
                 if (removed) {
@@ -127,8 +131,10 @@
         /// Returns <see langword="true"/> if the ping reset a watchdog item, <see langword="false"/> if the watchdog
         /// item didn't exist.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public bool Ping(string name)
         {
+            if (name == null) throw new ArgumentNullException(nameof(name));
             lock (m_TimerSyncLock) {
                 bool ping = m_Watchdog.Reset(name);
                 if (ping) {
