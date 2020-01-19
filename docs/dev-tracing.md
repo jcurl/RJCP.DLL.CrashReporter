@@ -34,6 +34,12 @@ modify the `App.config` file to include the following:
           <add name="console"/>
         </listeners>
       </source>
+      <source name="RJCP.CrashReporter.Watchdog" switchValue = "Verbose">
+        <listeners>
+          <remove name="Default"/>
+          <add name="myListener"/>
+        </listeners>
+      </source>
       <source name="CrashReporterApp" switchValue="Verbose">
         <listeners>
           <remove name="Default"/>
@@ -46,8 +52,9 @@ modify the `App.config` file to include the following:
 ```
 
 Replace `CrashReporterApp` with the name of your applications TraceSource name.
-The `RJCP.CrashReporter` should be present, so that when there is a problem
-performing a crash dump, details will be printed to the console.
+The `RJCP.CrashReporter` and `RJCP.CrashReporter.Watchdog` should be present, so
+that when there is a problem performing a crash dump, details will be printed to
+the console.
 
 This will capture all traces internally in RAM, and only output them to disk
 when instructed to by your program.
@@ -64,7 +71,7 @@ namespace CrashReportApp
     {
         static void Main()
         {
-            CrashReporter.Source = Log.App;
+            CrashReporter.Source = Log.App;    // Default is to RJCP.CrashReporter
             CrashReporter.SetExceptionHandlers();
 
             Log.App.TraceEvent(System.Diagnostics.TraceEventType.Information, 0, "Program Started");
@@ -164,3 +171,38 @@ The `SetExceptionHandlers` will register the `AppDomain.UnhandledException` and
 the `AppDomain.FirstChanceException`. On Mono, the `FirstChanceException` is not
 defined, so this library uses reflection to register the handlers, so your code
 will continue to compile also on Mono.
+
+### Trace Messages
+
+If code doesn't provide its own `TraceSource` by setting the `Source` property,
+tracing is done by default to the `RJCP.CrashReporter` trace source. It is
+recommended that the application provide its own log source.
+
+```csharp
+CrashReporter.Source = Log.App;
+```
+
+It is recommended that the `RJCP.CrashReporter` log to the console for console
+applications, as messages are only printed when creating a crash dump. The user
+is notified in case there is a problem creating a crash, or when a crash is
+made.
+
+#### XML Crash Dump Logging
+
+All errors when writing the XML crash dump file are logged to `RJCP.CrashReporter`.
+
+#### Crash Reporter
+
+* First Chance Exceptions are logged to the `CrashReporter.Source` property.
+* Unhandled Exceptions are logged to the `CrashReporter.Source` property.
+* The actual creation of crash dumps (either success or failure) are logged to
+  `RJCP.CrashReporter`
+  * `Information`: Crash is created and its location
+  * `Warning`: If the crash dump directory couldn't be properly cleaned. This
+    indicates a problem with the user account, which shouldn't occur.
+  * `Error`: Crash dump file couldn't be created (or the ZIP file can't be
+    generated).
+
+#### Watchdog Logging
+
+See the [developer watchdog](dev-watchdog.md) document for specific details.

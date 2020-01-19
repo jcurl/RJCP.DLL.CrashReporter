@@ -25,13 +25,19 @@
         /// CrashReporter.SetExceptionHandlers();
         /// </code>
         /// </example>
-        public static TraceSource Source { get; set; }
+        public static TraceSource Source { get; set; } = Log.CrashLog;
 
         /// <summary>
         /// Specifies what kind of core dump to create.
         /// </summary>
         /// <value>The type of core dump to generate.</value>
         public static CoreType CoreType { get; set; } = CoreType.MiniDump;
+
+        /// <summary>
+        /// Gets the watchdog for thread monitoring.
+        /// </summary>
+        /// <value>The watchdog for thread monitoring.</value>
+        public static Watchdog.IWatchdog Watchdog { get; } = new Watchdog.ThreadWatchdog();
 
         /// <summary>
         /// Sets the exception handlers for crash reporting.
@@ -238,14 +244,28 @@
         /// <summary>
         /// Creates a dump with a mini dump according to <see cref="CoreType"/>.
         /// </summary>
-        /// <returns>The name of the file that was created</returns>
+        /// <returns>The name of the file that was created.</returns>
         /// <remarks>
         /// You can use this method to generate your own core dump as required, for example, if an exception is caught
         /// (so that the <see cref="AppDomain.UnhandledException"/> won't be raised).
         /// </remarks>
         public static string CreateDump()
         {
-            return CreateDump(CoreType);
+            return CreateDump(null, CoreType);
+        }
+
+        /// <summary>
+        /// Creates a dump with a mini dump according to <see cref="CoreType"/>.
+        /// </summary>
+        /// <param name="fileName">File name of the crash dump to create without an extension.</param>
+        /// <returns>The name of the file that was created.</returns>
+        /// <remarks>
+        /// You can use this method to generate your own core dump as required, for example, if an exception is caught
+        /// (so that the <see cref="AppDomain.UnhandledException"/> won't be raised).
+        /// </remarks>
+        public static string CreateDump(string fileName)
+        {
+            return CreateDump(fileName, CoreType);
         }
 
         /// <summary>
@@ -259,13 +279,32 @@
         /// </remarks>
         public static string CreateDump(CoreType coreType)
         {
+            return CreateDump(null, coreType);
+        }
+
+        /// <summary>
+        /// Creates a dump with the minidump specified.
+        /// </summary>
+        /// <param name="fileName">File name of the crash dump to create without an extension.</param>
+        /// <param name="coreType">Type of the core dump to create.</param>
+        /// <returns>The name of the file that was generated, so the user might be notified.</returns>
+        /// <remarks>
+        /// You can use this method to generate your own core dump as required, for example, if an exception is caught
+        /// (so that the <see cref="AppDomain.UnhandledException"/> won't be raised).
+        /// </remarks>
+        public static string CreateDump(string fileName, CoreType coreType)
+        {
             try {
                 CleanUpDump();
             } catch { /* Ignore any errors while trying to clean up the dump, so we can continue to crash */ }
 
             string path;
             try {
-                path = Crash.Data.Dump();
+                if (fileName == null) {
+                    path = Crash.Data.Dump();
+                } else {
+                    path = Crash.Data.Dump(fileName);
+                }
                 if (path == null) return null;
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Error creating dump: {0}", ex.ToString());

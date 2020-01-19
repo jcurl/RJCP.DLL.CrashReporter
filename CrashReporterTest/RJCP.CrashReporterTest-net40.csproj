@@ -58,8 +58,8 @@
     <Compile Include="CrashData\DumpTestBase.cs" />
     <Compile Include="CrashData\EnvironmentDumpTest.cs" />
     <Compile Include="CrashData\ModuleDumpTest.cs" />
-    <Compile Include="CrashData\NetworkDumpTest.cs" />
     <Compile Include="CrashData\NetVersionDumpTest.cs" />
+    <Compile Include="CrashData\NetworkDumpTest.cs" />
     <Compile Include="CrashData\OSDumpTest.cs" />
     <Compile Include="CrashData\ProcDumpTest.cs" />
     <Compile Include="CrashData\TestBlock.cs" />
@@ -85,6 +85,12 @@
     <Compile Include="Trace\MemoryListListener.cs" />
     <Compile Include="Trace\MemoryListListenerTest.cs" />
     <Compile Include="Trace\SimplePrioMemoryLogTest.cs" />
+    <Compile Include="Watchdog\ThreadWatchdogTest.cs" />
+    <Compile Include="Watchdog\Timer\TimerListAccessor.cs" />
+    <Compile Include="Watchdog\Timer\TimerListTest.cs" />
+    <Compile Include="Watchdog\Timer\VirtualSingleShotTimer.cs" />
+    <Compile Include="Watchdog\Timer\VirtualSingleShotTimerTest.cs" />
+    <Compile Include="Watchdog\Timer\VirtualTimerSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

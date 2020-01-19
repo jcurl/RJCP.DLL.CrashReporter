@@ -105,6 +105,17 @@
     <Compile Include="Trace\MemoryTraceListener.cs" />
     <Compile Include="Trace\SimplePrioMemoryLog.cs" />
     <Compile Include="Trace\SimplePrioMemoryTraceListener.cs" />
+    <Compile Include="Watchdog\IWatchdog.cs" />
+    <Compile Include="Watchdog\ThreadWatchdog.cs" />
+    <Compile Include="Watchdog\Timer\ISingleShotTimer.cs" />
+    <Compile Include="Watchdog\Timer\ITimerSource.cs" />
+    <Compile Include="Watchdog\Timer\MonotonicTimerSource.cs" />
+    <Compile Include="Watchdog\Timer\SingleShotTimer.cs" />
+    <Compile Include="Watchdog\Timer\TimerItem.cs" />
+    <Compile Include="Watchdog\Timer\TimerList.cs" />
+    <Compile Include="Watchdog\WatchdogData.cs" />
+    <Compile Include="Watchdog\WatchdogEventArgs.cs" />
+    <Compile Include="Watchdog\WatchdogList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.RJCP.CrashReporter-net40.config" />

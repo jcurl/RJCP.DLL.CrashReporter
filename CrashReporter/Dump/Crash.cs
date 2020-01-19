@@ -107,9 +107,8 @@
         /// </returns>
         public string Dump()
         {
-            string fileName = GetCrashPath();
-            Dump(fileName);
-            return fileName;
+            string fileName = GetCrashPath(null);
+            return Dump(fileName);
         }
 
         /// <summary>
@@ -155,10 +154,19 @@
             return Path.Combine(basepath, "CrashDumps");
         }
 
-        private string GetCrashPath()
+        /// <summary>
+        /// Generate a full path name for a crash dump folder given a prefix.
+        /// </summary>
+        /// <param name="prefix">
+        /// The prefix to use at the beginning of the crash dump path. If <see langword="null"/>, the current process
+        /// name will be used. The directory for the crash dump will be created automatically if it doesn't exist
+        /// prior.
+        /// </param>
+        /// <returns>A fully qualified path that can be given to <see cref="Dump(string)"/>.</returns>
+        public string GetCrashPath(string prefix)
         {
-            Process current = Process.GetCurrentProcess();
-            string name = string.Format("{0}-{1:yyyyMMddHHmmss}.{2}", current.ProcessName, DateTime.Now, Guid.NewGuid().ToString());
+            if (string.IsNullOrWhiteSpace(prefix)) prefix = Process.GetCurrentProcess().ProcessName;
+            string name = string.Format("{0}-{1:yyyyMMddHHmmss}.{2}", prefix, DateTime.Now, Guid.NewGuid().ToString());
             string path = Path.Combine(GetCrashFolder(), name);
             if (!Directory.Exists(path)) {
                 try {
@@ -182,7 +190,7 @@
         /// <returns>An object that can be awaited on.</returns>
         public Task<string> DumpAsync()
         {
-            string fileName = GetCrashPath();
+            string fileName = GetCrashPath(null);
             return DumpAsync(fileName);
         }
 
