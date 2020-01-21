@@ -40,6 +40,12 @@
         public static Watchdog.IWatchdog Watchdog { get; } = new Watchdog.ThreadWatchdog();
 
         /// <summary>
+        /// Gets the CrashReporter configuration.
+        /// </summary>
+        /// <value>The CrashReporter configuration.</value>
+        public static Config.CrashReporter.CrashConfig Config { get; } = new Config.CrashReporter.CrashConfig();
+
+        /// <summary>
         /// Sets the exception handlers for crash reporting.
         /// </summary>
         /// <example>

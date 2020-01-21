@@ -1,33 +1,18 @@
-﻿namespace RJCP.Diagnostics
+﻿namespace RJCP.Diagnostics.Config.CrashReporter
 {
     using System;
     using System.Configuration;
     using System.Diagnostics;
 
-    internal class AppConfig
+    /// <summary>
+    /// Exposes the application configuration information for the CrashReporter.
+    /// </summary>
+    public class CrashConfig
     {
-        private static readonly object s_SyncLock = new object();
-        private static AppConfig s_Config;
-
-        public static AppConfig Config
-        {
-            get
-            {
-                if (s_Config == null) {
-                    lock (s_SyncLock) {
-                        if (s_Config == null) {
-                            s_Config = new AppConfig();
-                        }
-                    }
-                }
-                return s_Config;
-            }
-        }
-
-        private AppConfig()
+        internal CrashConfig()
         {
             Configuration config;
-            ConfigurationSectionGroup grp = null;
+            ConfigurationSectionGroup grp;
             try {
                 config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
                 try {
@@ -44,10 +29,10 @@
                         try {
                             switch (section.SectionInformation.Name) {
                             case "XmlCrashDumper":
-                                XmlCrashDumper = new Config.CrashReporter.XmlCrashDumperConfig((Config.XmlCrashDumper)grp.Sections["XmlCrashDumper"]);
+                                XmlCrashDumper = new XmlCrashDumperConfig((XmlCrashDumper)grp.Sections["XmlCrashDumper"]);
                                 break;
                             case "Watchdog":
-                                Watchdog = new Config.CrashReporter.WatchdogConfig((Config.Watchdog)grp.Sections["Watchdog"]);
+                                Watchdog = new WatchdogConfig((Watchdog)grp.Sections["Watchdog"]);
                                 break;
                             }
                         } catch (ConfigurationException) {
@@ -62,12 +47,20 @@
 
             // Provide default implementations is it is not in the configuration. Code doesn't need to check for 'null'
             // making it safer.
-            if (XmlCrashDumper == null) XmlCrashDumper = new Config.CrashReporter.XmlCrashDumperConfig();
-            if (Watchdog == null) Watchdog = new Config.CrashReporter.WatchdogConfig();
+            if (XmlCrashDumper == null) XmlCrashDumper = new XmlCrashDumperConfig();
+            if (Watchdog == null) Watchdog = new WatchdogConfig();
         }
 
-        public Config.CrashReporter.XmlCrashDumperConfig XmlCrashDumper { get; private set; }
+        /// <summary>
+        /// Gets the XML crash dumper configuration if configured.
+        /// </summary>
+        /// <value>The XML crash dumper configuration.</value>
+        public XmlCrashDumperConfig XmlCrashDumper { get; private set; }
 
-        public Config.CrashReporter.WatchdogConfig Watchdog { get; private set; }
+        /// <summary>
+        /// Gets the watchdog configuration.
+        /// </summary>
+        /// <value>The watchdog configuration.</value>
+        public WatchdogConfig Watchdog { get; private set; }
     }
 }

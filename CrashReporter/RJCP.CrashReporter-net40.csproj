@@ -44,16 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppConfig.cs" />
     <Compile Include="Config\CrashReporter\WatchdogConfig.cs" />
     <Compile Include="Config\CrashReporter\WatchdogOverride.cs" />
     <Compile Include="Config\CrashReporter\WatchdogOverrides.cs" />
+    <Compile Include="Config\CrashReporter\WatchdogPing.cs" />
     <Compile Include="Config\CrashReporter\XmlCrashDumperConfig.cs" />
     <Compile Include="Config\StyleSheetElement.cs" />
     <Compile Include="Config\Watchdog.cs" />
     <Compile Include="Config\WatchdogOverride.cs" />
     <Compile Include="Config\WatchdogOverrides.cs" />
+    <Compile Include="Config\WatchdogPingElement.cs" />
     <Compile Include="Config\XmlCrashDumper.cs" />
+    <Compile Include="Config\CrashReporter\CrashConfig.cs" />
     <Compile Include="CrashData\AssemblyDump.cs" />
     <Compile Include="CrashData\EnvironmentDump.cs" />
     <Compile Include="CrashData\ModuleDump.cs" />

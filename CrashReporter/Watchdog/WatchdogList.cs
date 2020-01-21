@@ -49,14 +49,14 @@
             return true;
         }
 
-        public bool Reset(string name)
+        public bool Reset(string name, bool captureStack)
         {
             if (!m_Timers.TryGetValue(name, out WatchdogData data)) return false;
             m_WarningTimer.Change(name, data.WarningTimeout);
             m_CriticalTimer.Change(name, data.CriticalTimeout);
             data.LastPingTime = DateTime.Now;
             data.LastPingThread = Thread.CurrentThread;
-            data.LastPingStack = new StackTrace(1, true);
+            data.LastPingStack = captureStack ? new StackTrace(1, true) : null;
             return true;
         }
 

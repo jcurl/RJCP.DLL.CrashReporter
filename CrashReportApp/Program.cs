@@ -28,7 +28,8 @@ namespace CrashReportApp
                     // Register a watchdog.
                     CrashReporter.Watchdog.Register("app", 2000, 5000);
 
-                    // This should result in a watchdog timeout, and crash the program.
+                    // This should result in a watchdog timeout, and crash the program (unless there's an override)
+                    CrashReporter.Watchdog.Ping("app");
                     System.Threading.Thread.Sleep(10000);
                     break;
                 }

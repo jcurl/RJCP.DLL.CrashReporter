@@ -10,5 +10,11 @@
         {
             get { return (WatchdogOverrides)this["Overrides"]; }
         }
+
+        [ConfigurationProperty("Ping", IsRequired = false)]
+        public WatchdogPingElement WatchdogPing
+        {
+            get { return (WatchdogPingElement)this["Ping"]; }
+        }
     }
 }

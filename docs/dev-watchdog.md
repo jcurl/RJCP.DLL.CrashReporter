@@ -222,6 +222,8 @@ timers for manipulating the watchdog timeouts.
 
 ## Overriding Watchdog Behaviour
 
+### Adjusting the Timeout Values
+
 It is possible to modify the configuration file of the application to override
 the warning and critical timeout values. This is useful in situations where
 software may use a timeout that is too conservative, and as a short-term
@@ -281,3 +283,38 @@ together, such as:
     </Watchdog>
   </CrashReporter>
 ```
+
+### Disabling the Stack Capture on Ping
+
+The watchdog functionality will capture the stack when an application is
+registered, and when a ping occurs. This assists with debugging should a
+watchdog warning or timeout occur in determining when the last ping occurred,
+and where the watchdog was first registered.
+
+One can disable the functionality to capture the stack on ping by adding the
+following in the applicaton configuration file.
+
+`app.config`
+```xml
+  <CrashReporter>
+    <Watchdog>
+      <Ping stack="false"/>
+    </Watchdog>
+  </CrashReporter>
+```
+
+The default behaviour is to enable the stack capture. Set the attribute `stack`
+to `false` to turn off the stack capture feature on ping. No stack is captured
+which makes the ping operation faster.
+
+The programmer can disable the stack feature always. If this is done, the
+application configuration section has no effect and stack capture on a ping is
+always disabled. This would mean though it is not possible to enable the feature
+with out recompiling if behaviour should change.
+
+```csharp
+CrashReporter.Config.Watchdog.Ping.StackCapture = false;
+```
+
+Setting this value back to `true` enables the stack capture if not disabled in
+the configuration file.

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Threading;
     using Config.CrashReporter;
 
     /// <summary>
@@ -69,7 +70,7 @@
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            bool overrideActive = AppConfig.Config.Watchdog.Overrides.TryGetOverride(name, out WatchdogOverride wdOverride);
+            bool overrideActive = CrashReporter.Config.Watchdog.Overrides.TryGetOverride(name, out WatchdogOverride wdOverride);
             if (overrideActive) {
                 warning = wdOverride.WarningTimeout;
                 critical = wdOverride.CriticalTimeout;
@@ -144,7 +145,7 @@
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
             lock (m_TimerSyncLock) {
-                bool ping = m_Watchdog.Reset(name);
+                bool ping = m_Watchdog.Reset(name, CrashReporter.Config.Watchdog.Ping.StackCapture);
                 if (ping) {
                     m_Timer.SetDelay(m_Watchdog.GetNextExpiry());
                     Log.Watchdog.TraceEvent(TraceEventType.Verbose, 0,
@@ -153,8 +154,9 @@
                     if (Log.Watchdog.Switch.ShouldTrace(TraceEventType.Warning)) {
                         string message = string.Format(
                             "Watchdog Ping: '{0}' not registered\n" +
-                            " Call Stack:\n{1}",
-                            name, new StackFrame(true)?.ToString() ?? "(none)");
+                            " Call Stack:{1}" +
+                            " Thread {2}",
+                            name, GetStack(new StackTrace(true)), GetThread(Thread.CurrentThread));
                         Log.Watchdog.TraceEvent(TraceEventType.Warning, 0, message);
                     }
                 }
@@ -177,13 +179,13 @@
                         WatchdogData warningData = m_Watchdog[warning];
                         string message = string.Format(
                             "Watchdog warning: '{0}' timeout {1}ms\n" +
-                            " Registered at {2}: Stack:\n{3}" +
-                            " Last ping at {4}: Stack:\n{5}" +
+                            " Registered at {2}: Stack:{3}" +
+                            " Last ping at {4}: Stack:{5}" +
                             " Thread {6}",
                             warning, warningData.WarningTimeout,
-                            warningData.RegisterTime.ToString("u"), warningData.RegisterStack?.ToString() ?? "(none)\n",
-                            warningData.LastPingTime.ToString("u"), warningData.LastPingStack?.ToString() ?? "(none)\n",
-                            warningData.LastPingThread?.Name ?? "(none)");
+                            warningData.RegisterTime.ToString("u"), GetStack(warningData.RegisterStack),
+                            warningData.LastPingTime.ToString("u"), GetStack(warningData.LastPingStack),
+                            GetThread(warningData.LastPingThread));
                         Log.Watchdog.TraceEvent(TraceEventType.Warning, 0, message);
                     } else {
                         break;
@@ -197,13 +199,13 @@
                         WatchdogData criticalData = m_Watchdog[critical];
                         string message = string.Format(
                             "Watchdog TIMEOUT: '{0}' timeout {1}ms\n" +
-                            " Registered at {2}: Stack:\n{3}" +
-                            " Last ping at {4}: Stack:\n{5}" +
+                            " Registered at {2}: Stack:{3}" +
+                            " Last ping at {4}: Stack:{5}" +
                             " Thread {6}",
                             critical, criticalData.CriticalTimeout,
-                            criticalData.RegisterTime.ToString("u"), criticalData.RegisterStack?.ToString() ?? "(none)\n",
-                            criticalData.LastPingTime.ToString("u"), criticalData.LastPingStack?.ToString() ?? "(none)\n",
-                            criticalData.LastPingThread?.Name ?? "(none)");
+                            criticalData.RegisterTime.ToString("u"), GetStack(criticalData.RegisterStack),
+                            criticalData.LastPingTime.ToString("u"), GetStack(criticalData.LastPingStack),
+                            GetThread(criticalData.LastPingThread));
                         Log.Watchdog.TraceEvent(TraceEventType.Error, 0, message);
                     } else {
                         break;
@@ -219,6 +221,20 @@
                 }
                 m_Timer.SetDelay(m_Watchdog.GetNextExpiry());
             }
+        }
+
+        private static string GetStack(StackTrace stackTrace)
+        {
+            if (stackTrace == null) return " (none)\n";
+            return string.Format("\n{0}", stackTrace.ToString());
+        }
+
+        private static string GetThread(Thread thread)
+        {
+            if (thread == null) return "(none)";
+            if (thread.Name == null)
+                return thread.ManagedThreadId.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            return string.Format("{0} ({1})", thread.Name, thread.ManagedThreadId);
         }
 
         /// <summary>
