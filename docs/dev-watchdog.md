@@ -75,6 +75,7 @@ CrashReporter.Watchdog.Unregister("operationname");
 All information about the watchdog is logged to the `TraceSource` called `RJCP.CrashReporter.Watchdog`. This trace source
 should normally be assigned the same logging as your application, e.g. to the `SimplePrioMemoryTraceListener`.
 
+`app.config`
 ```xml
   <system.diagnostics>
     <sharedListeners>
@@ -218,3 +219,65 @@ precisely how much time is incremented. When the
 `VirtualTimerSource.UpdateClock(int)` is called, events occur on that thread
 instead of a pool thread. See the unit test cases on how to use the virtual
 timers for manipulating the watchdog timeouts.
+
+## Overriding Watchdog Behaviour
+
+It is possible to modify the configuration file of the application to override
+the warning and critical timeout values. This is useful in situations where
+software may use a timeout that is too conservative, and as a short-term
+workaround, the watchdog values might need to be relaxed.
+
+In a similar manner, the timeouts can be shortened, which can be useful to test
+watchdog behaviour.
+
+If there is no configuration for the CrashReporter at all in your software, add
+a section similar to the example below.
+
+`app.config`
+```xml
+  <configSections>
+    <sectionGroup name="CrashReporter">
+      <section name="Watchdog" type="RJCP.Diagnostics.Config.Watchdog, RJCP.Diagnostics.CrashReporter"/>
+    </sectionGroup>
+  </configSections>
+
+  <CrashReporter>
+    <Watchdog>
+      <Overrides>
+        <Task name="app" warning="30000" critical="-1"/>
+      </Overrides>
+    </Watchdog>
+  </CrashReporter>
+```
+
+In the `<Overrides>` section, add an override, with the name of the watchdog
+task (to determine the application names, look at the code base, or the log
+files) and the timeout values that should be used.
+
+All timeout values are in milliseconds. A timeout of -1 is to disable that
+particular watchdog. So if a warning is still required, but the program should
+not exit, the `critical` can be set to -1 as given in the example above.
+
+If using the `XmlCrashDumper` in the configuration, merge the XML elements
+together, such as:
+
+`app.config`
+```xml
+  <configSections>
+    <sectionGroup name="CrashReporter">
+      <section name="XmlCrashDumper" type="RJCP.Diagnostics.Config.XmlCrashDumper, RJCP.Diagnostics.CrashReporter"/>
+      <section name="Watchdog" type="RJCP.Diagnostics.Config.Watchdog, RJCP.Diagnostics.CrashReporter"/>
+    </sectionGroup>
+  </configSections>
+
+  <CrashReporter>
+    <XmlCrashDumper>
+      <StyleSheet name="RJCP.Diagnostics.CrashReporter, RJCP.Diagnostics.CrashExport.Xml.CrashDump.xsl"/>
+    </XmlCrashDumper>
+    <Watchdog>
+      <Overrides>
+        <Task name="app" warning="30000" critical="-1"/>
+      </Overrides>
+    </Watchdog>
+  </CrashReporter>
+```

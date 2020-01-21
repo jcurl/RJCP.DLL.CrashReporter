@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Config.CrashReporter;
 
     /// <summary>
     /// A Watchdog for threads.
@@ -68,12 +69,19 @@
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
+            bool overrideActive = AppConfig.Config.Watchdog.Overrides.TryGetOverride(name, out WatchdogOverride wdOverride);
+            if (overrideActive) {
+                warning = wdOverride.WarningTimeout;
+                critical = wdOverride.CriticalTimeout;
+            }
+
             lock (m_TimerSyncLock) {
                 bool added = m_Watchdog.Add(name, warning, critical);
                 if (added) {
                     m_Timer.SetDelay(m_Watchdog.GetNextExpiry());
                     Log.Watchdog.TraceEvent(TraceEventType.Information, 0,
-                        "Watchdog Register: '{0}'; warning {1}ms; critical {2}ms", name, warning, critical);
+                        "Watchdog Register: '{0}'; warning {1}ms; critical {2}ms{3}",
+                        name, warning, critical, overrideActive ? " (override)" : "");
                 } else {
                     if (Log.Watchdog.Switch.ShouldTrace(TraceEventType.Warning)) {
                         WatchdogData registerData = m_Watchdog[name];

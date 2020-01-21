@@ -19,21 +19,24 @@ namespace CrashReportApp
                 return 0;
             }
 
-            string path = Path.Combine(Environment.CurrentDirectory, Crash.Data.CrashDumpFactory.FileName);
-            Crash.Data.Dump(path);
+            try {
+                switch (mode) {
+                case ExecutionMode.Exception:
+                    // Now simulate an unhandled exception
+                    throw new InvalidOperationException("An exception which should cause a dump");
+                case ExecutionMode.Watchdog:
+                    // Register a watchdog.
+                    CrashReporter.Watchdog.Register("app", 2000, 5000);
 
-            switch (mode) {
-            case ExecutionMode.Exception:
-                // Now simulate an unhandled exception
-                throw new InvalidOperationException("An exception which should cause a dump");
-            case ExecutionMode.Watchdog:
-                // Register a watchdog.
-                CrashReporter.Watchdog.Register("app", 2000, 5000);
-
-                // This should result in a watchdog timeout, and crash the program.
-                System.Threading.Thread.Sleep(10000);
-                break;
+                    // This should result in a watchdog timeout, and crash the program.
+                    System.Threading.Thread.Sleep(10000);
+                    break;
+                }
+            } finally {
+                string path = Path.Combine(Environment.CurrentDirectory, Crash.Data.CrashDumpFactory.FileName);
+                Crash.Data.Dump(path);
             }
+
             return 0;
         }
 

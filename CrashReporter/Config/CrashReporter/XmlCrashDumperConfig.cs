@@ -1,12 +1,12 @@
 ﻿namespace RJCP.Diagnostics.Config.CrashReporter
 {
-    internal class XmlCrashDumper
+    internal class XmlCrashDumperConfig
     {
-        private Config.XmlCrashDumper m_Config;
+        private XmlCrashDumper m_Config;
 
-        public XmlCrashDumper() { }
+        public XmlCrashDumperConfig() { }
 
-        public XmlCrashDumper(Config.XmlCrashDumper config)
+        public XmlCrashDumperConfig(XmlCrashDumper config)
         {
             m_Config = config;
         }

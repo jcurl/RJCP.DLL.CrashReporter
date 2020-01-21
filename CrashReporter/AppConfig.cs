@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.Config.CrashReporter
+﻿namespace RJCP.Diagnostics
 {
     using System;
     using System.Configuration;
@@ -41,7 +41,10 @@
                     try {
                         switch (section.SectionInformation.Name) {
                         case "XmlCrashDumper":
-                            XmlCrashDumper = new XmlCrashDumper((Config.XmlCrashDumper)grp.Sections["XmlCrashDumper"]);
+                            XmlCrashDumper = new Config.CrashReporter.XmlCrashDumperConfig((Config.XmlCrashDumper)grp.Sections["XmlCrashDumper"]);
+                            break;
+                        case "Watchdog":
+                            Watchdog = new Config.CrashReporter.WatchdogConfig((Config.Watchdog)grp.Sections["Watchdog"]);
                             break;
                         }
                     } catch (ConfigurationException) {
@@ -49,8 +52,15 @@
                     }
                 }
             }
+
+            // Provide default implementations is it is not in the configuration. Code doesn't need to check for 'null'
+            // making it safer.
+            if (XmlCrashDumper == null) XmlCrashDumper = new Config.CrashReporter.XmlCrashDumperConfig();
+            if (Watchdog == null) Watchdog = new Config.CrashReporter.WatchdogConfig();
         }
 
-        public XmlCrashDumper XmlCrashDumper { get; private set; } = new XmlCrashDumper();
+        public Config.CrashReporter.XmlCrashDumperConfig XmlCrashDumper { get; private set; }
+
+        public Config.CrashReporter.WatchdogConfig Watchdog { get; private set; }
     }
 }

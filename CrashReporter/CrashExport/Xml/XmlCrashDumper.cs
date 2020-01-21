@@ -139,7 +139,7 @@
 
         private Stream GetStyleSheetResource()
         {
-            string resource = Config.CrashReporter.AppConfig.Config.XmlCrashDumper.StyleSheetName;
+            string resource = AppConfig.Config.XmlCrashDumper.StyleSheetName;
             if (string.IsNullOrWhiteSpace(resource)) return GetDefaultStyleSheetResource();
 
             System.Reflection.Assembly assembly;
