@@ -264,9 +264,9 @@
         public static void DefaultWarningEvent(object sender, WatchdogEventArgs args)
         {
             string prefix = string.Format("{0}.wd", Process.GetCurrentProcess().ProcessName);
-            string fileName = Dump.Crash.Data.GetCrashPath(prefix);
+            string dumpPath = Dump.Crash.Data.GetCrashDir(prefix);
             try {
-                string path = CrashReporter.CreateDump(fileName, Dump.CoreType.None);
+                string path = CrashReporter.CreateDump(dumpPath, Dump.CoreType.None);
                 Log.CrashLog.TraceEvent(TraceEventType.Verbose, 0, "Watchdog warning created at: {0}", path);
             } catch {
                 Log.CrashLog.TraceEvent(TraceEventType.Information, 0, "Watchdog warning failed");
@@ -300,9 +300,9 @@
         public static void DefaultCriticalEvent(object sender, WatchdogEventArgs args)
         {
             string prefix = string.Format("{0}.wderr", Process.GetCurrentProcess().ProcessName);
-            string fileName = Dump.Crash.Data.GetCrashPath(prefix);
+            string dumpPath = Dump.Crash.Data.GetCrashDir(prefix);
             try {
-                string path = CrashReporter.CreateDump(fileName);
+                string path = CrashReporter.CreateDump(dumpPath);
                 Log.CrashLog.TraceEvent(TraceEventType.Information, 0, "Watchdog error created at: {0}", path);
             } catch {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Watchdog error failed");

@@ -10,6 +10,7 @@
 
     internal sealed class XmlCrashDumper : ICrashDataDumpFile
     {
+        internal const string DefaultFileName = "CrashDump.xml";
         private const string RootName = "DiagnosticDump";
 
         private bool m_OwnsStream;
@@ -21,7 +22,13 @@
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
             if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
 
-            Path = System.IO.Path.GetDirectoryName(fileName);
+            if (Directory.Exists(fileName)) {
+                Path = fileName;
+                fileName = System.IO.Path.Combine(fileName, DefaultFileName);
+            } else {
+                Path = System.IO.Path.GetDirectoryName(fileName);
+            }
+
             try {
                 m_Writer = CreateFileInternal(fileName, false);
                 m_Writer.WriteStartElement(RootName);

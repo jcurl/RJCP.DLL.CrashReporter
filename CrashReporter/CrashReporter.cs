@@ -273,7 +273,10 @@
         /// <summary>
         /// Creates a dump with a mini dump according to <see cref="CoreType"/>.
         /// </summary>
-        /// <param name="fileName">File name of the crash dump to create without an extension.</param>
+        /// <param name="fileName">
+        /// File name of the compressed crash dump file to create without the extension (the extension will be
+        /// automatically added based on the type of compression used).
+        /// </param>
         /// <returns>The name of the file that was created.</returns>
         /// <remarks>
         /// You can use this method to generate your own core dump as required, for example, if an exception is caught
@@ -301,12 +304,26 @@
         /// <summary>
         /// Creates a dump with the minidump specified.
         /// </summary>
-        /// <param name="fileName">File name of the crash dump to create without an extension.</param>
+        /// <param name="fileName">
+        /// File name of the compressed crash dump file to create without the extension (the extension will be
+        /// automatically added based on the type of compression used).
+        /// </param>
         /// <param name="coreType">Type of the core dump to create.</param>
         /// <returns>The name of the file that was generated, so the user might be notified.</returns>
         /// <remarks>
-        /// You can use this method to generate your own core dump as required, for example, if an exception is caught
-        /// (so that the <see cref="AppDomain.UnhandledException"/> won't be raised).
+        /// You can use this method to generate a core dump programmatically with crash data. It is useful during
+        /// unexpected exceptions.
+        /// <para>
+        /// The <paramref name="fileName"/> is the name of the compressed dump file to create. It should not have an
+        /// extension, as the correct extension based on the compression scheme is automatically added. If it contains
+        /// a recognized extension, that will be used.
+        /// </para>
+        /// <para>
+        /// A temporary directory of the same name as <paramref name="fileName"/> without the extension, is created
+        /// (or used if it already exists) to prepare the compressed file. This allows the directory to be first
+        /// created and data to be populated which should be provided in addition to crash dump. In this case,
+        /// <paramref name="fileName"/> is the directory which should be used for creating the compressed dump file.
+        /// </para>
         /// </remarks>
         public static string CreateDump(string fileName, CoreType coreType)
         {
@@ -314,33 +331,47 @@
                 CleanUpDump();
             } catch { /* Ignore any errors while trying to clean up the dump, so we can continue to crash */ }
 
-            string path;
-            try {
-                if (fileName == null) {
-                    path = Crash.Data.Dump();
-                } else {
-                    path = Crash.Data.Dump(fileName);
+            string crashDumpFile = null;
+            if (fileName != null) {
+                // If the file name has a known extension, then remove it. It will be added back later.
+                string extension = Path.GetExtension(fileName);
+                if (extension.Equals(".zip", StringComparison.OrdinalIgnoreCase)) {
+                    fileName = Path.Combine(
+                        Path.GetDirectoryName(fileName),
+                        Path.GetFileNameWithoutExtension(fileName));
                 }
-                if (path == null) return null;
+                crashDumpFile = Path.Combine(fileName, Crash.Data.CrashDumpFactory.FileName);
+            }
+
+            string crashDumpPath;
+            try {
+                if (crashDumpFile == null) {
+                    crashDumpPath = Crash.Data.Dump();
+                } else {
+                    crashDumpPath = Crash.Data.Dump(crashDumpFile);
+                }
+                if (crashDumpPath == null) return null;
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Error creating dump: {0}", ex.ToString());
                 throw;
             }
 
-            string dumpDir;
+            string coreDumpDir;
             try {
-                if (File.Exists(path)) {
-                    // This is a file, not a directory, so we get the directory portion.
-                    dumpDir = Path.GetDirectoryName(path);
-                } else if (Directory.Exists(path)) {
-                    dumpDir = path;
+                if (File.Exists(crashDumpPath)) {
+                    // This is a file, not a directory, so we get the directory portion and put the core dump next to
+                    // it.
+                    coreDumpDir = Path.GetDirectoryName(crashDumpPath);
+                } else if (Directory.Exists(crashDumpPath)) {
+                    coreDumpDir = crashDumpPath;
                 } else {
                     return null;
                 }
 
-                string dumpName = string.Format("{0}.{1}.dmp", Process.GetCurrentProcess().ProcessName, Process.GetCurrentProcess().Id);
-                string coreName = Path.Combine(dumpDir, dumpName);
-                Core.MiniDump(coreName, coreType);
+                string coreDumpName = string.Format("{0}.{1}.dmp",
+                    Process.GetCurrentProcess().ProcessName, Process.GetCurrentProcess().Id);
+                string coreDumpPath = Path.Combine(coreDumpDir, coreDumpName);
+                Core.MiniDump(coreDumpPath, coreType);
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Error creating core: {0}", ex.ToString());
                 throw;
@@ -348,13 +379,13 @@
 
             string dumpFileName;
             try {
-                dumpFileName = Dump.Archive.Compress.CompressFolder(dumpDir);
+                dumpFileName = Dump.Archive.Compress.CompressFolder(coreDumpDir);
                 if (dumpFileName != null && File.Exists(dumpFileName)) {
                     // Only delete if compression was successful.
-                    Dump.Archive.FileSystem.DeleteFolder(dumpDir);
+                    Dump.Archive.FileSystem.DeleteFolder(coreDumpDir);
 
-                    if (Directory.Exists(dumpDir))
-                        Log.CrashLog.TraceEvent(TraceEventType.Warning, 0, "Couldn't complete remove folder {0}", dumpDir);
+                    if (Directory.Exists(coreDumpDir))
+                        Log.CrashLog.TraceEvent(TraceEventType.Warning, 0, "Couldn't complete remove folder {0}", coreDumpDir);
                 }
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Compressing folder Exception: {0}", ex.ToString());

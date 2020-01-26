@@ -11,11 +11,14 @@
     public interface ICrashDumpFactory
     {
         /// <summary>
-        /// Provides a recommended file name for the factory.
+        /// The dumper recommended default file name.
         /// </summary>
         /// <value>
-        /// A recommended file name for creating a file with the factory. If the property is
-        /// <see cref="string.Empty"/>, then the crash dumper creates multiple files in a directory.
+        /// The recommended file name to use creating a dump file using this factory. The recommended file name also
+        /// contains the extension that is best used to interpret the file. If this property is
+        /// <see cref="string.Empty"/>, the dumper ignores the file name and creates multiple files using the path
+        /// provided as a directory (e.g. it might create a text file for each set of information required, such as
+        /// CSV files).
         /// </value>
         string FileName { get; }
 
@@ -35,6 +38,16 @@
         /// <see cref="FileName"/>. If <see cref="FileName"/> is empty, this would result in the directory where to
         /// write multiple files to (and the dumper writes multiple files to that directory).
         /// </remarks>
+        /// <example>
+        /// <code lang="csharp">
+        /// string baseDir = GetDumpBaseDirectory();    // Your code to get the directory for dumps for this process,
+        ///                                             // based on the process name, PID, date/time, etc.
+        /// string path = Path.Combine(baseDir, Crash.Data.CrashDumpFactory.FileName);
+        /// using (ICrashDataDumpFile crashFile = Crash.Data.CrashDumpFactory.Create(path)) {
+        ///   ...
+        /// }
+        /// </code>
+        /// </example>
         ICrashDataDumpFile Create(string fileName);
 
         /// <summary>
@@ -62,6 +75,16 @@
         /// An <see cref="ICrashDataDumpFile"/> which can be given to dumpers implementing
         /// <see cref="ICrashDataExport"/>.
         /// </returns>
+        /// <example>
+        /// <code lang="csharp">
+        /// string baseDir = GetDumpBaseDirectory();    // Your code to get the directory for dumps for this process,
+        ///                                             // based on the process name, PID, date/time, etc.
+        /// string path = Path.Combine(baseDir, Crash.Data.CrashDumpFactory.FileName);
+        /// using (await ICrashDataDumpFile crashFile = Crash.Data.CrashDumpFactory.CreateAsync(path)) {
+        ///   ...
+        /// }
+        /// </code>
+        /// </example>
         Task<ICrashDataDumpFile> CreateAsync(string fileName);
 
         /// <summary>

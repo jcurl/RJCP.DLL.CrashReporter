@@ -109,24 +109,24 @@
         /// </returns>
         public string Dump()
         {
-            string fileName = GetCrashPath(null);
-            return Dump(fileName);
+            string path = GetCrashPath(null);
+            return Dump(path);
         }
 
         /// <summary>
         /// Dumps debugging information to disk, writing to the file provided.
         /// </summary>
-        /// <param name="fileName">Name of the dump file to generate.</param>
+        /// <param name="path">Path for of the dump file/directory (depending on the factory).</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="fileName"/> is <see langword="null"/>.
+        /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
         /// <returns>Returns a path to a directory or a file where the crash dump was generated.</returns>
-        public string Dump(string fileName)
+        public string Dump(string path)
         {
-            using (ICrashDataDumpFile dump = CrashDumpFactory.Create(fileName)) {
+            using (ICrashDataDumpFile dump = CrashDumpFactory.Create(path)) {
                 Dump(dump);
             }
-            return fileName;
+            return path;
         }
 
         /// <summary>
@@ -154,12 +154,9 @@
             dump.Flush();
         }
 
-        internal const string CrashPathRegEx = @"-\d{14}\.[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-
-        internal static string GetCrashFolder()
+        private string GetCrashPath(string prefix)
         {
-            string basepath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            return Path.Combine(basepath, "CrashDumps");
+            return Path.Combine(GetCrashDir(prefix), CrashDumpFactory.FileName);
         }
 
         /// <summary>
@@ -171,24 +168,42 @@
         /// prior.
         /// </param>
         /// <returns>A fully qualified path that can be given to <see cref="Dump(string)"/>.</returns>
-        public string GetCrashPath(string prefix)
+        public string GetCrashDir(string prefix)
         {
             if (string.IsNullOrWhiteSpace(prefix)) prefix = Process.GetCurrentProcess().ProcessName;
             string name = string.Format("{0}-{1:yyyyMMddHHmmss}.{2}", prefix, DateTime.Now, Guid.NewGuid().ToString());
-            string path = Path.Combine(GetCrashFolder(), name);
-            if (!Directory.Exists(path)) {
-                try {
-                    Directory.CreateDirectory(path);
-                    return Path.Combine(path, CrashDumpFactory.FileName);
-                } catch (PathTooLongException) {  // Creation failed
-                } catch (DirectoryNotFoundException) {  // Creation failed
-                } catch (NotSupportedException) { // Creation failed
-                } catch (IOException) { // Creation failed
-                } catch (UnauthorizedAccessException) {  // Creation failed
+            string crashDir = Path.Combine(GetCrashFolder(), name);
+
+            if (!CreateCrashDirectory(crashDir)) {
+                crashDir = Path.Combine(Environment.CurrentDirectory, name);
+                if (!CreateCrashDirectory(crashDir)) {
+                    crashDir = Environment.CurrentDirectory;
                 }
             }
 
-            return Path.Combine(Environment.CurrentDirectory, name);
+            return crashDir;
+        }
+
+        internal const string CrashPathRegEx = @"-\d{14}\.[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+
+        internal static string GetCrashFolder()
+        {
+            string basepath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return Path.Combine(basepath, "CrashDumps");
+        }
+
+        private bool CreateCrashDirectory(string directory)
+        {
+            try {
+                if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+                return true;
+            } catch (PathTooLongException) {  // Creation failed
+            } catch (DirectoryNotFoundException) {  // Creation failed
+            } catch (NotSupportedException) { // Creation failed
+            } catch (IOException) { // Creation failed
+            } catch (UnauthorizedAccessException) {  // Creation failed
+            }
+            return false;
         }
 
 #if NET45
@@ -205,17 +220,17 @@
         /// <summary>
         /// Dumps debugging information to disk, writing to the file provided.
         /// </summary>
-        /// <param name="fileName">Name of the dump file to generate.</param>
+        /// <param name="path">Path for of the dump file/directory (depending on the factory).</param>
         /// <returns>An object that can be awaited on.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="fileName"/> is <see langword="null"/>.
+        /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
-        public async Task<string> DumpAsync(string fileName)
+        public async Task<string> DumpAsync(string path)
         {
-            using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(fileName)) {
+            using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(path)) {
                 await DumpAsync(dump);
             }
-            return fileName;
+            return path;
         }
 
         /// <summary>

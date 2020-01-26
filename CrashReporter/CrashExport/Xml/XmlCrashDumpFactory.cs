@@ -12,24 +12,28 @@
     public class XmlCrashDumpFactory : ICrashDumpFactory
     {
         /// <summary>
-        /// Provides a recommended file name for the factory.
+        /// The dumper recommended default file name.
         /// </summary>
         /// <value>
-        /// A recommended file name for creating a file with the factory.
+        /// The recommended file name to use creating a dump file using this factory. The recommended file name also
+        /// contains the extension that is best used to interpret the file.
         /// </value>
-        public string FileName { get { return "CrashDump.xml"; } }
+        public string FileName { get { return XmlCrashDumper.DefaultFileName; } }
 
         /// <summary>
         /// Creates the dump from the given file name.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fileName">Name of the file to create.</param>
         /// <returns>
         /// An <see cref="ICrashDataDumpFile"/> which can be given to dumpers implementing
         /// <see cref="ICrashDataExport"/>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="fileName"/> is <see langword="null"/>.
-        /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <remarks>
+        /// It is intended to call this method by choosing the directory where to store the dump, combined with the
+        /// <see cref="FileName"/>. If the path given is a directory, the crash dump file will be created within that
+        /// directory.
+        /// </remarks>
         public ICrashDataDumpFile Create(string fileName)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
@@ -77,11 +81,17 @@
         /// <summary>
         /// Creates the dump from the given file name asynchronously.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fileName">Name of the file to create.</param>
         /// <returns>
-        /// An <see cref="ICrashDataDumpFile" /> which can be given to dumpers implementing
-        /// <see cref="ICrashDataExport" />.
+        /// An <see cref="ICrashDataDumpFile"/> which can be given to dumpers implementing
+        /// <see cref="ICrashDataExport"/>.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <remarks>
+        /// It is intended to call this method by choosing the directory where to store the dump, combined with the
+        /// <see cref="FileName"/>. If the path given is a directory, the crash dump file will be created within that
+        /// directory.
+        /// </remarks>
         public Task<ICrashDataDumpFile> CreateAsync(string fileName)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
