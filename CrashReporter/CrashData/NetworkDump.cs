@@ -64,7 +64,11 @@
         /// </summary>
         /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
         /// <param name="row">The row that should be updated.</param>
-        protected override void UpdateRow(NetworkInterface item, DumpRow row)
+        /// <returns>
+        /// Returns <see langword="true"/> if the operation was successful and can be added to the dump file, else
+        /// <see langword="false"/> that there was a problem and this row should be skipped.
+        /// </returns>
+        protected override bool UpdateRow(NetworkInterface item, DumpRow row)
         {
             row[AdapterName] = item.Name;
             row[AdapterDescription] = item.Description;
@@ -85,6 +89,8 @@
             row[AdapterIpAnycast] = GetIpInfoAddresses(properties.AnycastAddresses);
             row[AdapterIpMulticastAddr] = GetMulticastAddresses(properties.MulticastAddresses);
             row[AdapterIpDhcp] = GetIpAddresses(properties.DhcpServerAddresses);
+
+            return true;
         }
 
         private string GetUnicastAddresses(UnicastIPAddressInformationCollection list)

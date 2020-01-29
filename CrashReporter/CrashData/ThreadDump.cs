@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.CrashData
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using CrashExport;
@@ -57,14 +58,23 @@
         /// </summary>
         /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
         /// <param name="row">The row that should be updated.</param>
-        protected override void UpdateRow(ProcessThread item, DumpRow row)
+        /// <returns>
+        /// Returns <see langword="true"/> if the operation was successful and can be added to the dump file, else
+        /// <see langword="false"/> that there was a problem and this row should be skipped.
+        /// </returns>
+        protected override bool UpdateRow(ProcessThread item, DumpRow row)
         {
-            row[ThreadId] = item.Id.ToString();
-            row[ThreadState] = item.ThreadState.ToString();
-            row[ThreadBasePrio] = item.BasePriority.ToString();
-            row[ThreadPrio] = item.PriorityLevel.ToString();
-            row[ThreadUserTime] = item.UserProcessorTime.TotalSeconds.ToString();
-            row[ThreadTotalTime] = item.TotalProcessorTime.TotalSeconds.ToString();
+            try {
+                row[ThreadId] = item.Id.ToString();
+                row[ThreadState] = item.ThreadState.ToString();
+                row[ThreadBasePrio] = item.BasePriority.ToString();
+                row[ThreadPrio] = item.PriorityLevel.ToString();
+                row[ThreadUserTime] = item.UserProcessorTime.TotalSeconds.ToString();
+                row[ThreadTotalTime] = item.TotalProcessorTime.TotalSeconds.ToString();
+                return true;
+            } catch (InvalidOperationException) {
+                return false;
+            }
         }
     }
 }

@@ -52,7 +52,11 @@
         /// </summary>
         /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
         /// <param name="row">The row that should be updated.</param>
-        protected override void UpdateRow(Assembly item, DumpRow row)
+        /// <returns>
+        /// Returns <see langword="true"/> if the operation was successful and can be added to the dump file, else
+        /// <see langword="false"/> that there was a problem and this row should be skipped.
+        /// </returns>
+        protected override bool UpdateRow(Assembly item, DumpRow row)
         {
             row[AssemblyName] = item.GetName().Name;
             row[AssemblyFullName] = item.FullName;
@@ -62,6 +66,7 @@
             row[AssemblyLocation] = item.Location;
             row[AssemblyCodeBase] = item.CodeBase;
             row[AssemblyProcessor] = item.GetName().ProcessorArchitecture.ToString();
+            return true;
         }
 
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 #if NET45
     using System.Threading.Tasks;
 #endif
@@ -54,7 +55,11 @@
         /// </summary>
         /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
         /// <param name="row">The row that should be updated.</param>
-        protected abstract void UpdateRow(T item, DumpRow row);
+        /// <returns>
+        /// Returns <see langword="true"/> if the operation was successful and can be added to the dump file, else
+        /// <see langword="false"/> that there was a problem and this row should be skipped.
+        /// </returns>
+        protected abstract bool UpdateRow(T item, DumpRow row);
 
         /// <summary>
         /// Check if this object should dump.
@@ -76,8 +81,14 @@
             using (IDumpTable table = dumpFile.DumpTable(TableName, RowName)) {
                 table.DumpHeader(m_Row);
                 foreach (T item in GetRows()) {
-                    UpdateRow(item, m_Row);
-                    table.DumpRow(m_Row);
+                    bool updated = false;
+                    try {
+                        updated = UpdateRow(item, m_Row);
+                    } catch (Exception ex) {
+                        Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Couldn't dump row for {0}: {1}",
+                            GetType().ToString(), ex.ToString());
+                    }
+                    if (updated) table.DumpRow(m_Row);
                 }
                 table.Flush();
             }
@@ -96,8 +107,14 @@
             using (IDumpTable table = await dumpFile.DumpTableAsync(TableName, RowName)) {
                 await table.DumpHeaderAsync(m_Row);
                 foreach (T item in GetRows()) {
-                    UpdateRow(item, m_Row);
-                    await table.DumpRowAsync(m_Row);
+                    bool updated = false;
+                    try {
+                        updated = UpdateRow(item, m_Row);
+                    } catch (Exception ex) {
+                        Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Couldn't dump row for {0}: {1}",
+                            GetType().ToString(), ex.ToString());
+                    }
+                    if (updated) await table.DumpRowAsync(m_Row);
                 }
                 await table.FlushAsync();
             }

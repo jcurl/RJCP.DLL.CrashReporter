@@ -58,7 +58,11 @@
         /// </summary>
         /// <param name="item">The item returned from <see cref="GetRows()"/>.</param>
         /// <param name="row">The row that should be updated.</param>
-        protected override void UpdateRow(ProcessModule item, DumpRow row)
+        /// <returns>
+        /// Returns <see langword="true"/> if the operation was successful and can be added to the dump file, else
+        /// <see langword="false"/> that there was a problem and this row should be skipped.
+        /// </returns>
+        protected override bool UpdateRow(ProcessModule item, DumpRow row)
         {
             row[ModName] = item.ModuleName;
             row[ModFileVersion] = item.FileVersionInfo.FileVersion;
@@ -69,6 +73,7 @@
             row[ModFileDesc] = item.FileVersionInfo.FileDescription;
             row[ModMemSize] = item.ModuleMemorySize.ToString();
             row[ModBaseAddress] = item.BaseAddress.ToString();
+            return true;
         }
     }
 }
