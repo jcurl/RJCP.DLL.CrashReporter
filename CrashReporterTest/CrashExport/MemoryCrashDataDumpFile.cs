@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using MemoryDump;
+    using CodeQuality.NUnitExtensions;
 #if NET45
     using System.Threading.Tasks;
 #endif
@@ -26,14 +27,14 @@
         /// </remarks>
         public bool IsSynchronous { get; set; } = true;
 
-        private NUnit.Framework.ScratchPad m_Scratch;
+        private ScratchPad m_Scratch;
 
         public string Path
         {
             get
             {
                 if (m_Scratch == null) {
-                    m_Scratch = new NUnit.Framework.ScratchPad(NUnit.Framework.ScratchOptions.CreateScratch | NUnit.Framework.ScratchOptions.KeepCurrentDir);
+                    m_Scratch = new ScratchPad(ScratchOptions.CreateScratch | ScratchOptions.KeepCurrentDir);
                 }
                 return m_Scratch.Path;
             }

@@ -3,6 +3,7 @@
     using System.IO;
     using System.Xml;
     using NUnit.Framework;
+    using RJCP.CodeQuality.NUnitExtensions;
 #if NET45
     using System.Threading.Tasks;
 #endif

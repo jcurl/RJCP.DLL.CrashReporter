@@ -2,7 +2,7 @@
 {
     using CrashExport;
     using NUnit.Framework;
-    using OSInfo = NUnit.Framework.OSInfo;
+    using OSInfo = RJCP.CodeQuality.OSInfo;
 
     [TestFixture(Category = "CrashReporter.CrashData")]
     public class WinVerDumpTest : DumpTestBase

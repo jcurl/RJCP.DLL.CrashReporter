@@ -6,6 +6,7 @@
     using NUnit.Framework;
     using CrashExport;
     using Dump;
+    using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture(Category = "CrashReporter.Trace")]
     public class AppConfigLogTest

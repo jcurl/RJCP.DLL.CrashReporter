@@ -44,9 +44,9 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
-    <ProjectReference Include="..\..\nunitextensions\NUnitExtensions\RJCP.NUnitExtensions.csproj">
+    <ProjectReference Include="..\..\nunitextensions\CodeQuality\RJCP.CodeQuality.csproj">
       <Project>{a4d356f2-15ac-4ffe-b0c4-1d3d0973a124}</Project>
-      <Name>RJCP.NUnitExtensions</Name>
+      <Name>RJCP.CodeQuality</Name>
     </ProjectReference>
     <ProjectReference Include="..\CrashReporter\RJCP.CrashReporter-net40.csproj">
       <Project>{807b678b-ccbd-40f5-bf8c-88862c80d44e}</Project>

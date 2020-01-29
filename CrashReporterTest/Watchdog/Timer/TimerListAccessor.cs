@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Watchdog.Timer
 {
     using System.Collections.Generic;
-    using NUnit.Framework;
+    using RJCP.CodeQuality;
 
     public class TimerListAccessor : AccessorBase
     {

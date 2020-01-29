@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading;
     using NUnit.Framework;
+    using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture(Category = "CrashReporter.Dump")]
     public class DumpTest

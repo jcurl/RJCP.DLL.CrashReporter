@@ -3,6 +3,7 @@
     using System.Diagnostics;
     using System.IO;
     using NUnit.Framework;
+    using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture(Category = "CrashReporter")]
     public class CrashReporterTest
