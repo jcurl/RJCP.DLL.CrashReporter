@@ -2,15 +2,20 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>RJCP.CrashReporter</id>
-        <version></version>
+        <version>0.4.0.1</version>
         <authors>Jason Curl</authors>
+		<copyright>(C) 2019-2020, Jason Curl</copyright>
+		<license type="expression">MIT</license>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<projectUrl>https://github.com/jcurl/CrashReporter</projectUrl> 
         <description>Library tools to allow developers to capture debug information.</description>
         <language>en-US</language>
         <dependencies>
             <group targetFramework=".NETFramework4.0">
                 <dependency id="DotNetZip" version="1.13.5" />
             </group>
+			<group targetFramework=".NETFramework4.5">
+			</group>
         </dependencies>
     </metadata>
     <files>
@@ -24,5 +29,8 @@
         <file src="RJCP.CrashReporter-net45.csproj" target="src" />
         <file src="**.cs" target="src" />
         <file src="..\*.md" target="doc" />
+		<file src="..\docs\dev-tracing.md" target="doc" />
+		<file src="..\docs\dev-watchdog.md" target="doc" />
+		<file src="..\docs\dev-xmlcrashdump.md" target="doc" />
     </files>
 </package>
