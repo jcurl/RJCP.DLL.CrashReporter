@@ -9,11 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJCP.CrashReporterTest-net4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frameworks", "Frameworks", "{7A9DE728-787D-4594-81E4-C225E37CA1A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJCP.NUnitExtensions", "..\nunitextensions\NUnitExtensions\RJCP.NUnitExtensions.csproj", "{A4D356F2-15AC-4FFE-B0C4-1D3D0973A124}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJCP.CodeQuality", "..\nunitextensions\CodeQuality\RJCP.CodeQuality.csproj", "{A4D356F2-15AC-4FFE-B0C4-1D3D0973A124}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestApplication", "TestApplication", "{F8D0926E-F960-443D-BE22-31FB98C4EB1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrashReportApp", "CrashReportApp\CrashReportApp-net45.csproj", "{93706C19-D30E-422D-8BCF-7AF81F4B1504}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrashReportApp-net45", "CrashReportApp\CrashReportApp-net45.csproj", "{93706C19-D30E-422D-8BCF-7AF81F4B1504}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
