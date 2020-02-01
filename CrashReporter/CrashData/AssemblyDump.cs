@@ -63,8 +63,16 @@
             row[AssemblyVersion] = item.GetName().Version.ToString();
             row[AssemblyInfoVersion] = GetAssemblyInformationalVersion(item);
             row[AssemblyFileVersion] = GetAssemblyFileVersion(item);
-            row[AssemblyLocation] = item.Location;
-            row[AssemblyCodeBase] = item.CodeBase;
+            try {
+                row[AssemblyLocation] = item.Location;
+            } catch (NotSupportedException) {
+                row[AssemblyLocation] = "(Dynamic Assembly)";
+            }
+            try {
+                row[AssemblyCodeBase] = item.CodeBase;
+            } catch (NotSupportedException) {
+                row[AssemblyCodeBase] = "(Dynamic Assembly)";
+            }
             row[AssemblyProcessor] = item.GetName().ProcessorArchitecture.ToString();
             return true;
         }
