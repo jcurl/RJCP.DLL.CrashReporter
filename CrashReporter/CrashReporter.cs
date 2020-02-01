@@ -327,9 +327,11 @@
         /// </remarks>
         public static string CreateDump(string fileName, CoreType coreType)
         {
-            try {
-                CleanUpDump();
-            } catch { /* Ignore any errors while trying to clean up the dump, so we can continue to crash */ }
+            if (fileName == null) {
+                try {
+                    CleanUpDump();
+                } catch { /* Ignore any errors while trying to clean up the dump, so we can continue to crash */ }
+            }
 
             string crashDumpFile = null;
             if (fileName != null) {
@@ -394,26 +396,43 @@
             return dumpFileName;
         }
 
-        private static Regex s_CrashFileRegex;
-
-        private static Regex CrashFileRegEx
-        {
-            get
-            {
-                if (s_CrashFileRegex == null) {
-                    s_CrashFileRegex = new Regex(Crash.CrashPathRegEx);
-                }
-                return s_CrashFileRegex;
-            }
-        }
-
         private const long GbMultiplier = 1024 * 1024 * 1024;
 
         /// <summary>
         /// Removes old dump files from the default dump directory created when using <see cref="CreateDump()"/>.
         /// </summary>
-        /// <exception cref="PlatformNotSupportedException">
-        /// The platform is not supported, so delete operations can't be performed.
+        /// <remarks>
+        /// Over time, the number of files in the dump may take a significant amount of space. This method allows to
+        /// programmatically remove old dumps and large dumps as disk space is reduced.
+        /// <para>
+        /// A log might be required to be deleted, but if there is a file system error, it will be skipped.
+        /// </para>
+        /// </remarks>
+        public static void CleanUpDump()
+        {
+            string dumpFolder = Crash.GetCrashFolder();
+            CleanUpDump(dumpFolder, Crash.CrashPathRegEx);
+        }
+
+        /// <summary>
+        /// Removes old dump files from the default dump directory created when using <see cref="CreateDump()"/>.
+        /// </summary>
+        /// <param name="dumpFolder">The dump folder to clean.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dumpFolder"/> is <see langword="null"/>.
+        /// </exception>
+        public static void CleanUpDump(string dumpFolder)
+        {
+            CleanUpDump(dumpFolder, null);
+        }
+
+        /// <summary>
+        /// Removes old dump files from the default dump directory created when using <see cref="CreateDump()"/>.
+        /// </summary>
+        /// <param name="dumpFolder">The dump folder to clean.</param>
+        /// <param name="fileMatchRegEx">The file match regular expression to only erase dumps that match.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dumpFolder"/> is <see langword="null"/>.
         /// </exception>
         /// <remarks>
         /// Over time, the number of files in the dump may take a significant amount of space. This method allows to
@@ -426,17 +445,20 @@
             Justification = "Kept in case ordering is changed to reduce possible bugs")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value",
             Justification = "Kept in case ordering is changed to reduce possible bugs")]
-        public static void CleanUpDump()
+        public static void CleanUpDump(string dumpFolder, string fileMatchRegEx)
         {
-            string dumpFolder;
-            try {
-                dumpFolder = Crash.GetCrashFolder();
-            } catch (PlatformNotSupportedException) {
-                return;
-            }
+            if (dumpFolder == null) throw new ArgumentNullException(nameof(dumpFolder));
             if (!Directory.Exists(dumpFolder)) return;
 
-            Regex crashFileRegex = CrashFileRegEx;
+            Regex crashFileRegex = null;
+            if (fileMatchRegEx != null) {
+                try {
+                    crashFileRegex = new Regex(fileMatchRegEx);
+                } catch (ArgumentException) {
+                    // Ignore invalid regex. We don't clean.
+                    return;
+                }
+            }
             IList<FileSystemInfo> crashCandidates = new List<FileSystemInfo>();
 
             DirectoryInfo directory;
@@ -450,7 +472,7 @@
             DirectoryInfo[] subDirs = directory.GetDirectories();
             if (subDirs != null) {
                 foreach (DirectoryInfo subDir in subDirs) {
-                    if (crashFileRegex.IsMatch(subDir.Name)) {
+                    if (crashFileRegex == null || crashFileRegex.IsMatch(subDir.Name)) {
                         crashCandidates.Add(subDir);
                     }
                 }
@@ -459,20 +481,14 @@
             FileInfo[] files = directory.GetFiles();
             if (files != null) {
                 foreach (FileInfo file in files) {
-                    string nameNoExt = Path.GetFileNameWithoutExtension(file.Name);
-                    if (crashFileRegex.IsMatch(nameNoExt)) {
+                    if (crashFileRegex == null || crashFileRegex.IsMatch(file.Name)) {
                         crashCandidates.Add(file);
                     }
                 }
             }
 
-            // Delete everything more than 45 days old
             crashCandidates = CleanUpDumpOld(Config.CrashDumper.DumpDir.AgeDays, crashCandidates);
-
-            // Keep the 40 newest sets of logs
             crashCandidates = CleanUpDumpKeepNewest(Config.CrashDumper.DumpDir.MaxLogs, crashCandidates);
-
-            // 1000MB or 10% should be minimum free space, but keep the last 5 files always
             crashCandidates = CleanUpKeepSpace(
                 drive,
                 Config.CrashDumper.DumpDir.ReserveFree * GbMultiplier, Config.CrashDumper.DumpDir.ReserveFreePercent,
