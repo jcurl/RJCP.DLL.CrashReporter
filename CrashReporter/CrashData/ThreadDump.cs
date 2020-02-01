@@ -71,10 +71,12 @@
                 row[ThreadPrio] = item.PriorityLevel.ToString();
                 row[ThreadUserTime] = item.UserProcessorTime.TotalSeconds.ToString();
                 row[ThreadTotalTime] = item.TotalProcessorTime.TotalSeconds.ToString();
-                return true;
+            } catch (AccessViolationException) { // Ignore: Access denied
+            } catch (System.ComponentModel.Win32Exception) { // Ignore: Access denied
             } catch (InvalidOperationException) {
                 return false;
             }
+            return true;
         }
     }
 }
