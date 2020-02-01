@@ -312,6 +312,7 @@ important to separate them with the usage of different `targetFramework`
 attributes).
 
 `packages.RJCP.CrashReporterTest-net40.config`
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <packages>
@@ -322,6 +323,7 @@ attributes).
 ```
 
 `packages.RJCP.CrashReporterTest-net45.config`
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <packages>
@@ -421,6 +423,7 @@ for each target framework need to be modified, to add a target for after
 building to copy the correct application configuration:
 
 `CrashReportApp-net40.csproj`
+
 ```xml
   <Target Name="AfterBuild">
     <Delete Files="$(TargetDir)$(TargetFileName).config" />
@@ -431,6 +434,7 @@ building to copy the correct application configuration:
 and
 
 `CrashReportApp-net45.csproj`
+
 ```xml
   <Target Name="AfterBuild">
     <Delete Files="$(TargetDir)$(TargetFileName).config" />

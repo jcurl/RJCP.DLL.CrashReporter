@@ -34,6 +34,9 @@
                             case "Watchdog":
                                 Watchdog = new WatchdogConfig((Watchdog)grp.Sections["Watchdog"]);
                                 break;
+                            case "CrashDumper":
+                                CrashDumper = new CrashDumperConfig((CrashDumper)grp.Sections["CrashDumper"]);
+                                break;
                             }
                         } catch (ConfigurationException) {
                             // Ignore exception errors. They'll be logged by default in the FirstChance.
@@ -49,6 +52,7 @@
             // making it safer.
             if (XmlCrashDumper == null) XmlCrashDumper = new XmlCrashDumperConfig();
             if (Watchdog == null) Watchdog = new WatchdogConfig();
+            if (CrashDumper == null) CrashDumper = new CrashDumperConfig();
         }
 
         /// <summary>
@@ -62,5 +66,11 @@
         /// </summary>
         /// <value>The watchdog configuration.</value>
         public WatchdogConfig Watchdog { get; private set; }
+
+        /// <summary>
+        /// Gets the crash dumper configuration.
+        /// </summary>
+        /// <value>The crash dumper configuration.</value>
+        public CrashDumperConfig CrashDumper { get; private set; }
     }
 }

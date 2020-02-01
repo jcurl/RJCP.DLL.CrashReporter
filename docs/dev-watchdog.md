@@ -8,7 +8,7 @@ warning timeout, a crash dump is automatically generated (but no core). If
 threads don't ping the watchdog within the critical timeout, a crash dump and a
 core is generated (as configured in `CrashReporter`) and the program is exited.
 
-## Why Use Watchdog Functionality?
+## Why Use Watchdog Functionality
 
 Multithreaded programs are difficult to write, and even with the .NET
 async/await model, it is still easy to enter deadlocks in an application
@@ -76,6 +76,7 @@ All information about the watchdog is logged to the `TraceSource` called `RJCP.C
 should normally be assigned the same logging as your application, e.g. to the `SimplePrioMemoryTraceListener`.
 
 `app.config`
+
 ```xml
   <system.diagnostics>
     <sharedListeners>
@@ -236,6 +237,7 @@ If there is no configuration for the CrashReporter at all in your software, add
 a section similar to the example below.
 
 `app.config`
+
 ```xml
   <configSections>
     <sectionGroup name="CrashReporter">
@@ -264,6 +266,7 @@ If using the `XmlCrashDumper` in the configuration, merge the XML elements
 together, such as:
 
 `app.config`
+
 ```xml
   <configSections>
     <sectionGroup name="CrashReporter">
@@ -295,6 +298,7 @@ One can disable the functionality to capture the stack on ping by adding the
 following in the applicaton configuration file.
 
 `app.config`
+
 ```xml
   <CrashReporter>
     <Watchdog>

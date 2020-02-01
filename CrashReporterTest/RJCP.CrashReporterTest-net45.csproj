@@ -54,6 +54,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\CrashReporter\ParserAccessor.cs" />
+    <Compile Include="Config\CrashReporter\ParserTest.cs" />
     <Compile Include="CrashData\AssemblyDumpTest.cs" />
     <Compile Include="CrashData\DumpTestBase.cs" />
     <Compile Include="CrashData\EnvironmentDumpTest.cs" />

@@ -467,16 +467,16 @@
             }
 
             // Delete everything more than 45 days old
-            crashCandidates = CleanUpDumpOld(45, crashCandidates);
+            crashCandidates = CleanUpDumpOld(Config.CrashDumper.DumpDir.AgeDays, crashCandidates);
 
             // Keep the 40 newest sets of logs
-            crashCandidates = CleanUpDumpKeepNewest(40, crashCandidates);
+            crashCandidates = CleanUpDumpKeepNewest(Config.CrashDumper.DumpDir.MaxLogs, crashCandidates);
 
             // 1000MB or 10% should be minimum free space, but keep the last 5 files always
             crashCandidates = CleanUpKeepSpace(
                 drive,
-                5 * GbMultiplier, 1,     // Reserve is 5GB or 4% whichever is larger (e.g. 100GB = 5GB reserve; 1000GB = 10GB)
-                1 * GbMultiplier, 5,     // Don't exceed 1GB if more than 5 files
+                Config.CrashDumper.DumpDir.ReserveFree * GbMultiplier, Config.CrashDumper.DumpDir.ReserveFreePercent,
+                Config.CrashDumper.DumpDir.MaxDirSize * GbMultiplier, Config.CrashDumper.DumpDir.MaxDirSizeMinLogs,
                 crashCandidates);
         }
 

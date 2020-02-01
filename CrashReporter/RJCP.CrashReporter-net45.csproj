@@ -43,12 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\CrashDumper.cs" />
     <Compile Include="Config\CrashReporter\CrashConfig.cs" />
+    <Compile Include="Config\CrashReporter\CrashDumperConfig.cs" />
+    <Compile Include="Config\CrashReporter\DumpDir.cs" />
+    <Compile Include="Config\CrashReporter\EnvVar\IToken.cs" />
+    <Compile Include="Config\CrashReporter\EnvVar\VarState.cs" />
+    <Compile Include="Config\CrashReporter\Parser.cs" />
+    <Compile Include="Config\CrashReporter\EnvVar\TokenString.cs" />
+    <Compile Include="Config\CrashReporter\EnvVar\TokenVar.cs" />
     <Compile Include="Config\CrashReporter\WatchdogConfig.cs" />
     <Compile Include="Config\CrashReporter\WatchdogOverride.cs" />
     <Compile Include="Config\CrashReporter\WatchdogOverrides.cs" />
     <Compile Include="Config\CrashReporter\WatchdogPing.cs" />
     <Compile Include="Config\CrashReporter\XmlCrashDumperConfig.cs" />
+    <Compile Include="Config\DumpDirElement.cs" />
     <Compile Include="Config\StyleSheetElement.cs" />
     <Compile Include="Config\Watchdog.cs" />
     <Compile Include="Config\WatchdogOverride.cs" />

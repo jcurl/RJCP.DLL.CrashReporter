@@ -38,7 +38,8 @@ their precise names.
 
 Modify the `App.Config` to specify the location of the embedded resource.
 
-`App.Config`
+`app.Config`
+
 ```xml
   <configSections>
     <sectionGroup name="CrashReporter">

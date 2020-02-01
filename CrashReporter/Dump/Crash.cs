@@ -188,8 +188,7 @@
 
         internal static string GetCrashFolder()
         {
-            string basepath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            return Path.Combine(basepath, "CrashDumps");
+            return CrashReporter.Config.CrashDumper.DumpDir.Path;
         }
 
         private bool CreateCrashDirectory(string directory)

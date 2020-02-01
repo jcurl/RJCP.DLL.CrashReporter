@@ -9,7 +9,7 @@ library.
 
 Run the program with the single option
 
-```
+```text
 CrashReportApp.exe exception
 
 RJCP.CrashReporter Information: 0 : Crash dump created at: C:\Users\jcurl\AppData\Local\CrashDumps\CrashReportApp-20200119120159.2e161246-b00a-4907-8952-e5ac4f5cff9a.zip
@@ -38,7 +38,7 @@ On Mono for Linux, core dumps are not generated.
 
 Run the program with the single option
 
-```
+```text
 CrashReportApp.exe watchdog
 
 RJCP.CrashReporter Verbose: 0 : Watchdog warning created at: C:\Users\jcurl\AppData\Local\CrashDumps\CrashReportApp.wd-20200119120236.839de4cf-f3c6-4db9-b8a3-eb466424f195.zip
@@ -130,8 +130,8 @@ Open the minidump and ensure the crash is at the exception. The location of the
 stack at the time of the crash is at the code which caused the minidump, but
 going over the stack will show the root cause to be the exception:
 
-```
-Not Flagged	>	9056	0	Main Thread	Main Thread
+```text
+Not Flagged    >    9056    0    Main Thread    Main Thread
 RJCP.Diagnostics.CrashReporter.dll!RJCP.Diagnostics.Dump.Core.MiniDump
 [Managed to Native Transition]
 RJCP.Diagnostics.CrashReporter.dll!RJCP.Diagnostics.Dump.Core.MiniDump(string path, RJCP.Diagnostics.Dump.CoreType dumpType) Line 91
