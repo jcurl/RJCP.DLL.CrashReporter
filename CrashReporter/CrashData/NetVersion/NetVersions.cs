@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.CrashData.NetVersion
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Security;
@@ -58,8 +59,15 @@
         // See https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
         private void FindNetFxLegacy()
         {
+            string netKey;
+            if (Environment.Is64BitOperatingSystem && !Environment.Is64BitProcess) {
+                netKey = @"SOFTWARE\Wow6432Node\Microsoft\NET Framework Setup\NDP\";
+            } else {
+                netKey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\";
+            }
+
             try {
-                using (RegistryKey ndpKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\")) {
+                using (RegistryKey ndpKey = Registry.LocalMachine.OpenSubKey(netKey)) {
                     if (ndpKey == null) return;
                     foreach (string versionKeyName in ndpKey.GetSubKeyNames()) {
                         if (versionKeyName.StartsWith("v")) {
