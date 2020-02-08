@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.CrashData.NetVersion.NetFx.Net45
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     internal static class NetFxConfig
     {
@@ -29,7 +30,28 @@
         public static NetFxVersion GetNetFxVersion(int release)
         {
             if (Versions.TryGetValue(release, out NetFxVersion version)) return version;
-            return null;
+
+            var versionList = from netversion in Versions
+                              orderby netversion.Key select netversion;
+            NetFxVersion derivedVersion = null;
+            foreach (var netVersion in versionList) {
+                if (netVersion.Key >= release) {
+                    if (derivedVersion == null) {
+                        return new NetFxVersion("< 4.5",
+                            string.Format("Unknown .NET version before .NET 4.5 ({0})", release));
+                    }
+                    derivedVersion = netVersion.Value;
+                    break;
+                }
+                derivedVersion = netVersion.Value;
+            }
+
+            // This can't happen, because the enumeration will always have at least one element, but quiesces a
+            // possible null pointer warning.
+            if (derivedVersion == null) return null;
+
+            return new NetFxVersion(derivedVersion.Version,
+                string.Format(".NET {0} or later, release {1}", derivedVersion.Version, release));
         }
     }
 }
