@@ -51,6 +51,37 @@
             }
         }
 
+        [TestCase("\x8", "[0x08]", TestName = "DumpWithInvalidCharacters(bs)")]
+        [TestCase("\x0", "[0x00]", TestName = "DumpWithInvalidCharacters(nul)")]
+        [TestCase("C\x8L\x8I\x8N\x8K\x8 \x8$P$G", "C[0x08]L[0x08]I[0x08]N[0x08]K[0x08] [0x08]$P$G", TestName = "DumpWithInvalidCharacters(PS)")]
+        [TestCase("", "", TestName = "DumpWithInvalidCharacters(empty)")]
+        [TestCase(null, "", TestName = "DumpWithInvalidCharacters(null)")]
+        [TestCase("string", "string", TestName = "DumpWithInvalidCharacters(string)")]
+        [TestCase("string\x0", "string[0x00]", TestName = "DumpWithInvalidCharacters(string nul)")]
+        [TestCase("\x0string", "[0x00]string", TestName = "DumpWithInvalidCharacters(nul string)")]
+        public void DumpWithInvalidCharacters(string input, string expected)
+        {
+            using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.CreateScratch | ScratchOptions.KeepCurrentDir)) {
+                ICrashDumpFactory factory = new XmlCrashDumpFactory();
+                using (MemoryStream ms = new MemoryStream()) {
+                    using (ICrashDataDumpFile dump = factory.Create(ms, scratch.Path)) {
+                        CrashData.TestBlock block = new CrashData.TestBlock();
+                        block.AddEntry("TestKey", input);
+                        block.Dump(dump);
+                        dump.Flush();
+                    }
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    XmlDocument document = new XmlDocument();
+                    document.Load(ms);
+                    Assert.That(CheckDocument(document), Is.True);
+
+                    XmlNode rownode = document.SelectSingleNode("/DiagnosticDump/TestBlock/item");
+                    Assert.That(rownode.Attributes["TestKey"].Value, Is.EqualTo(expected));
+                }
+            }
+        }
+
         private bool CheckDocument(XmlDocument document)
         {
             XmlNode rownode = document.SelectSingleNode("/DiagnosticDump/TestBlock/item");

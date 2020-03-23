@@ -10,16 +10,21 @@
     {
         private const string TableName = "TestBlock";
 
-        private static readonly Dictionary<string, string> TestBlockData = new Dictionary<string, string>() {
+        private Dictionary<string, string> m_TestBlockData = new Dictionary<string, string>() {
             { "Property", "TestProperty" },
             { "Value", "TestValue" }
         };
 
+        public void AddEntry(string key, string value)
+        {
+            m_TestBlockData.Add(key, value);
+        }
+
         public void Dump(ICrashDataDumpFile dumpFile)
         {
             using (IDumpTable table = dumpFile.DumpTable(TableName, "item")) {
-                table.DumpHeader(new string[] { "Property", "Value" });
-                table.DumpRow(TestBlockData);
+                table.DumpHeader(m_TestBlockData.Keys);
+                table.DumpRow(m_TestBlockData);
                 table.Flush();
             }
         }
@@ -28,8 +33,8 @@
         public async Task DumpAsync(ICrashDataDumpFile dumpFile)
         {
             using (IDumpTable table = await dumpFile.DumpTableAsync(TableName, "item")) {
-                await table.DumpHeaderAsync(new string[] { "Property", "Value" });
-                await table.DumpRowAsync(TestBlockData);
+                await table.DumpHeaderAsync(m_TestBlockData.Keys);
+                await table.DumpRowAsync(m_TestBlockData);
                 await table.FlushAsync();
             }
         }

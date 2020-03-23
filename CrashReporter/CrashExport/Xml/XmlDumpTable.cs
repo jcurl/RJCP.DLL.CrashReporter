@@ -31,7 +31,7 @@
             try {
                 IEnumerable<string> fields = m_Fields ?? row.Keys;
                 foreach(string field in fields) {
-                    m_Writer.WriteAttributeString(field, row[field]);
+                    m_Writer.WriteAttributeString(field, XmlExtensions.SanitizeXml10(row[field]));
                 }
             } finally {
                 m_Writer.WriteEndElement();
