@@ -39,14 +39,14 @@
         /// write multiple files to (and the dumper writes multiple files to that directory).
         /// </remarks>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// string baseDir = GetDumpBaseDirectory();    // Your code to get the directory for dumps for this process,
         ///                                             // based on the process name, PID, date/time, etc.
         /// string path = Path.Combine(baseDir, Crash.Data.CrashDumpFactory.FileName);
         /// using (ICrashDataDumpFile crashFile = Crash.Data.CrashDumpFactory.Create(path)) {
         ///   ...
         /// }
-        /// </code>
+        /// ]]></code>
         /// </example>
         ICrashDataDumpFile Create(string fileName);
 
@@ -76,14 +76,14 @@
         /// <see cref="ICrashDataExport"/>.
         /// </returns>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// string baseDir = GetDumpBaseDirectory();    // Your code to get the directory for dumps for this process,
         ///                                             // based on the process name, PID, date/time, etc.
         /// string path = Path.Combine(baseDir, Crash.Data.CrashDumpFactory.FileName);
         /// using (await ICrashDataDumpFile crashFile = Crash.Data.CrashDumpFactory.CreateAsync(path)) {
         ///   ...
         /// }
-        /// </code>
+        /// ]]></code>
         /// </example>
         Task<ICrashDataDumpFile> CreateAsync(string fileName);
 

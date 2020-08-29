@@ -19,11 +19,11 @@
         /// </summary>
         /// <value>The source that should be used for logging in case of a crash.</value>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
         /// CrashReporter.Source = Log.MyTraceSource;
         /// CrashReporter.SetExceptionHandlers();
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static TraceSource Source { get; set; } = Log.CrashLog;
 
@@ -49,11 +49,11 @@
         /// Sets the exception handlers for crash reporting.
         /// </summary>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
         /// CrashReporter.Source = Log.MyTraceSource;
         /// CrashReporter.SetExceptionHandlers();
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static void SetExceptionHandlers()
         {
@@ -66,11 +66,11 @@
         /// </summary>
         /// <returns>Returns <see langword="true"/> if it was set, <see langword="false"/> otherwise.</returns>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
         /// CrashReporter.Source = Log.MyTraceSource;
         /// CrashReporter.SetUnhandledException();
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static bool SetUnhandledException()
         {
@@ -96,11 +96,11 @@
         /// <para>The handler is set to the handler provided by this library.</para>
         /// </remarks>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
         /// CrashReporter.Source = Log.MyTraceSource;
         /// CrashReporter.SetFirstChanceException();
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static bool SetFirstChanceException()
         {
@@ -128,11 +128,11 @@
         /// </para>
         /// </remarks>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
         /// CrashReporter.Source = Log.MyTraceSource;
         /// CrashReporter.SetExceptionHandlers(CrashReporter.FirstChanceExceptionHandler);
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static bool SetFirstChanceException(EventHandler<FirstChanceExceptionEventArgs> handler)
         {
@@ -165,11 +165,11 @@
         /// </para>
         /// </remarks>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
         /// CrashReporter.Source = Log.MyTraceSource;
         /// CrashReporter.SetFirstChanceException(AppDomain.CurrentDomain, CrashReporter.FirstChanceExceptionHandler);
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static bool SetFirstChanceException(this AppDomain appDomain, EventHandler<FirstChanceExceptionEventArgs> handler)
         {
@@ -197,11 +197,11 @@
         /// </para>
         /// </remarks>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
         /// CrashReporter.Source = Log.MyTraceSource;
         /// CrashReporter.SetFirstChanceException(CrashReporter.FirstChanceExceptionHandler);
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static void FirstChanceExceptionHandler(object sender, FirstChanceExceptionEventArgs args)
         {
@@ -225,11 +225,11 @@
         /// crash dumps for the user.
         /// </remarks>
         /// <example>
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
         /// CrashReporter.Source = Log.MyTraceSource;
         /// AppDomain.CurrentDomain.UnhandledException += CrashReporter.UnhandledExceptionHandler;
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
