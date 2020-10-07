@@ -65,7 +65,7 @@
             try {
                 IEnumerable<string> fields = m_Fields ?? row.Keys;
                 foreach (string field in fields) {
-                    await m_Writer.WriteAttributeStringAsync(null, field, null, row[field]);
+                    await m_Writer.WriteAttributeStringAsync(null, field, null, XmlExtensions.SanitizeXml10(row[field]));
                 }
             } finally {
                 await m_Writer.WriteEndElementAsync();
