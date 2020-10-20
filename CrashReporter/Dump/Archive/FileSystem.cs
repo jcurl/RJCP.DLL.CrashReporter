@@ -368,15 +368,16 @@
                 }
             }
 
-            DirectoryInfo[] subDirs = dir.GetDirectories();
-            foreach (DirectoryInfo subDir in subDirs) {
-                try {
+            DirectoryInfo[] subDirs;
+            try {
+                subDirs = dir.GetDirectories();
+                foreach (DirectoryInfo subDir in subDirs) {
                     size += GetFolderSize(subDir);
-                } catch (DirectoryNotFoundException) {
-                    // Ignore, as the directory was deleted while enumerating
-                } catch (PathTooLongException) {
-                    // Ignore, as it shouldn't happen
                 }
+            } catch (DirectoryNotFoundException) {
+                // Ignore, as the directory was deleted while enumerating
+            } catch (PathTooLongException) {
+                // Ignore, as it shouldn't happen
             }
 
             return size;
