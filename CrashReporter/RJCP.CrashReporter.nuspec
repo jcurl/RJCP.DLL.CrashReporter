@@ -27,7 +27,7 @@
         <file src="bin\build\net45\RJCP.Diagnostics.CrashReporter.XML" target="lib\net45" />
         <file src="RJCP.CrashReporter-net40.csproj" target="src" />
         <file src="RJCP.CrashReporter-net45.csproj" target="src" />
-        <file src="**.cs" target="src" />
+        <file src="**.cs" target="src" exclude="obj\**\*.*" />
         <file src="..\*.md" target="doc" />
         <file src="..\docs\dev-crashdumpconfig.md" target="doc" />
         <file src="..\docs\dev-xmlcrashdump.md" target="doc" />
