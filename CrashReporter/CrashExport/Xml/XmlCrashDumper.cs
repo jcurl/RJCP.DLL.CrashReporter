@@ -89,8 +89,11 @@
             return xmlWriter;
         }
 
+#if !NET45
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed",
             Justification = "Compiler conditional uses isAsync")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "False Positive")]
+#endif
         private XmlWriterSettings SaveXmlSettings(bool isAsync)
         {
             return new XmlWriterSettings {

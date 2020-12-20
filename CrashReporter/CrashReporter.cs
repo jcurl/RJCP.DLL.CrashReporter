@@ -496,8 +496,6 @@
                 crashCandidates);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3241:Methods should not return values that are never used",
-            Justification = "General function, return value should remain in case ordering changes in caller")]
         private static IList<FileSystemInfo> CleanUpDumpOld(int ageDays, IList<FileSystemInfo> candidates)
         {
             if (candidates.Count == 0) return candidates;
@@ -515,8 +513,6 @@
             return remaining;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3241:Methods should not return values that are never used",
-            Justification = "General function, return value should remain in case ordering changes in caller")]
         private static IList<FileSystemInfo> CleanUpDumpKeepNewest(int count, IList<FileSystemInfo> candidates)
         {
             if (candidates.Count == 0) return candidates;
@@ -561,8 +557,6 @@
         /// </list>
         /// Logs are always deleted in the order of the oldest first (based on the creation time).
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3241:Methods should not return values that are never used",
-            Justification = "General function, return value should remain in case ordering changes in caller")]
         private static IList<FileSystemInfo> CleanUpKeepSpace(DriveInfo drive, long minDiskFree, int minPercent, long maxUsage, int minFiles, IList<FileSystemInfo> candidates)
         {
             if (candidates.Count == 0) return candidates;
