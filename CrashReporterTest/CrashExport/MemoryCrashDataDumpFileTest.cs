@@ -509,6 +509,7 @@
             }
         }
 
+        [Test]
         public void SetHeaderFieldDuplicate()
         {
             using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
