@@ -82,7 +82,7 @@
             }
         }
 
-        private bool CheckDocument(XmlDocument document)
+        private static bool CheckDocument(XmlDocument document)
         {
             XmlNode rownode = document.SelectSingleNode("/DiagnosticDump/TestBlock/item");
             Assert.That(rownode.Attributes["Property"].Value, Is.EqualTo("TestProperty"));

@@ -13,9 +13,9 @@
     /// </remarks>
     internal class TimerList
     {
-        private ITimerSource m_TimerSource;
-        private Dictionary<string, LinkedListNode<TimerItem>> m_Items = new Dictionary<string, LinkedListNode<TimerItem>>();
-        private LinkedList<TimerItem> m_Sorted = new LinkedList<TimerItem>();
+        private readonly ITimerSource m_TimerSource;
+        private readonly Dictionary<string, LinkedListNode<TimerItem>> m_Items = new Dictionary<string, LinkedListNode<TimerItem>>();
+        private readonly LinkedList<TimerItem> m_Sorted = new LinkedList<TimerItem>();
 
         public TimerList() : this(new MonotonicTimerSource()) { }
 
@@ -98,7 +98,11 @@
             }
         }
 
+#if NET461_OR_GREATER || NETSTANDARD
+        private static readonly string[] EmptyList = Array.Empty<string>();
+#else
         private static readonly string[] EmptyList = new string[0];
+#endif
 
         public IEnumerable<string> ExpungeExpired()
         {

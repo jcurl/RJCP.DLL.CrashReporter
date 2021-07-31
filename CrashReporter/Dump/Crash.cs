@@ -168,7 +168,7 @@
         /// prior.
         /// </param>
         /// <returns>A fully qualified path that can be given to <see cref="Dump(string)"/>.</returns>
-        public string GetCrashDir(string prefix)
+        public static string GetCrashDir(string prefix)
         {
             if (string.IsNullOrWhiteSpace(prefix)) prefix = Process.GetCurrentProcess().ProcessName;
             string name = string.Format("{0}-{1:yyyyMMddHHmmss}.{2}", prefix, DateTime.Now, Guid.NewGuid().ToString());
@@ -191,7 +191,7 @@
             return CrashReporter.Config.CrashDumper.DumpDir.Path;
         }
 
-        private bool CreateCrashDirectory(string directory)
+        private static bool CreateCrashDirectory(string directory)
         {
             try {
                 if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);

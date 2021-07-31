@@ -11,8 +11,8 @@
     /// </summary>
     public sealed class ThreadWatchdog : IWatchdog
     {
-        private WatchdogList m_Watchdog;
-        private Timer.ISingleShotTimer m_Timer;
+        private readonly WatchdogList m_Watchdog;
+        private readonly Timer.ISingleShotTimer m_Timer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThreadWatchdog"/> class.
@@ -264,7 +264,7 @@
         public static void DefaultWarningEvent(object sender, WatchdogEventArgs args)
         {
             string prefix = string.Format("{0}.wd", Process.GetCurrentProcess().ProcessName);
-            string dumpPath = Dump.Crash.Data.GetCrashDir(prefix);
+            string dumpPath = Dump.Crash.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath, Dump.CoreType.None);
                 Log.CrashLog.TraceEvent(TraceEventType.Verbose, 0, "Watchdog warning created at: {0}", path);
@@ -300,7 +300,7 @@
         public static void DefaultCriticalEvent(object sender, WatchdogEventArgs args)
         {
             string prefix = string.Format("{0}.wderr", Process.GetCurrentProcess().ProcessName);
-            string dumpPath = Dump.Crash.Data.GetCrashDir(prefix);
+            string dumpPath = Dump.Crash.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath);
                 Log.CrashLog.TraceEvent(TraceEventType.Information, 0, "Watchdog error created at: {0}", path);

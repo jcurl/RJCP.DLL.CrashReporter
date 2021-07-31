@@ -19,8 +19,8 @@
         private const string NetRunning = "Running";
         private const string NetRunningVersion = "Version";
 
-        private DumpRow m_RowInstalled = new DumpRow(NetInstalled, NetDescription);
-        private DumpRow m_RowRunning = new DumpRow(NetRunning, NetRunningVersion, NetDescription);
+        private readonly DumpRow m_RowInstalled = new DumpRow(NetInstalled, NetDescription);
+        private readonly DumpRow m_RowRunning = new DumpRow(NetRunning, NetRunningVersion, NetDescription);
 
         /// <summary>
         /// Dumps debug information using the provided dump interface.
@@ -92,7 +92,7 @@
         }
 #endif
 
-        private IEnumerable<KeyValuePair<string, NetVersion.INetVersion>> GetRunTime()
+        private static IEnumerable<KeyValuePair<string, NetVersion.INetVersion>> GetRunTime()
         {
             List<KeyValuePair<string, NetVersion.INetVersion>> running = new List<KeyValuePair<string, NetVersion.INetVersion>>();
 

@@ -26,7 +26,7 @@
         public void DoDumpChangedPrefix()
         {
             string prefix = string.Format("{0}.test", Process.GetCurrentProcess().ProcessName);
-            string path = Dump.Crash.Data.GetCrashDir(prefix);
+            string path = Dump.Crash.GetCrashDir(prefix);
             Assert.That(path, Is.Not.Null.Or.Empty);
 
             string dump = CrashReporter.CreateDump(path, Dump.CoreType.None);

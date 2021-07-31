@@ -5,7 +5,7 @@
 
     public sealed class VirtualSingleShotTimer : ISingleShotTimer
     {
-        private VirtualTimerSource m_TimerSource;
+        private readonly VirtualTimerSource m_TimerSource;
 
         public VirtualSingleShotTimer(VirtualTimerSource timerSource)
         {

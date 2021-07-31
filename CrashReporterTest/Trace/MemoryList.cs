@@ -5,7 +5,7 @@
 
     public class MemoryList : IMemoryLog
     {
-        private List<LogEntry> m_List = new List<LogEntry>();
+        private readonly List<LogEntry> m_List = new List<LogEntry>();
 
         public int Count { get { return m_List.Count; } }
 

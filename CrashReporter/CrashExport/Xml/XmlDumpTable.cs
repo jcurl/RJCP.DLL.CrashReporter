@@ -8,8 +8,8 @@
 
     internal sealed class XmlDumpTable : DumpTable
     {
-        private string m_RowName;
-        private XmlWriter m_Writer;
+        private readonly string m_RowName;
+        private readonly XmlWriter m_Writer;
         private List<string> m_Fields;
 
         internal XmlDumpTable(string rowName, XmlWriter xmlWriter)
@@ -49,7 +49,7 @@
         }
 
 #if NET45_OR_GREATER
-        private static Task Completed = Task.FromResult(true);
+        private readonly static Task Completed = Task.FromResult(true);
 
         public override Task DumpHeaderAsync(IEnumerable<string> header)
         {

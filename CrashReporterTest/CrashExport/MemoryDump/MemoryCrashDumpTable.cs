@@ -11,8 +11,8 @@
     public sealed class MemoryCrashDumpTable : DumpTable, IEnumerable<IFields>
     {
         private readonly object m_SyncRoot = new object();
-        private List<string> m_Fields = new List<string>();
-        private List<IFields> m_Rows = new List<IFields>();
+        private readonly List<string> m_Fields = new List<string>();
+        private readonly List<IFields> m_Rows = new List<IFields>();
 
         internal MemoryCrashDumpTable(string tableName, string rowName)
         {
@@ -192,7 +192,7 @@
 
         private class Rows : IRows
         {
-            private IList<IFields> m_Rows;
+            private readonly IList<IFields> m_Rows;
 
             public Rows(IList<IFields> rows) { m_Rows = rows; }
 

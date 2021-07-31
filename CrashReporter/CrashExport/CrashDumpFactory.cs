@@ -10,7 +10,7 @@
     /// </summary>
     public class CrashDumpFactory : ICrashDumpFactory
     {
-        private ICrashDumpFactory m_XmlFactory = new Xml.XmlCrashDumpFactory();
+        private readonly ICrashDumpFactory m_XmlFactory = new Xml.XmlCrashDumpFactory();
 
         /// <summary>
         /// Provides a recommended file name for the factory.

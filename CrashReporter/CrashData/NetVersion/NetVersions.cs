@@ -100,7 +100,7 @@
             }
         }
 
-        private bool IsInstalled(RegistryKey key)
+        private static bool IsInstalled(RegistryKey key)
         {
             string install = key.GetValue("Install", "").ToString();
             return install.Equals("1");

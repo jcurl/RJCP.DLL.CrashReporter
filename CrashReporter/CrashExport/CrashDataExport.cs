@@ -13,7 +13,7 @@
     /// <typeparam name="T">The data type for each row of data.</typeparam>
     public abstract class CrashDataExport<T> : ICrashDataExport
     {
-        private DumpRow m_Row;
+        private readonly DumpRow m_Row;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CrashDataExport{T}"/> class.

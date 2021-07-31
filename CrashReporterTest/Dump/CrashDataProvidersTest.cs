@@ -23,12 +23,12 @@
             Assert.That(HasProviderType(typeof(CrashData.ModuleDump)), Is.True);
         }
 
-        private bool HasProviderType(Type provider)
+        private static bool HasProviderType(Type provider)
         {
             return Crash.Data.Providers.Any((d) => d.GetType().Equals(provider));
         }
 
-        private int Listeners()
+        private static int Listeners()
         {
             return Crash.Data.Providers.Count((d) => d.GetType().IsAssignableFrom(typeof(Trace.MemoryTraceListener)));
         }

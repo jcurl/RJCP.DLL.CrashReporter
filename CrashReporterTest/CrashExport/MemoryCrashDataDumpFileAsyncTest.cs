@@ -490,18 +490,5 @@
                 await dump.FlushAsync();
             }
         }
-
-        public async Task SetHeaderFieldDuplicateAsync()
-        {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
-                using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
-                    Assert.That(async () => { await table.DumpHeaderAsync(new string[] { "field", "field" }); }, Throws.TypeOf<ArgumentException>());
-                    await table.FlushAsync();
-                }
-                Assert.That(dump.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
-                await dump.FlushAsync();
-            }
-        }
     }
 }

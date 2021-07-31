@@ -94,7 +94,7 @@
             return true;
         }
 
-        private string GetUnicastAddresses(UnicastIPAddressInformationCollection list)
+        private static string GetUnicastAddresses(UnicastIPAddressInformationCollection list)
         {
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {
@@ -104,7 +104,7 @@
             return addresses.ToString();
         }
 
-        private string GetGwAddresses(GatewayIPAddressInformationCollection list)
+        private static string GetGwAddresses(GatewayIPAddressInformationCollection list)
         {
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {
@@ -114,7 +114,7 @@
             return addresses.ToString();
         }
 
-        private string GetIpInfoAddresses(IPAddressInformationCollection list)
+        private static string GetIpInfoAddresses(IPAddressInformationCollection list)
         {
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {
@@ -124,7 +124,7 @@
             return addresses.ToString();
         }
 
-        private string GetMulticastAddresses(MulticastIPAddressInformationCollection list)
+        private static string GetMulticastAddresses(MulticastIPAddressInformationCollection list)
         {
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {
@@ -134,7 +134,7 @@
             return addresses.ToString();
         }
 
-        private string GetIpAddresses(IPAddressCollection list)
+        private static string GetIpAddresses(IPAddressCollection list)
         {
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {

@@ -8,7 +8,7 @@
     /// </summary>
     public class SingleShotTimer : ISingleShotTimer
     {
-        private Timer m_Timer;
+        private readonly Timer m_Timer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SingleShotTimer"/> class.

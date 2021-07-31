@@ -5,7 +5,7 @@
     /// </summary>
     public class XmlCrashDumperConfig
     {
-        private XmlCrashDumper m_Config;
+        private readonly XmlCrashDumper m_Config;
 
         internal XmlCrashDumperConfig() { }
 

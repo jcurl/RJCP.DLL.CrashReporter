@@ -98,7 +98,7 @@
             return CreateAsyncInternal(fileName);
         }
 
-        private async Task<ICrashDataDumpFile> CreateAsyncInternal(string fileName)
+        private static async Task<ICrashDataDumpFile> CreateAsyncInternal(string fileName)
         {
             XmlCrashDumper dumper = new XmlCrashDumper();
             try {
@@ -131,7 +131,7 @@
             return CreateAsyncInternal(stream, path);
         }
 
-        private async Task<ICrashDataDumpFile> CreateAsyncInternal(Stream stream, string path)
+        private static async Task<ICrashDataDumpFile> CreateAsyncInternal(Stream stream, string path)
         {
             XmlCrashDumper dumper = new XmlCrashDumper();
             try {

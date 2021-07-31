@@ -28,7 +28,7 @@
                 Minimum = defaultMinimum;
             }
 
-            private Queue<LogEntry> m_Log = new Queue<LogEntry>();
+            private readonly Queue<LogEntry> m_Log = new Queue<LogEntry>();
 
             public Queue<LogEntry> LogList { get { return m_Log; } }
 
@@ -47,18 +47,18 @@
         }
 
         // The logs. m_Other is the lowest priority for all undefined log levels.
-        private Log m_Critical = new Log(CriticalDefault);
-        private Log m_Error = new Log(ErrorDefault);
-        private Log m_Warning = new Log(WarningDefault);
-        private Log m_Info = new Log(InfoDefault);
-        private Log m_Verbose = new Log(VerboseDefault);
-        private Log m_Other = new Log(OtherDefault);
+        private readonly Log m_Critical = new Log(CriticalDefault);
+        private readonly Log m_Error = new Log(ErrorDefault);
+        private readonly Log m_Warning = new Log(WarningDefault);
+        private readonly Log m_Info = new Log(InfoDefault);
+        private readonly Log m_Verbose = new Log(VerboseDefault);
+        private readonly Log m_Other = new Log(OtherDefault);
 
         // Defines the prioritized order of the logs. First is lowest priority.
-        private List<KeyValuePair<TraceEventType, Log>> m_Log;
+        private readonly List<KeyValuePair<TraceEventType, Log>> m_Log;
 
         // Maps quickly to a log list for adding logs.
-        private Dictionary<TraceEventType, Log> m_LogMap;
+        private readonly Dictionary<TraceEventType, Log> m_LogMap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimplePrioMemoryLog"/> class.
@@ -333,8 +333,8 @@
         {
             private class Indexer
             {
-                private Log m_List;
-                IEnumerator<LogEntry> m_Enumerator;
+                private readonly Log m_List;
+                private IEnumerator<LogEntry> m_Enumerator;
 
                 public Indexer(Log list)
                 {
@@ -371,7 +371,7 @@
                 }
             }
 
-            private List<Indexer> m_Logs;
+            private readonly List<Indexer> m_Logs;
 
             public MemoryLogEnumerator(SimplePrioMemoryLog parent)
             {

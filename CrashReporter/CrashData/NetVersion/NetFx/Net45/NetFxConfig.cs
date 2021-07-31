@@ -5,7 +5,7 @@
 
     internal static class NetFxConfig
     {
-        private static Dictionary<int, NetFxVersion> Versions = new Dictionary<int, NetFxVersion>() {
+        private readonly static Dictionary<int, NetFxVersion> Versions = new Dictionary<int, NetFxVersion>() {
             { 378389, new NetFxVersion("4.5", ".NET Framework 4.5") },
             { 378675, new NetFxVersion("4.5.1", ".NET Framework 4.5.1 installed with Windows 8.1 or Windows Server 2012 R2") },
             { 378758, new NetFxVersion("4.5.1", ".NET Framework 4.5.1 installed on Windows 8, Windows 7 SP1, or Windows Vista SP2") },

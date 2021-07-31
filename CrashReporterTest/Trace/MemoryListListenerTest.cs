@@ -174,7 +174,7 @@
             }
         }
 
-        private MemoryCrashDataDumpFile Dump(MemoryListListener listener)
+        private static MemoryCrashDataDumpFile Dump(MemoryListListener listener)
         {
             MemoryCrashDataDumpFile dumpFile = null;
             try {

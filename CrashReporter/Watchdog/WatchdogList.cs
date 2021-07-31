@@ -7,9 +7,9 @@
 
     internal class WatchdogList
     {
-        private Timer.TimerList m_WarningTimer;
-        private Timer.TimerList m_CriticalTimer;
-        private Dictionary<string, WatchdogData> m_Timers = new Dictionary<string, WatchdogData>();
+        private readonly Timer.TimerList m_WarningTimer;
+        private readonly Timer.TimerList m_CriticalTimer;
+        private readonly Dictionary<string, WatchdogData> m_Timers = new Dictionary<string, WatchdogData>();
 
         public WatchdogList()
         {

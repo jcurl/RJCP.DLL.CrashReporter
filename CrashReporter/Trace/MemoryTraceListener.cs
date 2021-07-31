@@ -94,7 +94,7 @@
             lock (m_SyncLock) { MemoryLog.Add(entry); }
         }
 
-        private LineSplitter m_Line = new LineSplitter();
+        private readonly LineSplitter m_Line = new LineSplitter();
 
         /// <summary>
         /// Writes the specified message to the listener.
@@ -307,7 +307,7 @@
         private const string LogThreadId = "threadid";
         private const string LogMessage = "message";
 
-        private DumpRow m_Row = new DumpRow(
+        private readonly DumpRow m_Row = new DumpRow(
             LogInternalClock, LogDateTime, LogEventType, LogSource,
             LogId, LogThreadId, LogMessage);
 
@@ -328,7 +328,7 @@
             }
         }
 
-        private DumpRow GetLogEntry(LogEntry entry, DumpRow row)
+        private static DumpRow GetLogEntry(LogEntry entry, DumpRow row)
         {
             row[LogInternalClock] = entry.Clock.ToString();
             row[LogDateTime] = (entry.DateTime.Ticks == 0) ? string.Empty : entry.DateTime.ToString("o");

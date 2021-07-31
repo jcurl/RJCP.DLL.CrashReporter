@@ -5,7 +5,7 @@
     /// </summary>
     public class WatchdogOverride
     {
-        private Config.WatchdogOverride m_Override;
+        private readonly Config.WatchdogOverride m_Override;
 
         internal WatchdogOverride(Config.WatchdogOverride wdOverride)
         {

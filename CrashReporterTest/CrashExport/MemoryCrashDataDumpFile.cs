@@ -10,7 +10,7 @@
 
     public sealed class MemoryCrashDataDumpFile : ICrashDataDumpFile
     {
-        private Dictionary<string, List<MemoryCrashDumpTable>> m_Blocks = new Dictionary<string, List<MemoryCrashDumpTable>>();
+        private readonly Dictionary<string, List<MemoryCrashDumpTable>> m_Blocks = new Dictionary<string, List<MemoryCrashDumpTable>>();
 
         /// <summary>
         /// Gets a value indicating if this instance can support writing blocks asynchronously.

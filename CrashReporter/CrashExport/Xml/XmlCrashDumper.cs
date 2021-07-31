@@ -74,7 +74,7 @@
             return CreateFileInternal(m_Stream, directory, styleSheetName, isAsync);
         }
 
-        private XmlWriter CreateFileInternal(Stream stream, string dirPath, string styleSheet, bool isAsync)
+        private static XmlWriter CreateFileInternal(Stream stream, string dirPath, string styleSheet, bool isAsync)
         {
             if (!Directory.Exists(dirPath)) {
                 string message = string.Format("Directory '{0}' not found", dirPath);
@@ -89,7 +89,7 @@
             return xmlWriter;
         }
 
-        private XmlWriterSettings SaveXmlSettings(bool isAsync)
+        private static XmlWriterSettings SaveXmlSettings(bool isAsync)
         {
             return new XmlWriterSettings {
 #if NET45_OR_GREATER
@@ -142,7 +142,7 @@
             }
         }
 
-        private Stream GetStyleSheetResource()
+        private static Stream GetStyleSheetResource()
         {
             string resource = CrashReporter.Config.XmlCrashDumper.StyleSheetName;
             if (string.IsNullOrWhiteSpace(resource)) return GetDefaultStyleSheetResource();
@@ -167,7 +167,7 @@
             return stream;
         }
 
-        private System.Reflection.Assembly GetAssemblyByName(string name)
+        private static System.Reflection.Assembly GetAssemblyByName(string name)
         {
             foreach (System.Reflection.Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
                 System.Reflection.AssemblyName assemblyName = assembly.GetName();
@@ -177,12 +177,12 @@
             return null;
         }
 
-        private Stream GetDefaultStyleSheetResource()
+        private static Stream GetDefaultStyleSheetResource()
         {
             return typeof(XmlCrashDumper).Assembly.GetManifestResourceStream("RJCP.Diagnostics.CrashExport.Xml.CrashDump.xsl");
         }
 
-        private void CopyTransform(string outFileName)
+        private static void CopyTransform(string outFileName)
         {
             using (Stream stream = GetStyleSheetResource())
             using (FileStream fileCopyStream = new FileStream(outFileName, FileMode.Create, FileAccess.Write, FileShare.None)) {

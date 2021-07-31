@@ -10,7 +10,7 @@
     {
         private const string TableName = "TestBlock";
 
-        private Dictionary<string, string> m_TestBlockData = new Dictionary<string, string>() {
+        private readonly Dictionary<string, string> m_TestBlockData = new Dictionary<string, string>() {
             { "Property", "TestProperty" },
             { "Value", "TestValue" }
         };

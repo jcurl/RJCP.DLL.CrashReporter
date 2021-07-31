@@ -5,7 +5,7 @@
     /// </summary>
     public class WatchdogPing
     {
-        private WatchdogPingElement m_WatchdogPing;
+        private readonly WatchdogPingElement m_WatchdogPing;
 
         internal WatchdogPing() { }
 

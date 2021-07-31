@@ -8,8 +8,8 @@
     /// </summary>
     public class DumpRow
     {
-        private List<string> m_Header;
-        private Dictionary<string, string> m_Row;
+        private readonly List<string> m_Header;
+        private readonly Dictionary<string, string> m_Row;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DumpRow"/> class.

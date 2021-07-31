@@ -5,8 +5,8 @@
 
     internal class LineSplitter
     {
-        private StringBuilder m_Line = new StringBuilder();
-        private List<string> m_Lines = new List<string>();
+        private readonly StringBuilder m_Line = new StringBuilder();
+        private readonly List<string> m_Lines = new List<string>();
 
         public IEnumerable<string> Append(string line)
         {
