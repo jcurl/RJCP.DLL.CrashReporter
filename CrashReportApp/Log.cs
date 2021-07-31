@@ -4,6 +4,6 @@
 
     public static class Log
     {
-        public static TraceSource App { get; }  = new TraceSource("CrashReporterApp");
+        public static TraceSource App { get; } = new TraceSource("CrashReporterApp");
     }
 }

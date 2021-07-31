@@ -76,8 +76,6 @@
         }
 
         [TestCase]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S2699:Tests should include assertions",
-            Justification = "Test case should run to end without crashing.")]
         public void CleanDumpFolder()
         {
             CrashReporter.CleanUpDump();

@@ -441,8 +441,6 @@
         /// A log might be required to be deleted, but if there is a file system error, it will be skipped.
         /// </para>
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1854:Unused assignments should be removed",
-            Justification = "Kept in case ordering is changed to reduce possible bugs")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value",
             Justification = "Kept in case ordering is changed to reduce possible bugs")]
         public static void CleanUpDump(string dumpFolder, string fileMatchRegEx)

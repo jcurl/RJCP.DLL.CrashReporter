@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;net461</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release</Configurations>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
+    <AssemblyName>CrashReportApp</AssemblyName>
+    <AssemblyTitle>CrashReportApp</AssemblyTitle>
+    <Product>RJCP.Diagnostics.CrashReporter</Product>
+    <RootNamespace>CrashReportApp</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2019-2021, Jason Curl</Copyright>
+    <Company></Company>
+    
+    <Description>Test application to create core dumps.</Description>
+    <Version>1.0.0</Version>
+
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="ExecutionMode.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Program.cs" />
+    <None Include="App.net40.config" />
+    <None Include="App.net461.config" />
+  </ItemGroup>
+
+  <Target Name="CopyAppConfig" AfterTargets="AfterBuild" Condition="Exists('$(ProjectDir)App.$(TargetFramework).config')">
+    <Delete Files="$(OutDir)$(TargetFileName).config" />
+    <Copy SourceFiles="$(ProjectDir)App.$(TargetFramework).config" DestinationFiles="$(OutDir)$(TargetFileName).config" />
+  </Target>
+</Project>

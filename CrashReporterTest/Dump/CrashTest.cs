@@ -4,7 +4,7 @@
     using CrashExport;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
-#if NET45
+#if NET45_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -52,7 +52,7 @@
             }
         }
 
-#if NET45
+#if NET45_OR_GREATER
         [Test]
         public async Task PerformCrashDumpAsync()
         {

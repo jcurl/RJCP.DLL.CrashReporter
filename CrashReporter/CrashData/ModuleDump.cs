@@ -28,7 +28,8 @@
         /// Initializes a new instance of the <see cref="ModuleDump"/> class.
         /// </summary>
         public ModuleDump() : base(new DumpRow(ModName, ModFileVersion, ModFileName, ModProdVersion,
-            ModProdName, ModOrigFileName, ModFileDesc, ModMemSize, ModBaseAddress)) { }
+            ModProdName, ModOrigFileName, ModFileDesc, ModMemSize, ModBaseAddress))
+        { }
 
         /// <summary>
         /// Gets the name of the table.

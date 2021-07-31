@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.CrashExport
 {
     using System.IO;
-#if NET45
+#if NET45_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -29,7 +29,7 @@
             return dump;
         }
 
-#if NET45
+#if NET45_OR_GREATER
         public Task<ICrashDataDumpFile> CreateAsync(string fileName)
         {
             return Task.FromResult(CreateDefault());

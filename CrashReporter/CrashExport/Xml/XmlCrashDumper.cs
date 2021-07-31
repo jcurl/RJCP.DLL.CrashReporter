@@ -4,7 +4,7 @@
     using System.IO;
     using System.Text;
     using System.Xml;
-#if NET45
+#if NET45_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -89,15 +89,10 @@
             return xmlWriter;
         }
 
-#if !NET45
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed",
-            Justification = "Compiler conditional uses isAsync")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "False Positive")]
-#endif
         private XmlWriterSettings SaveXmlSettings(bool isAsync)
         {
             return new XmlWriterSettings {
-#if NET45
+#if NET45_OR_GREATER
                 Async = isAsync,     // Defined in .NET 4.5 and later only.
 #endif
                 CloseOutput = false,
@@ -195,7 +190,7 @@
             }
         }
 
-#if NET45
+#if NET45_OR_GREATER
         public Task CreateFileAsync(string fileName)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));

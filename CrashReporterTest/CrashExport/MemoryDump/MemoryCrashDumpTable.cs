@@ -4,7 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-#if NET45
+#if NET45_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -151,7 +151,7 @@
             m_IsFlushed = true;
         }
 
-#if NET45
+#if NET45_OR_GREATER
         public override Task DumpHeaderAsync(IEnumerable<string> header)
         {
             if (header == null) throw new ArgumentNullException(nameof(header));

@@ -1,6 +1,5 @@
 ﻿namespace RJCP.Diagnostics.CrashData.NetVersion.NetFx
 {
-    using System;
     using Microsoft.Win32;
 
     internal class NetFx10 : INetVersion

@@ -1,50 +1,69 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{807B678B-CCBD-40F5-BF8C-88862C80D44E}</ProjectGuid>
+    <TargetFrameworks>net40;net461</TargetFrameworks>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RJCP.Diagnostics</RootNamespace>
+    <Configurations>Debug;Release</Configurations>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
     <AssemblyName>RJCP.Diagnostics.CrashReporter</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <AssemblyTitle>RJCP.Diagnostics.CrashReporter</AssemblyTitle>
+    <Product>RJCP.Diagnostics.CrashReporter</Product>
+    <RootNamespace>RJCP.Diagnostics</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2019-2021, Jason Curl</Copyright>
+    <Company></Company>
+    <PackageId>RJCP.Diagnostics.CrashReporter</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/jcurl/CrashReporter</PackageProjectUrl>
+    
+    <Description>Library tools to allow developers to capture debug information.</Description>
+    <Version>0.4.4</Version>
+
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\net40\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\net40\</IntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\net40\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\net40\</IntermediateOutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\net40\RJCP.Diagnostics.CrashReporter.xml</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="DotNetZip, Version=1.13.5.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\DotNetZip.1.13.5\lib\net40\DotNetZip.dll</HintPath>
-    </Reference>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <PackageReference Include="DotNetZip" Version="1.13.5" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="Config\CrashDumper.cs" />
+    <Compile Include="Config\CrashReporter\CrashConfig.cs" />
     <Compile Include="Config\CrashReporter\CrashDumperConfig.cs" />
     <Compile Include="Config\CrashReporter\DumpDir.cs" />
     <Compile Include="Config\CrashReporter\EnvVar\IToken.cs" />
@@ -64,7 +83,6 @@
     <Compile Include="Config\WatchdogOverrides.cs" />
     <Compile Include="Config\WatchdogPingElement.cs" />
     <Compile Include="Config\XmlCrashDumper.cs" />
-    <Compile Include="Config\CrashReporter\CrashConfig.cs" />
     <Compile Include="CrashData\AssemblyDump.cs" />
     <Compile Include="CrashData\EnvironmentDump.cs" />
     <Compile Include="CrashData\ModuleDump.cs" />
@@ -103,12 +121,12 @@
     <Compile Include="CrashExport\Xml\XmlCrashDumpFactory.cs" />
     <Compile Include="CrashExport\Xml\XmlExtensions.cs" />
     <Compile Include="CrashReporter.cs" />
-    <Compile Include="Dump\Archive\CompressZipFile.cs" />
+    <None Include="Dump\Archive\CompressZipFile.cs" />
+    <None Include="Dump\Archive\CompressZipArchive.cs" />
     <Compile Include="Dump\Archive\FileSystem.cs" />
     <Compile Include="Dump\Core.cs" />
     <Compile Include="Dump\CoreType.cs" />
     <Compile Include="Dump\Crash.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Native\AppDomainAccessor.cs" />
     <Compile Include="Native\NativeMethods.cs" />
@@ -135,11 +153,22 @@
     <Compile Include="Watchdog\WatchdogEventArgs.cs" />
     <Compile Include="Watchdog\WatchdogList.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.RJCP.CrashReporter-net40.config" />
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <Compile Include="Dump\Archive\CompressZipFile.cs" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <Compile Include="Dump\Archive\CompressZipArchive.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="CrashExport\Xml\CrashDump.xsl" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <ItemGroup>
+    <None Include="..\LICENSE.md" Pack="true" PackagePath="\" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
 </Project>

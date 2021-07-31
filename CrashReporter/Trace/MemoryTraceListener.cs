@@ -5,7 +5,7 @@
     using System.Text;
     using CrashExport;
     using Dump;
-#if NET45
+#if NET45_OR_GREATER
     using System.Collections.Generic;
     using System.Threading.Tasks;
 #endif
@@ -91,7 +91,7 @@
             LogEntry entry = new LogEntry(TraceEventType.Warning, 0, logMessage) {
                 DateTime = DateTime.Now
             };
-            lock(m_SyncLock) { MemoryLog.Add(entry); }
+            lock (m_SyncLock) { MemoryLog.Add(entry); }
         }
 
         private LineSplitter m_Line = new LineSplitter();
@@ -340,7 +340,7 @@
             return row;
         }
 
-#if NET45
+#if NET45_OR_GREATER
         /// <summary>
         /// Asynchronously dumps debug information using the provided dump interface.
         /// </summary>

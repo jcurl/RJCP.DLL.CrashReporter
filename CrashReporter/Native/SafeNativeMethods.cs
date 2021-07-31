@@ -32,10 +32,10 @@
         public static extern bool GetProductInfo(uint osMajor, uint osMinor, uint spMajor, uint spMinor, ref uint productInfo);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        public static extern void GetNativeSystemInfo([MarshalAs(UnmanagedType.Struct)] ref NativeMethods.SYSTEM_INFO lpSystemInfo);
+        public static extern void GetNativeSystemInfo(ref NativeMethods.SYSTEM_INFO lpSystemInfo);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        public static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] ref NativeMethods.SYSTEM_INFO lpSystemInfo);
+        public static extern void GetSystemInfo(ref NativeMethods.SYSTEM_INFO lpSystemInfo);
 
         [DllImport("kernel32.dll")]
         public static extern uint GetVersion();

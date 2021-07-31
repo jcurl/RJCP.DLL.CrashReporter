@@ -2,7 +2,7 @@
 {
     using CrashExport;
     using NUnit.Framework;
-#if NET45
+#if NET45_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -32,7 +32,7 @@
             return true;
         }
 
-#if NET45
+#if NET45_OR_GREATER
         [Test]
         public async Task DumpTestAsync()
         {

@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Xml;
-#if NET45
+#if NET45_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -30,7 +30,7 @@
             m_Writer.WriteStartElement(m_RowName);
             try {
                 IEnumerable<string> fields = m_Fields ?? row.Keys;
-                foreach(string field in fields) {
+                foreach (string field in fields) {
                     m_Writer.WriteAttributeString(field, XmlExtensions.SanitizeXml10(row[field]));
                 }
             } finally {
@@ -48,7 +48,7 @@
             }
         }
 
-#if NET45
+#if NET45_OR_GREATER
         private static Task Completed = Task.FromResult(true);
 
         public override Task DumpHeaderAsync(IEnumerable<string> header)

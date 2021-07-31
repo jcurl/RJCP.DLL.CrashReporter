@@ -38,7 +38,8 @@
         /// <paramref name="wdOverride"/> is set containing the information, <see langword="false"/> in which
         /// <paramref name="wdOverride"/> is set to <see langword="null"/>.
         /// </returns>
-        public bool TryGetOverride(string name, out WatchdogOverride wdOverride) {
+        public bool TryGetOverride(string name, out WatchdogOverride wdOverride)
+        {
             if (m_Overrides == null) {
                 wdOverride = null;
                 return false;

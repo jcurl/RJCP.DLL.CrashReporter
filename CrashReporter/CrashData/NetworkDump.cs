@@ -36,7 +36,8 @@
             AdapterInterfaceType, AdapterSpeed, AdapterMulticastEnabled, AdapterMac,
             AdapterIpDnsSuffix, AdapterIpDnsEnabled, AdapterIpDynDnsEnabled,
             AdapterIpDhcp, AdapterIpUnicast, AdapterIpDns, AdapterIpGateway,
-            AdapterIpAnycast, AdapterIpMulticastAddr)) { }
+            AdapterIpAnycast, AdapterIpMulticastAddr))
+        { }
 
         /// <summary>
         /// Gets the name of the table.

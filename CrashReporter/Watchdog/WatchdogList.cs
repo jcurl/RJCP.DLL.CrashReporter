@@ -1,9 +1,9 @@
 ﻿namespace RJCP.Diagnostics.Watchdog
 {
     using System;
-    using System.Threading;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Threading;
 
     internal class WatchdogList
     {

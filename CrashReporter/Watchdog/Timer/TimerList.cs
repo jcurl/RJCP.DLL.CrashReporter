@@ -17,7 +17,7 @@
         private Dictionary<string, LinkedListNode<TimerItem>> m_Items = new Dictionary<string, LinkedListNode<TimerItem>>();
         private LinkedList<TimerItem> m_Sorted = new LinkedList<TimerItem>();
 
-        public TimerList() : this (new MonotonicTimerSource()) { }
+        public TimerList() : this(new MonotonicTimerSource()) { }
 
         public TimerList(ITimerSource timerSource)
         {

@@ -3,9 +3,9 @@
     using System;
     using System.Diagnostics;
     using System.IO;
-    using NUnit.Framework;
     using CrashExport;
     using Dump;
+    using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture(Category = "CrashReporter.Trace")]

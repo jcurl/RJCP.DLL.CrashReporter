@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;net461</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release</Configurations>
+
+    <AssemblyName>RJCP.Diagnostics.CrashReporterTest</AssemblyName>
+    <AssemblyTitle>RJCP.Diagnostics.CrashReporterTest</AssemblyTitle>
+    <Product>RJCP.Diagnostics.CrashReporter</Product>
+    <RootNamespace>RJCP.Diagnostics</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2019-2021, Jason Curl</Copyright>
+    <Company></Company>
+    <Description>Test harness for RJCP.Diagnostics.CrashReporter.</Description>
+    <Version>1.0.0</Version>
+
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <EnableDefaultItems>false</EnableDefaultItems>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.1.0" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <ProjectReference Include="..\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
+    <ProjectReference Include="..\..\nunitextensions\CodeQuality\RJCP.CodeQuality.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Config\CrashReporter\ParserAccessor.cs" />
+    <Compile Include="Config\CrashReporter\ParserTest.cs" />
+    <Compile Include="CrashData\AssemblyDumpTest.cs" />
+    <Compile Include="CrashData\DumpTestBase.cs" />
+    <Compile Include="CrashData\EnvironmentDumpTest.cs" />
+    <Compile Include="CrashData\ModuleDumpTest.cs" />
+    <Compile Include="CrashData\NetVersionDumpTest.cs" />
+    <Compile Include="CrashData\NetworkDumpTest.cs" />
+    <Compile Include="CrashData\OSDumpTest.cs" />
+    <Compile Include="CrashData\ProcDumpTest.cs" />
+    <Compile Include="CrashData\TestBlock.cs" />
+    <Compile Include="CrashData\TestBlockTest.cs" />
+    <Compile Include="CrashData\ThreadDumpTest.cs" />
+    <Compile Include="CrashData\WinVerDumpTest.cs" />
+    <Compile Include="CrashExport\MemoryCrashDataDumpFile.cs" />
+    <None Include="CrashExport\MemoryCrashDataDumpFileAsyncTest.cs" />
+    <Compile Include="CrashExport\MemoryCrashDataDumpFileTest.cs" />
+    <Compile Include="CrashExport\MemoryCrashDumpFactory.cs" />
+    <Compile Include="CrashExport\MemoryDump\IFields.cs" />
+    <Compile Include="CrashExport\MemoryDump\IRows.cs" />
+    <Compile Include="CrashExport\MemoryDump\ITables.cs" />
+    <Compile Include="CrashExport\MemoryDump\MemoryCrashDumpTable.cs" />
+    <Compile Include="CrashExport\Xml\XmlCrashDumperTest.cs" />
+    <Compile Include="CrashReporterTest.cs" />
+    <Compile Include="Dump\CrashDataProvidersTest.cs" />
+    <Compile Include="Dump\CrashTest.cs" />
+    <Compile Include="Dump\DumpTest.cs" />
+    <Compile Include="Trace\AppConfigLogTest.cs" />
+    <Compile Include="Trace\MemoryList.cs" />
+    <Compile Include="Trace\MemoryListListener.cs" />
+    <Compile Include="Trace\MemoryListListenerTest.cs" />
+    <Compile Include="Trace\SimplePrioMemoryLogTest.cs" />
+    <Compile Include="Watchdog\ThreadWatchdogTest.cs" />
+    <Compile Include="Watchdog\Timer\TimerListAccessor.cs" />
+    <Compile Include="Watchdog\Timer\TimerListTest.cs" />
+    <Compile Include="Watchdog\Timer\VirtualSingleShotTimer.cs" />
+    <Compile Include="Watchdog\Timer\VirtualSingleShotTimerTest.cs" />
+    <Compile Include="Watchdog\Timer\VirtualTimerSource.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <Compile Include="CrashExport\MemoryCrashDataDumpFileAsyncTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+
+</Project>

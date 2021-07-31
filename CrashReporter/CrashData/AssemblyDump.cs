@@ -24,7 +24,8 @@
         /// Initializes a new instance of the <see cref="AssemblyDump"/> class.
         /// </summary>
         public AssemblyDump() : base(new DumpRow(AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
-            AssemblyFileVersion, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase)) { }
+            AssemblyFileVersion, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase))
+        { }
 
         /// <summary>
         /// Gets the name of the table.

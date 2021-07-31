@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-#if NET45
+#if NET45_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -51,7 +51,7 @@
         /// </summary>
         public abstract void Flush();
 
-#if NET45
+#if NET45_OR_GREATER
         /// <summary>
         /// Writes the header for the table.
         /// </summary>

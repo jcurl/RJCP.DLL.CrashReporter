@@ -164,7 +164,7 @@
         [Test]
         public void SetRow()
         {
-            Dictionary<string, string> row = new Dictionary<string, string> { { "property",  "value" } };
+            Dictionary<string, string> row = new Dictionary<string, string> { { "property", "value" } };
 
             using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
                 using (IDumpTable table = dump.DumpTable("element", "item")) {
@@ -234,8 +234,8 @@
         [Test]
         public void SetRowAfterDispose()
         {
-            Dictionary<string, string> row1 = new Dictionary<string, string> { { "property",  "value" } };
-            Dictionary<string, string> row2 = new Dictionary<string, string> { { "property2",  "value2" } };
+            Dictionary<string, string> row1 = new Dictionary<string, string> { { "property", "value" } };
+            Dictionary<string, string> row2 = new Dictionary<string, string> { { "property2", "value2" } };
 
             using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
                 IDumpTable table = null;

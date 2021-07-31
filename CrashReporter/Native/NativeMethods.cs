@@ -3,8 +3,6 @@
     using System;
     using System.Runtime.InteropServices;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase",
-        Justification = "Native Methods match the style used in Native header files")]
     internal static class NativeMethods
     {
         [Flags]
