@@ -99,7 +99,7 @@
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
-                addresses.Append(item.Address.AddressFamily.ToString()).Append("/").Append(item.Address.ToString());
+                addresses.Append(item.Address.AddressFamily.ToString()).Append('/').Append(item.Address.ToString());
             }
             return addresses.ToString();
         }
@@ -109,7 +109,7 @@
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
-                addresses.Append(item.Address.AddressFamily.ToString()).Append("/").Append(item.Address.ToString());
+                addresses.Append(item.Address.AddressFamily.ToString()).Append('/').Append(item.Address.ToString());
             }
             return addresses.ToString();
         }
@@ -119,7 +119,7 @@
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
-                addresses.Append(item.Address.AddressFamily.ToString()).Append("/").Append(item.Address.ToString());
+                addresses.Append(item.Address.AddressFamily.ToString()).Append('/').Append(item.Address.ToString());
             }
             return addresses.ToString();
         }
@@ -129,7 +129,7 @@
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
-                addresses.Append(item.Address.AddressFamily.ToString()).Append("/").Append(item.Address.ToString());
+                addresses.Append(item.Address.AddressFamily.ToString()).Append('/').Append(item.Address.ToString());
             }
             return addresses.ToString();
         }
@@ -139,7 +139,7 @@
             StringBuilder addresses = new StringBuilder();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
-                addresses.Append(item.AddressFamily.ToString()).Append("/").Append(item.ToString());
+                addresses.Append(item.AddressFamily.ToString()).Append('/').Append(item.ToString());
             }
             return addresses.ToString();
         }

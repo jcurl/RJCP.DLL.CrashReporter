@@ -45,7 +45,7 @@
 
                 StringBuilder version = new StringBuilder();
                 version.Append(path[0].Substring(1));
-                if (path.Length >= 2) version.Append(" ").Append(path[1]);
+                if (path.Length >= 2) version.Append(' ').Append(path[1]);
                 if (!string.IsNullOrEmpty(servicePack)) version.Append(" SP").Append(servicePack);
                 Version = version.ToString();
 
