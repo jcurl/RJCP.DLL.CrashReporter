@@ -47,6 +47,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="RJCP.MSBuildTasks" Version="0.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
   </ItemGroup>
 
