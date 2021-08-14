@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Xml;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
     using System.Threading.Tasks;
 #endif
 
@@ -48,7 +48,7 @@
             }
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
         private readonly static Task Completed = Task.FromResult(true);
 
         public override Task DumpHeaderAsync(IEnumerable<string> header)

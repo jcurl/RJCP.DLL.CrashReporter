@@ -5,7 +5,7 @@
     using System.Diagnostics;
     using System.IO;
     using CrashExport;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
     using System.Threading.Tasks;
 #endif
 
@@ -205,7 +205,7 @@
             return false;
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
         /// <summary>
         /// Dumps debugging information to disk, using an automatically generated path.
         /// </summary>

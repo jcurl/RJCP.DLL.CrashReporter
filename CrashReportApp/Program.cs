@@ -10,6 +10,9 @@ namespace CrashReportApp
         static int Main(string[] args)
         {
             CrashReporter.Source = Log.App;
+#if NETCOREAPP
+            ((RJCP.Diagnostics.Watchdog.ThreadWatchdog)CrashReporter.Watchdog).Source = Log.App;
+#endif
             CrashReporter.SetExceptionHandlers();
 
             Log.App.TraceEvent(System.Diagnostics.TraceEventType.Information, 0, "Program Started");

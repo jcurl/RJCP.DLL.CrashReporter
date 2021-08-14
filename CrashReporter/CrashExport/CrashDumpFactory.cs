@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.CrashExport
 {
     using System.IO;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
     using System.Threading.Tasks;
 #endif
 
@@ -45,7 +45,7 @@
             return m_XmlFactory.Create(stream, path);
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
         /// <summary>
         /// Creates the dump from the given file name asynchronously.
         /// </summary>

@@ -2,7 +2,7 @@
 {
     using CrashExport;
     using NUnit.Framework;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETCOREAPP
     using System.Threading.Tasks;
 #endif
 
@@ -32,7 +32,7 @@
             return true;
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETCOREAPP
         [Test]
         public async Task DumpTestAsync()
         {

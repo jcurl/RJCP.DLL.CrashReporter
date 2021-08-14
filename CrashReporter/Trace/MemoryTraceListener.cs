@@ -5,7 +5,7 @@
     using System.Text;
     using CrashExport;
     using Dump;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
     using System.Collections.Generic;
     using System.Threading.Tasks;
 #endif
@@ -13,7 +13,7 @@
     /// <summary>
     /// A <see cref="TraceListener"/> that uses an <see cref="IMemoryLog"/> for tracing.
     /// </summary>
-    public abstract class MemoryTraceListener : TraceListener, ICrashDataExport
+    public class MemoryTraceListener : TraceListener, ICrashDataExport
     {
         private readonly object m_SyncLock = new object();
 
@@ -28,7 +28,7 @@
         /// This object implements thread safe locking around access to <paramref name="logCollection"/>. To maintain
         /// thread safety, ensure that direct access to this collection do not happen in parallel with this class.
         /// </remarks>
-        protected MemoryTraceListener(IMemoryLog logCollection)
+        public MemoryTraceListener(IMemoryLog logCollection)
         {
             if (logCollection == null) throw new ArgumentNullException(nameof(logCollection));
             InternalClock.Instance.Initialize();
@@ -340,7 +340,7 @@
             return row;
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
         /// <summary>
         /// Asynchronously dumps debug information using the provided dump interface.
         /// </summary>

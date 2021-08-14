@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using CodeQuality.NUnitExtensions;
     using MemoryDump;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETCOREAPP
     using System.Threading.Tasks;
 #endif
 
@@ -91,7 +91,7 @@
             m_IsFlushed = true;
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETCOREAPP
         public Task<IDumpTable> DumpTableAsync(string tableName, string rowName)
         {
             if (tableName == null) throw new ArgumentNullException(nameof(tableName));
@@ -164,6 +164,8 @@
 
         public bool IsDisposed { get; private set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S3877:Exceptions should not be thrown from unexpected methods",
+            Justification = "Testcase specific code, only to ensure implementations are correct.")]
         public void Dispose()
         {
             if (m_Scratch != null) m_Scratch.Dispose();

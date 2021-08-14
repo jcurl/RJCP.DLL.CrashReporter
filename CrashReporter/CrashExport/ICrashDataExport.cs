@@ -1,6 +1,6 @@
 ﻿namespace RJCP.Diagnostics.CrashExport
 {
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
     using System.Threading.Tasks;
 #endif
 
@@ -15,7 +15,7 @@
         /// <param name="dumpFile">The dump interface to write properties to.</param>
         void Dump(ICrashDataDumpFile dumpFile);
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
         /// <summary>
         /// Asynchronously dumps debug information using the provided dump interface.
         /// </summary>

@@ -100,12 +100,21 @@
             }
 
             using (FileStream fsToDump = OpenFile(path)) {
+#if NETFRAMEWORK
                 NativeMethods.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
                     new NativeMethods.MINIDUMP_EXCEPTION_INFORMATION {
                         ClientPointers = false,
                         ExceptionPointers = Marshal.GetExceptionPointers(),
                         ThreadId = SafeNativeMethods.GetCurrentThreadId()
                     };
+#else
+                NativeMethods.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
+                    new NativeMethods.MINIDUMP_EXCEPTION_INFORMATION {
+                        ClientPointers = false,
+                        ExceptionPointers = IntPtr.Zero,
+                        ThreadId = SafeNativeMethods.GetCurrentThreadId()
+                    };
+#endif
 
                 IntPtr mem = Marshal.AllocHGlobal(Marshal.SizeOf(miniDumpInfo));
                 Marshal.StructureToPtr(miniDumpInfo, mem, false);

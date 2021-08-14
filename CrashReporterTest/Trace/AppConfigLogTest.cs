@@ -6,18 +6,43 @@
     using CrashExport;
     using Dump;
     using NUnit.Framework;
+    using NUnit.Framework.Internal;
     using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture(Category = "CrashReporter.Trace")]
     public class AppConfigLogTest
     {
+        private static TraceSource GetTraceSource(string traceSourceName)
+        {
+            // this method is required for .NET Core, as the TraceSource doesn't read a .NET App.Config file to
+            // instantiate itself.
+            TraceSource traceSource = new TraceSource(traceSourceName);
+#if NETCOREAPP
+            traceSource.Switch = new SourceSwitch(traceSourceName, "Verbose");
+            traceSource.Listeners.Clear();
+
+            SimplePrioMemoryLog log = new SimplePrioMemoryLog() {
+                Critical = 100,
+                Error = 150,
+                Warning = 200,
+                Info = 250,
+                Verbose = 300,
+                Other = 100,
+                Total = 1500
+            };
+            MemoryTraceListener listener = new MemoryTraceListener(log);
+            traceSource.Listeners.Add(listener);
+#endif
+            return traceSource;
+        }
+
         [Test]
         public void LogData()
         {
-            TraceSource source1 = new TraceSource("RJCP.CrashReporterTest");
+            TraceSource source1 = GetTraceSource("RJCP.CrashReporterTest");
             source1.TraceEvent(TraceEventType.Verbose, 0, "Message");
 
-            TraceSource source2 = new TraceSource("RJCP.CrashReporterTest2");
+            TraceSource source2 = GetTraceSource("RJCP.CrashReporterTest2");
             source2.TraceEvent(TraceEventType.Warning, 0, "Message");
 
             ICrashDataExport log1 = null;
@@ -27,7 +52,7 @@
             Assert.That(log1, Is.Not.Null);
 
             ICrashDataExport log2 = null;
-            foreach (var listenerObject in source1.Listeners) {
+            foreach (var listenerObject in source2.Listeners) {
                 if (log2 == null) log2 = listenerObject as ICrashDataExport;
             }
             Assert.That(log2, Is.Not.Null);
@@ -45,7 +70,7 @@
         [Test]
         public void LogDump()
         {
-            TraceSource source = new TraceSource("RJCP.CrashReporterTest");
+            TraceSource source = GetTraceSource("RJCP.CrashReporterTest");
             source.TraceEvent(TraceEventType.Warning, 0, "Warning message");
 
             using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.CreateScratch | ScratchOptions.KeepCurrentDir)) {

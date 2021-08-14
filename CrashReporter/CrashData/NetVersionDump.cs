@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using CrashExport;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
     using System.Threading.Tasks;
 #endif
 
@@ -55,7 +55,7 @@
             }
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
         /// <summary>
         /// Asynchronously dumps debug information using the provided dump interface.
         /// </summary>

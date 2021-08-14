@@ -4,7 +4,7 @@
     using System.IO;
     using System.Text;
     using System.Xml;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
     using System.Threading.Tasks;
 #endif
 
@@ -92,7 +92,7 @@
         private static XmlWriterSettings SaveXmlSettings(bool isAsync)
         {
             return new XmlWriterSettings {
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
                 Async = isAsync,     // Defined in .NET 4.5 and later only.
 #endif
                 CloseOutput = false,
@@ -190,7 +190,7 @@
             }
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETSTANDARD
         public Task CreateFileAsync(string fileName)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));

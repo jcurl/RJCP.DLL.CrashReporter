@@ -4,7 +4,7 @@
     using System.Xml;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETCOREAPP
     using System.Threading.Tasks;
 #endif
 
@@ -90,7 +90,7 @@
             return true;
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETCOREAPP
         [Test]
         public async Task DumpTestBlockAsync()
         {

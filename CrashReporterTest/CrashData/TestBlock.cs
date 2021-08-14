@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using CrashExport;
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETCOREAPP
     using System.Threading.Tasks;
 #endif
 
@@ -29,7 +29,7 @@
             }
         }
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NETCOREAPP
         public async Task DumpAsync(ICrashDataDumpFile dumpFile)
         {
             using (IDumpTable table = await dumpFile.DumpTableAsync(TableName, "item")) {
