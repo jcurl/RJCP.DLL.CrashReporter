@@ -1,10 +1,10 @@
 ﻿namespace RJCP.Diagnostics
 {
-    using System.Diagnostics;
+    using Trace;
 
     internal static class Log
     {
-        public readonly static TraceSource CrashLog = new TraceSource("RJCP.CrashReporter");
-        public readonly static TraceSource Watchdog = new TraceSource("RJCP.CrashReporter.Watchdog");
+        public readonly static LogSource CrashLog = new LogSource("RJCP.CrashReporter");
+        public readonly static LogSource Watchdog = new LogSource("RJCP.CrashReporter.Watchdog");
     }
 }

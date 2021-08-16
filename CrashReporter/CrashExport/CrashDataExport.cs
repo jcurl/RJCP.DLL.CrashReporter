@@ -85,7 +85,7 @@
                     try {
                         updated = UpdateRow(item, m_Row);
                     } catch (Exception ex) {
-                        Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Couldn't dump row for {0}: {1}",
+                        Log.CrashLog.TraceEvent(TraceEventType.Error, "Couldn't dump row for {0}: {1}",
                             GetType().ToString(), ex.ToString());
                     }
                     if (updated) table.DumpRow(m_Row);
@@ -111,7 +111,7 @@
                     try {
                         updated = UpdateRow(item, m_Row);
                     } catch (Exception ex) {
-                        Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Couldn't dump row for {0}: {1}",
+                        Log.CrashLog.TraceEvent(TraceEventType.Error, "Couldn't dump row for {0}: {1}",
                             GetType().ToString(), ex.ToString());
                     }
                     if (updated) await table.DumpRowAsync(m_Row);

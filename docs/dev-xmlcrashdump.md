@@ -65,7 +65,7 @@ given.
 In more detail, there is only one attribute for the element `<StyleSheet>`,
 called `name`. The string is written with two parts:
 
-```
+```text
 <assemblyName>, <resourceName>
 ```
 

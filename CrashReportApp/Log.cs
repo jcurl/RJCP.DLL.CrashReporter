@@ -5,14 +5,11 @@
 
     public static class Log
     {
-        public static TraceSource App { get; } = new TraceSource("CrashReporterApp");
+        public static LogSource App { get; private set; }
 
         static Log()
         {
 #if NETCOREAPP
-            App.Switch = new SourceSwitch("CrashReporterApp", "Verbose");
-            App.Listeners.Clear();
-
             SimplePrioMemoryLog log = new SimplePrioMemoryLog() {
                 Critical = 100,
                 Error = 150,
@@ -23,8 +20,11 @@
                 Total = 1500
             };
             MemoryTraceListener listener = new MemoryTraceListener(log);
-            App.Listeners.Add(listener);
+            LogSource.SetLogSource("CrashReporterApp", SourceLevels.Verbose, listener);
+            LogSource.SetLogSource("RJCP.CrashReporter", SourceLevels.Verbose, listener);
+            LogSource.SetLogSource("RJCP.CrashReporter.Watchdog", SourceLevels.Verbose, listener);
 #endif
+            App = new LogSource("CrashReporterApp");
         }
     }
 }

@@ -15,19 +15,6 @@
     public static class CrashReporter
     {
         /// <summary>
-        /// Gets or sets the source which should be used for crash handling logging.
-        /// </summary>
-        /// <value>The source that should be used for logging in case of a crash.</value>
-        /// <example>
-        /// <code language="csharp"><![CDATA[
-        /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
-        /// CrashReporter.Source = Log.MyTraceSource;
-        /// CrashReporter.SetExceptionHandlers();
-        /// ]]></code>
-        /// </example>
-        public static TraceSource Source { get; set; } = Log.CrashLog;
-
-        /// <summary>
         /// Specifies what kind of core dump to create.
         /// </summary>
         /// <value>The type of core dump to generate.</value>
@@ -205,9 +192,9 @@
         /// </example>
         public static void FirstChanceExceptionHandler(object sender, FirstChanceExceptionEventArgs args)
         {
-            if (Source != null && Source.Switch.ShouldTrace(TraceEventType.Information)) {
+            if (Log.CrashLog.ShouldTrace(TraceEventType.Information)) {
                 StackTrace stack = new StackTrace(true);
-                Source.TraceEvent(TraceEventType.Information, 0,
+                Log.CrashLog.TraceEvent(TraceEventType.Information,
                     "First Chance Exception ({0}): {1}\n{2}",
                     args.Exception.GetType().ToString(), args.Exception.Message, stack.ToString());
             }
@@ -233,17 +220,17 @@
         /// </example>
         public static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
-            if (Source != null && Source.Switch.ShouldTrace(TraceEventType.Critical)) {
+            if (Log.CrashLog.ShouldTrace(TraceEventType.Critical)) {
                 if (args.IsTerminating) {
-                    Source.TraceEvent(TraceEventType.Critical, 0, "Unhandled Exception: Terminating!");
+                    Log.CrashLog.TraceEvent(TraceEventType.Critical, "Unhandled Exception: Terminating!");
                 }
                 StackTrace stack = new StackTrace(true);
                 if (!(args.ExceptionObject is Exception ex)) {
-                    Source.TraceEvent(TraceEventType.Critical, 0,
+                    Log.CrashLog.TraceEvent(TraceEventType.Critical,
                         "Unhandled Exception ({0}): {1}\n{2}",
                         args.ExceptionObject.GetType().ToString(), args.ExceptionObject.ToString(), stack.ToString());
                 } else {
-                    Source.TraceEvent(TraceEventType.Critical, 0,
+                    Log.CrashLog.TraceEvent(TraceEventType.Critical,
                         "Unhandled Exception ({0}): {1}\n{2}",
                         ex.GetType().ToString(), ex.Message, stack.ToString());
                 }
@@ -251,9 +238,9 @@
 
             try {
                 string path = CreateDump();
-                Log.CrashLog.TraceEvent(TraceEventType.Information, 0, "Crash dump created at: {0}", path);
+                Log.CrashLog.TraceEvent(TraceEventType.Information, "Crash dump created at: {0}", path);
             } catch {
-                Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Crash dump failed");
+                Log.CrashLog.TraceEvent(TraceEventType.Error, "Crash dump failed");
             }
         }
 
@@ -354,7 +341,7 @@
                 }
                 if (crashDumpPath == null) return null;
             } catch (Exception ex) {
-                Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Error creating dump: {0}", ex.ToString());
+                Log.CrashLog.TraceEvent(TraceEventType.Error, "Error creating dump: {0}", ex.ToString());
                 throw;
             }
 
@@ -375,7 +362,7 @@
                 string coreDumpPath = Path.Combine(coreDumpDir, coreDumpName);
                 Core.MiniDump(coreDumpPath, coreType);
             } catch (Exception ex) {
-                Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Error creating core: {0}", ex.ToString());
+                Log.CrashLog.TraceEvent(TraceEventType.Error, "Error creating core: {0}", ex.ToString());
                 throw;
             }
 
@@ -387,10 +374,10 @@
                     Dump.Archive.FileSystem.DeleteFolder(coreDumpDir);
 
                     if (Directory.Exists(coreDumpDir))
-                        Log.CrashLog.TraceEvent(TraceEventType.Warning, 0, "Couldn't complete remove folder {0}", coreDumpDir);
+                        Log.CrashLog.TraceEvent(TraceEventType.Warning, "Couldn't complete remove folder {0}", coreDumpDir);
                 }
             } catch (Exception ex) {
-                Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Compressing folder Exception: {0}", ex.ToString());
+                Log.CrashLog.TraceEvent(TraceEventType.Error, "Compressing folder Exception: {0}", ex.ToString());
                 throw;
             }
             return dumpFileName;

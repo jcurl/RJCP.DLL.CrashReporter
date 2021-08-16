@@ -53,18 +53,6 @@
             m_Timer.AlarmEvent += WatchdogTimeoutEvent;
         }
 
-        /// <summary>
-        /// Gets or sets the source which should be used for crash handling logging.
-        /// </summary>
-        /// <value>The source that should be used for logging in case of a crash.</value>
-        /// <example>
-        /// <code language="csharp"><![CDATA[
-        /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
-        /// ((Watchdog.ThreadWatchdog)CrashReporter.Watchdog).Source = MyTraceSource;
-        /// ]]></code>
-        /// </example>
-        public TraceSource Source { get; set; } = Log.Watchdog;
-
         private readonly object m_TimerSyncLock = new object();
 
         /// <summary>
@@ -92,11 +80,11 @@
                 bool added = m_Watchdog.Add(name, warning, critical);
                 if (added) {
                     m_Timer.SetDelay(m_Watchdog.GetNextExpiry());
-                    Source.TraceEvent(TraceEventType.Information, 0,
+                    Log.Watchdog.TraceEvent(TraceEventType.Information,
                         "Watchdog Register: '{0}'; warning {1}ms; critical {2}ms{3}",
                         name, warning, critical, overrideActive ? " (override)" : "");
                 } else {
-                    if (Source.Switch.ShouldTrace(TraceEventType.Warning)) {
+                    if (Log.Watchdog.ShouldTrace(TraceEventType.Warning)) {
                         WatchdogData registerData = m_Watchdog[name];
                         string message = string.Format(
                             "Watchdog Register: '{0}' already registered\n" +
@@ -104,7 +92,7 @@
                             " Call Stack:\n{3}",
                             name, registerData.RegisterTime.ToString("u"), registerData.RegisterStack?.ToString() ?? "(none)",
                             new StackFrame(true)?.ToString() ?? "(none)");
-                        Source.TraceEvent(TraceEventType.Warning, 0, message);
+                        Log.Watchdog.TraceEvent(TraceEventType.Warning, message);
                     }
                 }
 
@@ -129,14 +117,14 @@
                 bool removed = m_Watchdog.Remove(name);
                 if (removed) {
                     m_Timer.SetDelay(m_Watchdog.GetNextExpiry());
-                    Source.TraceEvent(TraceEventType.Information, 0, "Watchdog Unregister: '{0}'", name);
+                    Log.Watchdog.TraceEvent(TraceEventType.Information, "Watchdog Unregister: '{0}'", name);
                 } else {
-                    if (Source.Switch.ShouldTrace(TraceEventType.Warning)) {
+                    if (Log.Watchdog.ShouldTrace(TraceEventType.Warning)) {
                         string message = string.Format(
                             "Watchdog Unregister: '{0}' already unregistered\n" +
                             " Call Stack:\n{1}",
                             name, new StackFrame(true)?.ToString() ?? "(none)");
-                        Source.TraceEvent(TraceEventType.Warning, 0, message);
+                        Log.Watchdog.TraceEvent(TraceEventType.Warning, message);
                     }
                 }
 
@@ -160,16 +148,16 @@
                 bool ping = m_Watchdog.Reset(name, CrashReporter.Config.Watchdog.Ping.StackCapture);
                 if (ping) {
                     m_Timer.SetDelay(m_Watchdog.GetNextExpiry());
-                    Source.TraceEvent(TraceEventType.Verbose, 0,
+                    Log.Watchdog.TraceEvent(TraceEventType.Verbose,
                         "Watchdog Ping: '{0}'", name);
                 } else {
-                    if (Source.Switch.ShouldTrace(TraceEventType.Warning)) {
+                    if (Log.Watchdog.ShouldTrace(TraceEventType.Warning)) {
                         string message = string.Format(
                             "Watchdog Ping: '{0}' not registered\n" +
                             " Call Stack:{1}" +
                             " Thread {2}",
                             name, GetStack(new StackTrace(true)), GetThread(Thread.CurrentThread));
-                        Source.TraceEvent(TraceEventType.Warning, 0, message);
+                        Log.Watchdog.TraceEvent(TraceEventType.Warning, message);
                     }
                 }
                 return ping;
@@ -187,7 +175,7 @@
                 // Log all warnings
                 foreach (string warning in warnings) {
                     isWarning = true;
-                    if (Source.Switch.ShouldTrace(TraceEventType.Warning)) {
+                    if (Log.Watchdog.ShouldTrace(TraceEventType.Warning)) {
                         WatchdogData warningData = m_Watchdog[warning];
                         string message = string.Format(
                             "Watchdog warning: '{0}' timeout {1}ms\n" +
@@ -198,7 +186,7 @@
                             warningData.RegisterTime.ToString("u"), GetStack(warningData.RegisterStack),
                             warningData.LastPingTime.ToString("u"), GetStack(warningData.LastPingStack),
                             GetThread(warningData.LastPingThread));
-                        Source.TraceEvent(TraceEventType.Warning, 0, message);
+                        Log.Watchdog.TraceEvent(TraceEventType.Warning, message);
                     } else {
                         break;
                     }
@@ -207,7 +195,7 @@
                 // Log all critical timeouts
                 foreach (string critical in timeouts) {
                     isCritical = true;
-                    if (Source.Switch.ShouldTrace(TraceEventType.Error)) {
+                    if (Log.Watchdog.ShouldTrace(TraceEventType.Error)) {
                         WatchdogData criticalData = m_Watchdog[critical];
                         string message = string.Format(
                             "Watchdog TIMEOUT: '{0}' timeout {1}ms\n" +
@@ -218,7 +206,7 @@
                             criticalData.RegisterTime.ToString("u"), GetStack(criticalData.RegisterStack),
                             criticalData.LastPingTime.ToString("u"), GetStack(criticalData.LastPingStack),
                             GetThread(criticalData.LastPingThread));
-                        Source.TraceEvent(TraceEventType.Error, 0, message);
+                        Log.Watchdog.TraceEvent(TraceEventType.Error, message);
                     } else {
                         break;
                     }
@@ -279,9 +267,9 @@
             string dumpPath = Dump.Crash.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath, Dump.CoreType.None);
-                Log.CrashLog.TraceEvent(TraceEventType.Verbose, 0, "Watchdog warning created at: {0}", path);
+                Log.CrashLog.TraceEvent(TraceEventType.Verbose, "Watchdog warning created at: {0}", path);
             } catch {
-                Log.CrashLog.TraceEvent(TraceEventType.Information, 0, "Watchdog warning failed");
+                Log.CrashLog.TraceEvent(TraceEventType.Information, "Watchdog warning failed");
             }
         }
 
@@ -315,9 +303,9 @@
             string dumpPath = Dump.Crash.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath);
-                Log.CrashLog.TraceEvent(TraceEventType.Information, 0, "Watchdog error created at: {0}", path);
+                Log.CrashLog.TraceEvent(TraceEventType.Information, "Watchdog error created at: {0}", path);
             } catch {
-                Log.CrashLog.TraceEvent(TraceEventType.Error, 0, "Watchdog error failed");
+                Log.CrashLog.TraceEvent(TraceEventType.Error, "Watchdog error failed");
             }
             Environment.Exit(-1);
         }

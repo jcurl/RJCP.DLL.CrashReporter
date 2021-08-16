@@ -2,23 +2,32 @@
 
 ## Why use Crash Reporter
 
-.NET provides trace functionality, but the default `TraceListeners` log to the
-console always, or log to disk always. They append logs as required. Most of the
-time these logs are not required, can slow down your application slightly while
-writing to disk and more importantly, fill up the space on the users harddisk,
-pushing the onus onto the user to remove unneeded trace files, or to disable
-traces (and so have no possibility to report issues without reenabling and
-spending significant effort in reproduction).
+.NET Framework 4.x provides trace functionality, with the framework providing
+`TraceListeners` that can log to the console or to a file. The .NET Core
+provides an `ILogger` via a `ILoggerFactory` that has similar functionality.
+They append logs as required. Most of the time these logs are not required, can
+slow down your application slightly while writing to disk and more importantly,
+fill up the space on the users harddisk, pushing the onus onto the user to
+remove unneeded trace files, or to disable traces (and so have no possibility to
+report issues without reenabling and spending significant effort in
+reproduction).
 
-The Crash Reporter traces in RAM initially, uses a prioritized queue to discard
-old traces as RAM usage increases, and only writes them to disk when instructed
-to do so. This means traces are only saved as they're required (when there's a
+This library provides a `TraceListener` implementation that instead allows
+traces to be logged to RAM initially, using a prioritized queue to discard old
+traces as RAM usage increases, and only writes them to disk when instructed to
+do so. This means traces are only saved as they're required (when there's a
 problem).
+
+The `LogSource` class from the `RJCP.Diagnostics.Trace` library provides the
+singleton required that `RJCP.Diagnostics.CrashReporter` can use to trace to a
+trace listener (or your own `TraceListener` or `ILogger`).
 
 ## Quick Guide
 
-Reference the `RJCP.Diagnostics.CrashReporter` library into your project, and
-modify the `App.config` file to include the following:
+### .NET Framework 4.x
+
+On .NET Framework 4.x ,reference the `RJCP.Diagnostics.CrashReporter` library
+into your project, and modify the `App.config` file to include the following:
 
 ```xml
   <system.diagnostics>
@@ -31,7 +40,7 @@ modify the `App.config` file to include the following:
       <source name="RJCP.CrashReporter" switchValue = "Warning">
         <listeners>
           <remove name="Default"/>
-          <add name="console"/>
+          <add name="myListener"/>
         </listeners>
       </source>
       <source name="RJCP.CrashReporter.Watchdog" switchValue = "Verbose">
@@ -44,6 +53,7 @@ modify the `App.config` file to include the following:
         <listeners>
           <remove name="Default"/>
           <add name="myListener"/>
+          <add name="console"/>
         </listeners>
       </source>
     </sources>
@@ -51,10 +61,13 @@ modify the `App.config` file to include the following:
   </system.diagnostics>
 ```
 
-Replace `CrashReporterApp` with the name of your applications TraceSource name.
-The `RJCP.CrashReporter` and `RJCP.CrashReporter.Watchdog` should be present, so
-that when there is a problem performing a crash dump, details will be printed to
-the console.
+.NET Core doesn't read the `app.config` file, which is why it doesn't work for
+those projects.
+
+Replace `CrashReporterApp` with the name of your applications `TraceSource`
+name. The `RJCP.CrashReporter` and `RJCP.CrashReporter.Watchdog` should be
+present, so that when there is a problem performing a crash dump, details will
+be printed to the console.
 
 This will capture all traces internally in RAM, and only output them to disk
 when instructed to by your program.
@@ -64,6 +77,7 @@ using System;
 using System.IO;
 using RJCP.Diagnostics;
 using RJCP.Diagnostics.Dump;
+using RJCP.Diagnostics.Trace;
 
 namespace CrashReportApp
 {
@@ -71,10 +85,9 @@ namespace CrashReportApp
     {
         static void Main()
         {
-            CrashReporter.Source = Log.App;    // Default is to RJCP.CrashReporter
             CrashReporter.SetExceptionHandlers();
 
-            Log.App.TraceEvent(System.Diagnostics.TraceEventType.Information, 0, "Program Started");
+            Log.App.TraceEvent(System.Diagnostics.TraceEventType.Information, "Program Started");
 
             // Dump all traces (no core dump) and information to the current directory
             string path = Path.Combine(Environment.CurrentDirectory, Crash.Data.CrashDumpFactory.FileName);
@@ -86,6 +99,47 @@ namespace CrashReportApp
     }
 }
 ```
+
+### .NET Core (.NET Standard 2.1)
+
+The .NET Core framework doesn't read the `app.config` file. While `TraceSource`
+is part of the sources and is available, there is no singleton initializing the
+tracing framework, and the client application writer must do this themselves.
+For this library it is sufficient to instantiate the `MemoryTraceListener` in
+code and assign to to the `LogSource` as such:
+
+```csharp
+using System.Diagnostics;
+using RJCP.Diagnostics.Trace;
+
+public static class Log
+{
+    public static LogSource App { get; private set; }
+
+    static Log()
+    {
+#if NETCOREAPP
+        SimplePrioMemoryLog log = new SimplePrioMemoryLog() {
+            Critical = 100,
+            Error = 150,
+            Warning = 200,
+            Info = 250,
+            Verbose = 300,
+            Other = 100,
+            Total = 1500
+        };
+        MemoryTraceListener listener = new MemoryTraceListener(log);
+        LogSource.SetLogSource("CrashReporterApp", SourceLevels.Verbose, listener);
+        LogSource.SetLogSource("RJCP.CrashReporter", SourceLevels.Verbose, listener);
+        LogSource.SetLogSource("RJCP.CrashReporter.Watchdog", SourceLevels.Verbose, listener);
+#endif
+        App = new LogSource("CrashReporterApp");
+    }
+```
+
+You can of course get the `ILogger` object on .NET Standard through the
+`App.Logger` property. See the `RJCP.Diagnostics.Trace` project for more
+details.
 
 ## Detailed Information
 
@@ -131,7 +185,7 @@ If the Total is less than the sum of all the other queues, it will be implicitly
 be set to the minimum required to accomodate all the queues. If it is larger,
 then messages will be discarded later.
 
-### Logging Multiple Trace Sources into a Single Listener
+### Logging Multiple Trace Sources into a Single Listener (.NET Framework 4.x)
 
 Use the `<sharedListeners>` for each `<source>` in the `App.config`. Logging
 will be placed into a single block.
@@ -171,21 +225,6 @@ The `SetExceptionHandlers` will register the `AppDomain.UnhandledException` and
 the `AppDomain.FirstChanceException`. On Mono, the `FirstChanceException` is not
 defined, so this library uses reflection to register the handlers, so your code
 will continue to compile also on Mono.
-
-### Trace Messages
-
-If code doesn't provide its own `TraceSource` by setting the `Source` property,
-tracing is done by default to the `RJCP.CrashReporter` trace source. It is
-recommended that the application provide its own log source.
-
-```csharp
-CrashReporter.Source = Log.App;
-```
-
-It is recommended that the `RJCP.CrashReporter` log to the console for console
-applications, as messages are only printed when creating a crash dump. The user
-is notified in case there is a problem creating a crash, or when a crash is
-made.
 
 #### XML Crash Dump Logging
 

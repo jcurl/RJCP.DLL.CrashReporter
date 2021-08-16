@@ -117,8 +117,14 @@ the watchdog timeout.
 
 ### Disabling Logging
 
-Modify the file `CrashReportApp.exe.config` to remove all logging. Remove the
-section `<system.diagnostics>` and inner tags completely. Rerun the tests above.
+For .NET Framework 4.x, modify the file `CrashReportApp.exe.config` to remove
+all logging. Remove the section `<system.diagnostics>` and inner tags
+completely. Rerun the tests above.
+
+For .NET Core, logging is initialized in code, see the file `Log.cs`. The
+external library `RJCP.Diagnostics.Trace` is responsible for creating the
+internal `TraceListener` that wraps around the user `ILogger` (you need to
+instantiate where to log to yourself in your own code).
 
 Running `CrashReportApp.exe exception` generates a crash dump, but there are no
 traces in crash. To find the crash, go to `%LOCALAPPDATA%\CrashDumps` and find

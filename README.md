@@ -14,9 +14,7 @@ This section lists the features supported by this library.
 
 Functionality which is available for all your software:
 
-* Supports .NET 4.0 and .NET 4.5
-  * Uses multitargetting, there are two solutions, one for .NET 4.0 and one for
-    .NET 4.5.
+* Supports .NET 4.0 and .NET 4.5 to 4.8, and .NET Core (.NET Standard 2.1)
 * Dump various types of information to an XML file, that the user can send in
   addition to their bug reports.
   * Collects OS information (mostly Windows)
@@ -45,6 +43,9 @@ to decide if they wish to provide this data as part of their bug report.
 
 It puts the data in the folder `%LOCALAPPDATA%\CrashDumps`.
 
+You can override the location for where logs are captured in your application
+configuration file.
+
 ## Logging
 
 A Trace Listener is implemented that uses memory for backing. This allows
@@ -57,6 +58,8 @@ and to keep high priority messages. Typically at the time of a crash, the most
 recent messages are of importance. But if there are warnings or errors, these
 may be of more importance than the most recent.
 
+On .NET Core, set the global loggers via the `LogSource` class.
+
 ## Extensibility
 
 The software is designed to allow user provided data collection classes to
@@ -65,3 +68,16 @@ instantiate the class on start up and add it to the collection of crash data
 collectors, so that when the time comes, it is called to dump the data to disk.
 
 Create your own `ICrashProvider` and then add it to the list of providers.
+
+## Example Code
+
+For a minimalistic example of how to get it working in your own project, see the
+project `CrashReportApp`, which shows how to configure the application
+configuration file for .NET 4.x for both a watchdog and tracing, and how to
+configure the `LogSource` explicitly for .NET Core 3.1 without having to use
+complicated dependency injection.
+
+## Dependencies
+
+This library also depends on my `RJCP.Diagnostics.Trace` library to provide a
+unified logging experience between .NET Framework and .NET Core.

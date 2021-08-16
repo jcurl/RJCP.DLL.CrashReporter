@@ -3,6 +3,8 @@
 An applications behaviour for when `CreateDump` is called can be managed through
 the application configuration section `CrashDumper`.
 
+This document applies to .NET Framework as well as .NET Core.
+
 ```xml
   <configSections>
     <sectionGroup name="CrashReporter">

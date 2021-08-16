@@ -45,7 +45,7 @@
                 }
             } catch (ConfigurationErrorsException ex) {
                 // There was an error loading the configuration, so we use the default configuration
-                Log.CrashLog.TraceEvent(TraceEventType.Warning, 0, "Error loading configuration: {0}", ex.Message);
+                Log.CrashLog.TraceEvent(TraceEventType.Warning, "Error loading configuration: {0}", ex.Message);
             }
 
             // Provide default implementations is it is not in the configuration. Code doesn't need to check for 'null'

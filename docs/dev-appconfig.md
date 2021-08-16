@@ -4,6 +4,8 @@ This document covers a quick overview of the configuration file format for
 reference. For information on modifying the `app.config` file for tracing, refer
 to [Tracing](dev-tracing.md).
 
+It applies to .NET Framework as well as .NET Core.
+
 ```xml
   <configSections>
     <sectionGroup name="CrashReporter">

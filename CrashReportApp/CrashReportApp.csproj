@@ -53,6 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
     <ProjectReference Include="..\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
   </ItemGroup>
 

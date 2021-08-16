@@ -59,8 +59,8 @@ CrashReporter.Watchdog.Ping("operationname");
 
 ### Unregistering the Watchdog
 
-When the operation is finished, the watchdog should be unregistered so that there
-are no unintended timeouts resulting in a crash.
+When the operation is finished, the watchdog should be unregistered so that
+there are no unintended timeouts resulting in a crash.
 
 ```csharp
 using RJCP.Diagnostics;
@@ -72,8 +72,14 @@ CrashReporter.Watchdog.Unregister("operationname");
 
 ### Setting up the App.Config File
 
-All information about the watchdog is logged to the `TraceSource` called `RJCP.CrashReporter.Watchdog`. This trace source
-should normally be assigned the same logging as your application, e.g. to the `SimplePrioMemoryTraceListener`.
+All information about the watchdog is logged to the `TraceSource` called
+`RJCP.CrashReporter.Watchdog`. This trace source should normally be assigned the
+same logging as your application, e.g. to the `SimplePrioMemoryTraceListener`.
+
+For .NET Framework 4.x, this is done using the standard `TraceSource` logic
+present in the framework. For .NET Core the `TraceSource` is available, but the
+initialization must be done in code, and not as part of the `app.config` file
+(it isn't read). See [dev-tracing](dev-tracing.md) for more information.
 
 `app.config`
 
@@ -88,7 +94,7 @@ should normally be assigned the same logging as your application, e.g. to the `S
       <source name="RJCP.CrashReporter" switchValue = "Warning">
         <listeners>
           <remove name="Default"/>
-          <add name="console"/>
+          <add name="myListener"/>
         </listeners>
       </source>
       <source name="RJCP.CrashReporter.Watchdog" switchValue = "Verbose">
@@ -100,6 +106,7 @@ should normally be assigned the same logging as your application, e.g. to the `S
       <source name="CrashReporterApp" switchValue="Verbose">
         <listeners>
           <remove name="Default"/>
+          <add name="myListener"/>
           <add name="myListener"/>
         </listeners>
       </source>
