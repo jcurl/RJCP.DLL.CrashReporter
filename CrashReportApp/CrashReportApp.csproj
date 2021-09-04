@@ -29,6 +29,8 @@
 
     <EnableDefaultItems>false</EnableDefaultItems>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+    <RevisionControl>git</RevisionControl>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
@@ -47,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RJCP.MSBuildTasks" Version="0.1.0">
+    <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
