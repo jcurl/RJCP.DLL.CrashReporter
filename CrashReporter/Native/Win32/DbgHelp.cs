@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.Native
+﻿namespace RJCP.Diagnostics.Native.Win32
 {
     using System;
     using System.Runtime.InteropServices;
@@ -6,14 +6,14 @@
     using Microsoft.Win32.SafeHandles;
 
     [SuppressUnmanagedCodeSecurity]
-    internal static class UnsafeNativeMethods
+    internal static partial class DbgHelp
     {
         [DllImport("dbghelp.dll", SetLastError = true)]
         public static extern bool MiniDumpWriteDump(
             IntPtr hProcess,
             uint ProcessId,
             SafeFileHandle hFile,
-            NativeMethods.MINIDUMP_TYPE DumpType,
+            MINIDUMP_TYPE DumpType,
             IntPtr ExceptionParam,
             IntPtr UserStreamParam,
             IntPtr CallackParam);

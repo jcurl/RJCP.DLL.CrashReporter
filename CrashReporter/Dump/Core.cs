@@ -3,7 +3,7 @@
     using System;
     using System.IO;
     using System.Runtime.InteropServices;
-    using Native;
+    using Native.Win32;
 
     /// <summary>
     /// Methods to allow core dumps for application debugging.
@@ -81,47 +81,47 @@
             // There's a ClrDump too, but it's not visible by default
             //  http://www.debuginfo.com/tools/clrdump.html
 
-            NativeMethods.MINIDUMP_TYPE dbgDumpType;
+            DbgHelp.MINIDUMP_TYPE dbgDumpType;
             switch (dumpType) {
             case CoreType.MiniDump:
-                dbgDumpType = NativeMethods.MINIDUMP_TYPE.MiniDumpNormal;
+                dbgDumpType = DbgHelp.MINIDUMP_TYPE.MiniDumpNormal;
                 break;
             case CoreType.FullHeap:
                 dbgDumpType =
-                    NativeMethods.MINIDUMP_TYPE.MiniDumpWithFullMemory |
-                    NativeMethods.MINIDUMP_TYPE.MiniDumpWithFullMemoryInfo |
-                    NativeMethods.MINIDUMP_TYPE.MiniDumpWithHandleData |
-                    NativeMethods.MINIDUMP_TYPE.MiniDumpWithThreadInfo |
-                    NativeMethods.MINIDUMP_TYPE.MiniDumpWithUnloadedModules;
+                    DbgHelp.MINIDUMP_TYPE.MiniDumpWithFullMemory |
+                    DbgHelp.MINIDUMP_TYPE.MiniDumpWithFullMemoryInfo |
+                    DbgHelp.MINIDUMP_TYPE.MiniDumpWithHandleData |
+                    DbgHelp.MINIDUMP_TYPE.MiniDumpWithThreadInfo |
+                    DbgHelp.MINIDUMP_TYPE.MiniDumpWithUnloadedModules;
                 break;
             default:
-                dbgDumpType = NativeMethods.MINIDUMP_TYPE.MiniDumpNormal;
+                dbgDumpType = DbgHelp.MINIDUMP_TYPE.MiniDumpNormal;
                 break;
             }
 
             using (FileStream fsToDump = OpenFile(path)) {
 #if NETFRAMEWORK
-                NativeMethods.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
-                    new NativeMethods.MINIDUMP_EXCEPTION_INFORMATION {
+                DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
+                    new DbgHelp.MINIDUMP_EXCEPTION_INFORMATION {
                         ClientPointers = false,
                         ExceptionPointers = Marshal.GetExceptionPointers(),
-                        ThreadId = SafeNativeMethods.GetCurrentThreadId()
+                        ThreadId = Kernel32.GetCurrentThreadId()
                     };
 #else
-                NativeMethods.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
-                    new NativeMethods.MINIDUMP_EXCEPTION_INFORMATION {
+                DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
+                    new DbgHelp.MINIDUMP_EXCEPTION_INFORMATION {
                         ClientPointers = false,
                         ExceptionPointers = IntPtr.Zero,
-                        ThreadId = SafeNativeMethods.GetCurrentThreadId()
+                        ThreadId = Kernel32.GetCurrentThreadId()
                     };
 #endif
 
                 IntPtr mem = Marshal.AllocHGlobal(Marshal.SizeOf(miniDumpInfo));
                 Marshal.StructureToPtr(miniDumpInfo, mem, false);
 
-                bool result = UnsafeNativeMethods.MiniDumpWriteDump(
-                    SafeNativeMethods.GetCurrentProcess(),
-                    SafeNativeMethods.GetCurrentProcessId(),
+                bool result = DbgHelp.MiniDumpWriteDump(
+                    Kernel32.GetCurrentProcess(),
+                    Kernel32.GetCurrentProcessId(),
                     fsToDump.SafeFileHandle,
                     dbgDumpType,
                     miniDumpInfo.ClientPointers ? mem : IntPtr.Zero,

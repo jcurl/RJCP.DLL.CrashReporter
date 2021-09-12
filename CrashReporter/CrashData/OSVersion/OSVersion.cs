@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.CrashData.OSVersion
 {
     using System;
-    using Native;
+    using Native.Win32;
 #if DEBUG
     using System.Runtime.InteropServices;
 #endif
@@ -48,9 +48,9 @@
 
             // Get the basic information. If this shows we've got a newer operating
             // system, we can get more detailed information later.
-            NativeMethods.OSVERSIONINFO info = new NativeMethods.OSVERSIONINFO();
+            Kernel32.OSVERSIONINFO info = new Kernel32.OSVERSIONINFO();
             try {
-                result = SafeNativeMethods.GetVersionEx(info);
+                result = Kernel32.GetVersionEx(info);
                 if (!result) {
 #if DEBUG
                     int error = Marshal.GetLastWin32Error();
@@ -84,8 +84,8 @@
                 return true;
             }
 
-            NativeMethods.OSVERSIONINFOEX infoex = new NativeMethods.OSVERSIONINFOEX();
-            result = SafeNativeMethods.GetVersionEx(infoex);
+            Kernel32.OSVERSIONINFOEX infoex = new Kernel32.OSVERSIONINFOEX();
+            result = Kernel32.GetVersionEx(infoex);
             if (!result) {
 #if DEBUG
                 int error = Marshal.GetLastWin32Error();
@@ -96,9 +96,9 @@
             }
 
             int ntstatus = -1;
-            NativeMethods.OSVERSIONINFOEX rtlInfoEx = new NativeMethods.OSVERSIONINFOEX();
+            Kernel32.OSVERSIONINFOEX rtlInfoEx = new Kernel32.OSVERSIONINFOEX();
             try {
-                ntstatus = SafeNativeMethods.RtlGetVersion(rtlInfoEx);
+                ntstatus = NtDll.RtlGetVersion(rtlInfoEx);
             } catch (EntryPointNotFoundException) {
                 // The RtlGetVersionEx() call doesn't exist, or it returned an error
                 ntstatus = -1;
@@ -138,7 +138,7 @@
 
         private void GetVersion()
         {
-            uint version = SafeNativeMethods.GetVersion();
+            uint version = Kernel32.GetVersion();
 
             int majorVersion = (int)(version & 0xFF);
             int minorVersion = (int)((version & 0xFF00) >> 8);
@@ -167,7 +167,7 @@
             bool wow64 = false;
             bool result;
             try {
-                result = SafeNativeMethods.IsWow64Process(SafeNativeMethods.GetCurrentProcess(), ref wow64);
+                result = Kernel32.IsWow64Process(Kernel32.GetCurrentProcess(), ref wow64);
             } catch (EntryPointNotFoundException) {
                 result = false;
             }
@@ -190,7 +190,7 @@
             uint productInfo = 0;
             bool result = false;
             try {
-                result = SafeNativeMethods.GetProductInfo((uint)Version.Major, (uint)Version.Minor,
+                result = Kernel32.GetProductInfo((uint)Version.Major, (uint)Version.Minor,
                     (uint)ServicePack.Major, (uint)ServicePack.Minor, ref productInfo);
             } catch (EntryPointNotFoundException) {
                 // The operating system doesn't support this function call
@@ -205,12 +205,12 @@
 
         private void GetSystemInfo()
         {
-            NativeMethods.SYSTEM_INFO lpSystemInfo = new NativeMethods.SYSTEM_INFO();
+            Kernel32.SYSTEM_INFO lpSystemInfo = new Kernel32.SYSTEM_INFO();
 
             // GetNativeSystemInfo is independent if we're 64-bit or not
             // But it needs _WIN32_WINNT 0x0501
             try {
-                SafeNativeMethods.GetNativeSystemInfo(ref lpSystemInfo);
+                Kernel32.GetNativeSystemInfo(ref lpSystemInfo);
                 Architecture = (OSArchitecture)lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
                 m_NativeSystemInfo = true;
             } catch {
@@ -220,7 +220,7 @@
 
             if (Architecture == OSArchitecture.Unknown || !m_NativeSystemInfo) {
                 try {
-                    SafeNativeMethods.GetSystemInfo(ref lpSystemInfo);
+                    Kernel32.GetSystemInfo(ref lpSystemInfo);
                     Architecture = (OSArchitecture)lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
                 } catch {
                     Architecture = OSArchitecture.Unknown;
@@ -231,7 +231,7 @@
         private void DetectWin2003R2()
         {
             if (Version.Major == 5 && Version.Minor == 2) {
-                ServerR2 = (SafeNativeMethods.GetSystemMetrics(NativeMethods.SystemMetrics.SM_SERVERR2) != 0);
+                ServerR2 = (User32.GetSystemMetrics(User32.SystemMetrics.SM_SERVERR2) != 0);
             }
         }
 
@@ -242,13 +242,13 @@
             if (Version.Major == 5 && Version.Minor == 1) {
                 ProductInfo = OSProductInfo.Undefined;
 
-                result = SafeNativeMethods.GetSystemMetrics(NativeMethods.SystemMetrics.SM_MEDIACENTER);
+                result = User32.GetSystemMetrics(User32.SystemMetrics.SM_MEDIACENTER);
                 if (result != 0) ProductInfo = OSProductInfo.MediaCenter;
 
-                result = SafeNativeMethods.GetSystemMetrics(NativeMethods.SystemMetrics.SM_TABLETPC);
+                result = User32.GetSystemMetrics(User32.SystemMetrics.SM_TABLETPC);
                 if (result != 0) ProductInfo = OSProductInfo.TabletPc;
 
-                result = SafeNativeMethods.GetSystemMetrics(NativeMethods.SystemMetrics.SM_STARTER);
+                result = User32.GetSystemMetrics(User32.SystemMetrics.SM_STARTER);
                 if (result != 0) ProductInfo = OSProductInfo.Starter;
 
                 if (ProductInfo == OSProductInfo.Undefined) {
