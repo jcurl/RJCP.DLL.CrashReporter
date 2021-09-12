@@ -164,8 +164,6 @@
 
         public bool IsDisposed { get; private set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S3877:Exceptions should not be thrown from unexpected methods",
-            Justification = "Testcase specific code, only to ensure implementations are correct.")]
         public void Dispose()
         {
             if (m_Scratch != null) m_Scratch.Dispose();
