@@ -38,6 +38,9 @@
         public static extern uint GetVersion();
 
         [DllImport("kernel32.dll")]
-        public static extern bool IsWow64Process(IntPtr hProcess, ref bool wow64);
+        public static extern bool IsWow64Process(IntPtr hProcess, out bool wow64);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool IsWow64Process2(IntPtr hProcess, out ushort processMachine, out ushort nativeMachine);
     }
 }

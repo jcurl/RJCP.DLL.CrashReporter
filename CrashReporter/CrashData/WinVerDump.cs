@@ -53,7 +53,8 @@
                 new KeyValuePair<string, string>("productInfo", winVer.ProductInfo.ToString()),
                 new KeyValuePair<string, string>("productType", winVer.ProductType.ToString()),
                 new KeyValuePair<string, string>("suite", winVer.SuiteFlags.ToString()),
-                new KeyValuePair<string, string>("architecture", winVer.Architecture.ToString()),
+                new KeyValuePair<string, string>("nativearchitecture", winVer.NativeArchitecture),
+                new KeyValuePair<string, string>("architecture", winVer.Architecture),
                 new KeyValuePair<string, string>("r2", winVer.ServerR2.ToString()),
             };
         }

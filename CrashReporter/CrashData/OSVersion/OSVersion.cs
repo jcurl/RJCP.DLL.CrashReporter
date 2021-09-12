@@ -8,13 +8,10 @@
 
     internal class OSVersion
     {
-        private bool m_NativeSystemInfo;
-
         public OSVersion()
         {
             bool result = GetVersionEx();
             if (!result) GetVersion();
-            GetSystemInfo();
             DetectArchitecture();
             GetProductInfo();
             DetectWin2003R2();
@@ -38,7 +35,9 @@
 
         public OSProductInfo ProductInfo { get; private set; }
 
-        public OSArchitecture Architecture { get; private set; }
+        public string Architecture { get; private set; }
+
+        public string NativeArchitecture { get; private set; }
 
         public bool ServerR2 { get; private set; }
 
@@ -162,25 +161,48 @@
 
         private void DetectArchitecture()
         {
-            // We try to determine if we're a WOW64 process if we don't know the architecture
-            // or if we're x86 and NativeSystemInfo didn't work.
-            bool wow64 = false;
-            bool result;
+            if (DetectArchitectureWithWow2())
+                return;
+
+            DetectArchitectureWithSystemInfo();
+        }
+
+        private bool DetectArchitectureWithWow2()
+        {
             try {
-                result = Kernel32.IsWow64Process(Kernel32.GetCurrentProcess(), ref wow64);
+                bool result = Kernel32.IsWow64Process2(Kernel32.GetCurrentProcess(), out ushort processMachine, out ushort nativeMachine);
+                if (!result) return false;
+
+                Architecture = OSArchitecture.GetImageFileMachineString(processMachine);
+                NativeArchitecture = OSArchitecture.GetImageFileMachineString(nativeMachine);
+                return true;
             } catch (EntryPointNotFoundException) {
-                result = false;
+                return false;
             }
+        }
 
-            if (result) {
-                if (wow64) {
-                    // wow64 == true: 32-bit process on 64-bit windows.
-                    Architecture = OSArchitecture.x86_x64;
+        private void DetectArchitectureWithSystemInfo()
+        {
+            Kernel32.SYSTEM_INFO lpSystemInfo = new Kernel32.SYSTEM_INFO();
 
-                    // else:
-                    //   wow64 == false: 32-bit on 32-bit; or 64-bit on 64-bit
-                }
+            // GetNativeSystemInfo is independent if we're 64-bit or not But it needs _WIN32_WINNT 0x0501
+            ushort processorNativeArchitecture;
+            try {
+                Kernel32.GetNativeSystemInfo(ref lpSystemInfo);
+                processorNativeArchitecture = lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
+            } catch (EntryPointNotFoundException) {
+                processorNativeArchitecture = Kernel32.PROCESSOR_ARCHITECTURE.UNKNOWN;
             }
+            NativeArchitecture = OSArchitecture.GetProcessArchitecture(processorNativeArchitecture);
+
+            ushort processorArchitecture;
+            try {
+                Kernel32.GetSystemInfo(ref lpSystemInfo);
+                processorArchitecture = lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
+            } catch (EntryPointNotFoundException) {
+                processorArchitecture = Kernel32.PROCESSOR_ARCHITECTURE.UNKNOWN;
+            }
+            Architecture = OSArchitecture.GetProcessArchitecture(processorArchitecture);
         }
 
         private void GetProductInfo()
@@ -200,31 +222,6 @@
                 ProductInfo = OSProductInfo.Undefined;
             } else {
                 ProductInfo = (OSProductInfo)productInfo;
-            }
-        }
-
-        private void GetSystemInfo()
-        {
-            Kernel32.SYSTEM_INFO lpSystemInfo = new Kernel32.SYSTEM_INFO();
-
-            // GetNativeSystemInfo is independent if we're 64-bit or not
-            // But it needs _WIN32_WINNT 0x0501
-            try {
-                Kernel32.GetNativeSystemInfo(ref lpSystemInfo);
-                Architecture = (OSArchitecture)lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
-                m_NativeSystemInfo = true;
-            } catch {
-                Architecture = OSArchitecture.Unknown;
-                m_NativeSystemInfo = false;
-            }
-
-            if (Architecture == OSArchitecture.Unknown || !m_NativeSystemInfo) {
-                try {
-                    Kernel32.GetSystemInfo(ref lpSystemInfo);
-                    Architecture = (OSArchitecture)lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
-                } catch {
-                    Architecture = OSArchitecture.Unknown;
-                }
             }
         }
 
