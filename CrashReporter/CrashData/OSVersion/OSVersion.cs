@@ -173,8 +173,13 @@
                 bool result = Kernel32.IsWow64Process2(Kernel32.GetCurrentProcess(), out ushort processMachine, out ushort nativeMachine);
                 if (!result) return false;
 
-                Architecture = OSArchitecture.GetImageFileMachineString(processMachine);
                 NativeArchitecture = OSArchitecture.GetImageFileMachineString(nativeMachine);
+                if (processMachine == Kernel32.IMAGE_FILE_MACHINE.UNKNOWN) {
+                    // This is not a WoW process, so it's the same as the native architecture.
+                    Architecture = NativeArchitecture;
+                } else {
+                    Architecture = OSArchitecture.GetImageFileMachineString(processMachine);
+                }
                 return true;
             } catch (EntryPointNotFoundException) {
                 return false;
@@ -193,16 +198,26 @@
             } catch (EntryPointNotFoundException) {
                 processorNativeArchitecture = Kernel32.PROCESSOR_ARCHITECTURE.UNKNOWN;
             }
+
+            if (processorNativeArchitecture == Kernel32.PROCESSOR_ARCHITECTURE.UNKNOWN) {
+                Kernel32.GetSystemInfo(ref lpSystemInfo);
+                processorNativeArchitecture = lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
+            }
+
             NativeArchitecture = OSArchitecture.GetProcessArchitecture(processorNativeArchitecture);
 
-            ushort processorArchitecture;
-            try {
-                Kernel32.GetSystemInfo(ref lpSystemInfo);
-                processorArchitecture = lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
-            } catch (EntryPointNotFoundException) {
-                processorArchitecture = Kernel32.PROCESSOR_ARCHITECTURE.UNKNOWN;
+            switch (processorNativeArchitecture) {
+            case Kernel32.PROCESSOR_ARCHITECTURE.IA64:
+            case Kernel32.PROCESSOR_ARCHITECTURE.AMD64:
+                bool result = Kernel32.IsWow64Process(Kernel32.GetCurrentProcess(), out bool wow64);
+                if (result && wow64) {
+                    Architecture = OSArchitecture.GetProcessArchitecture(Kernel32.PROCESSOR_ARCHITECTURE.INTEL);
+                }
+                break;
             }
-            Architecture = OSArchitecture.GetProcessArchitecture(processorArchitecture);
+
+            if (Architecture == null)
+                Architecture = NativeArchitecture;
         }
 
         private void GetProductInfo()
