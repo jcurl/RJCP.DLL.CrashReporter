@@ -5,6 +5,7 @@
 
     internal static class NetFxConfig
     {
+        // https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
         private readonly static Dictionary<int, NetFxVersion> Versions = new Dictionary<int, NetFxVersion>() {
             { 378389, new NetFxVersion("4.5", ".NET Framework 4.5") },
             { 378675, new NetFxVersion("4.5.1", ".NET Framework 4.5.1 installed with Windows 8.1 or Windows Server 2012 R2") },
@@ -24,7 +25,9 @@
             { 461814, new NetFxVersion("4.7.2", ".NET Framework 4.7.2") },
             { 528040, new NetFxVersion("4.8", ".NET Framework 4.8 on Windows 10, May 2019 Update (1903)") },
             { 528049, new NetFxVersion("4.8", ".NET Framework 4.8") },
-            { 528209, new NetFxVersion("4.8", ".NET Framework 4.8 on Windows 10, October 2019 Update (1909)") }
+            { 528209, new NetFxVersion("4.8", ".NET Framework 4.8 on Windows 10, October 2019 Update (1909)") },
+            { 528372, new NetFxVersion("4.8", ".NET Framework 4.8 on Windows 10, October 2020 Update (20H2, 21H1)") },
+            { 528449, new NetFxVersion("4.8", ".NET Framework 4.8 on Windows 11 / Server 2022") }
         };
 
         public static NetFxVersion GetNetFxVersion(int release)
@@ -37,8 +40,7 @@
             foreach (var netVersion in versionList) {
                 if (netVersion.Key >= release) {
                     if (derivedVersion == null) {
-                        return new NetFxVersion("< 4.5",
-                            string.Format("Unknown .NET version before .NET 4.5 ({0})", release));
+                        return new NetFxVersion("< 4.5", $"Unknown .NET version before .NET 4.5 ({release})");
                     }
                     derivedVersion = netVersion.Value;
                     break;
@@ -51,7 +53,7 @@
             if (derivedVersion == null) return null;
 
             return new NetFxVersion(derivedVersion.Version,
-                string.Format(".NET {0} or later, release {1}", derivedVersion.Version, release));
+                $".NET {derivedVersion.Version} or later, release {release}");
         }
     }
 }
