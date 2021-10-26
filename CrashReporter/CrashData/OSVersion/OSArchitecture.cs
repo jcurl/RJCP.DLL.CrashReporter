@@ -2,7 +2,7 @@
 {
     using Native.Win32;
 
-    internal class OSArchitecture
+    internal static class OSArchitecture
     {
         public static string GetImageFileMachineString(ushort imageFileMachine)
         {
