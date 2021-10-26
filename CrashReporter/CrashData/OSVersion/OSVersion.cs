@@ -1,7 +1,10 @@
 ﻿namespace RJCP.Diagnostics.CrashData.OSVersion
 {
     using System;
+    using System.Security;
     using Native.Win32;
+    using Microsoft.Win32;
+
 #if DEBUG
     using System.Runtime.InteropServices;
 #endif
@@ -17,6 +20,7 @@
             DetectWin2003R2();
             DetectWinXP();
             DetectWinXPx64();
+            DetectWin10();
         }
 
         public OSPlatformId PlatformId { get; private set; }
@@ -40,6 +44,8 @@
         public string NativeArchitecture { get; private set; }
 
         public bool ServerR2 { get; private set; }
+
+        public string ReleaseInfo { get; private set; } = string.Empty;
 
         private bool GetVersionEx()
         {
@@ -279,6 +285,29 @@
                 if (ProductType == OSProductType.Workstation) {
                     ProductInfo = OSProductInfo.Professional;
                 }
+            }
+        }
+
+        private void DetectWin10()
+        {
+            if (Version.Major != 10) return;
+
+            try {
+                RegistryKey currentVersion =
+                    Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                if (currentVersion != null) {
+                    object ubrobj = currentVersion.GetValue("UBR");
+                    if (ubrobj is int ubr) {
+                        Version = new Version(Version.Major, Version.Minor, Version.Build, ubr);
+                    }
+
+                    if (currentVersion.GetValue("DisplayVersion") is string releaseId &&
+                        currentVersion.GetValue("ProductName") is string productName) {
+                        ReleaseInfo = $"{productName} ({releaseId})";
+                    }
+                }
+            } catch {
+                // Ignore any errors (Security, registry errors, etc.).
             }
         }
     }

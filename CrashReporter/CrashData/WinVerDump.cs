@@ -56,6 +56,7 @@
                 new KeyValuePair<string, string>("nativearchitecture", winVer.NativeArchitecture),
                 new KeyValuePair<string, string>("architecture", winVer.Architecture),
                 new KeyValuePair<string, string>("r2", winVer.ServerR2.ToString()),
+                new KeyValuePair<string, string>("releaseInfo", winVer.ReleaseInfo)
             };
         }
 
