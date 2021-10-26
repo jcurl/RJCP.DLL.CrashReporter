@@ -29,7 +29,6 @@
             new DumpRow(ThreadId, ThreadState, ThreadBasePrio, ThreadPrio, ThreadUserTime, ThreadTotalTime))
         { }
 
-
         /// <summary>
         /// Gets the name of the table.
         /// </summary>

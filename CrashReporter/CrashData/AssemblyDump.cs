@@ -78,7 +78,6 @@
             return true;
         }
 
-
         private static string GetAssemblyInformationalVersion(Assembly assembly)
         {
             if (!(Attribute.GetCustomAttribute(assembly, typeof(AssemblyInformationalVersionAttribute))
