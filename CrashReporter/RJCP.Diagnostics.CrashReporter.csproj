@@ -19,7 +19,7 @@
     <PackageId>RJCP.Diagnostics.CrashReporter</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/jcurl/CrashReporter</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.CrashReporter</PackageProjectUrl>
 
     <Description>Library tools to allow developers to capture debug information.</Description>
     <Version>0.4.4</Version>
