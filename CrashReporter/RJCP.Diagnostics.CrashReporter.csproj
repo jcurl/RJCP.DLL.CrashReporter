@@ -165,6 +165,7 @@
     <Compile Include="Trace\IMemoryLog.cs" />
     <Compile Include="Trace\LineSplitter.cs" />
     <Compile Include="Trace\LogEntry.cs" />
+    <Compile Include="Trace\MemoryLogDump.cs" />
     <Compile Include="Trace\MemoryTraceListener.cs" />
     <Compile Include="Trace\SimplePrioMemoryLog.cs" />
     <Compile Include="Trace\SimplePrioMemoryTraceListener.cs" />

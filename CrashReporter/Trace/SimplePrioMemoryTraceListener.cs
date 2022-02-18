@@ -5,6 +5,8 @@
     /// </summary>
     public sealed class SimplePrioMemoryTraceListener : MemoryTraceListener
     {
+        private readonly SimplePrioMemoryLog m_MemoryLog;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SimplePrioMemoryTraceListener"/> class.
         /// </summary>
@@ -20,7 +22,12 @@
         /// <item>Total</item>
         /// </list>
         /// </remarks>
-        public SimplePrioMemoryTraceListener() : base(new SimplePrioMemoryLog()) { }
+        public SimplePrioMemoryTraceListener() : this(new SimplePrioMemoryLog()) { }
+
+        private SimplePrioMemoryTraceListener(SimplePrioMemoryLog memoryLog) : base(memoryLog)
+        {
+            m_MemoryLog = memoryLog;
+        }
 
         private readonly string[] SupportedAttributes = new string[] {
             "Critical", "Error", "Warning", "Information", "Verbose", "Other", "Total"
@@ -43,13 +50,13 @@
         /// </summary>
         protected override void TraceInit()
         {
-            if (int.TryParse(Attributes["Critical"], out int critical)) ((SimplePrioMemoryLog)MemoryLog).Critical = critical;
-            if (int.TryParse(Attributes["Error"], out int error)) ((SimplePrioMemoryLog)MemoryLog).Error = error;
-            if (int.TryParse(Attributes["Warning"], out int warning)) ((SimplePrioMemoryLog)MemoryLog).Warning = warning;
-            if (int.TryParse(Attributes["Information"], out int info)) ((SimplePrioMemoryLog)MemoryLog).Info = info;
-            if (int.TryParse(Attributes["Verbose"], out int verbose)) ((SimplePrioMemoryLog)MemoryLog).Verbose = verbose;
-            if (int.TryParse(Attributes["Other"], out int other)) ((SimplePrioMemoryLog)MemoryLog).Other = other;
-            if (int.TryParse(Attributes["Total"], out int total)) ((SimplePrioMemoryLog)MemoryLog).Total = total;
+            if (int.TryParse(Attributes["Critical"], out int critical)) m_MemoryLog.Critical = critical;
+            if (int.TryParse(Attributes["Error"], out int error)) m_MemoryLog.Error = error;
+            if (int.TryParse(Attributes["Warning"], out int warning)) m_MemoryLog.Warning = warning;
+            if (int.TryParse(Attributes["Information"], out int info)) m_MemoryLog.Info = info;
+            if (int.TryParse(Attributes["Verbose"], out int verbose)) m_MemoryLog.Verbose = verbose;
+            if (int.TryParse(Attributes["Other"], out int other)) m_MemoryLog.Other = other;
+            if (int.TryParse(Attributes["Total"], out int total)) m_MemoryLog.Total = total;
         }
     }
 }

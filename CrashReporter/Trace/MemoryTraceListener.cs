@@ -3,19 +3,14 @@
     using System;
     using System.Diagnostics;
     using System.Text;
-    using CrashExport;
     using Dump;
-#if NET45_OR_GREATER || NETSTANDARD
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// A <see cref="TraceListener"/> that uses an <see cref="IMemoryLog"/> for tracing.
     /// </summary>
-    public class MemoryTraceListener : TraceListener, ICrashDataExport
+    public class MemoryTraceListener : TraceListener
     {
-        private readonly object m_SyncLock = new object();
+        private readonly MemoryLogDump m_MemoryLog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryTraceListener"/> class.
@@ -30,21 +25,11 @@
         /// </remarks>
         public MemoryTraceListener(IMemoryLog logCollection)
         {
-            if (logCollection == null) throw new ArgumentNullException(nameof(logCollection));
-            InternalClock.Instance.Initialize();
-            Crash.Data.Providers.Add(this);
-            MemoryLog = logCollection;
-        }
+            m_MemoryLog = new MemoryLogDump(logCollection);
 
-        /// <summary>
-        /// Gets the m memory log collection that was given to this constructor.
-        /// </summary>
-        /// <value>The m memory log collection that was given to this constructor.</value>
-        /// <remarks>
-        /// This object implements thread safe locking around access to <see cref="MemoryLog"/>. To maintain thread
-        /// safety, ensure that direct access to this collection do not happen in parallel with this class.
-        /// </remarks>
-        protected IMemoryLog MemoryLog { get; private set; }
+            InternalClock.Instance.Initialize();
+            Crash.Data.Providers.Add(m_MemoryLog);
+        }
 
         /// <summary>
         /// Indicates if this is a default logging source.
@@ -91,7 +76,7 @@
             LogEntry entry = new LogEntry(TraceEventType.Warning, 0, logMessage) {
                 DateTime = DateTime.Now
             };
-            lock (m_SyncLock) { MemoryLog.Add(entry); }
+            m_MemoryLog.Add(entry);
         }
 
         private readonly LineSplitter m_Line = new LineSplitter();
@@ -109,7 +94,7 @@
                 LogEntry entry = new LogEntry(TraceEventType.Verbose, 0, line) {
                     DateTime = DateTime.Now
                 };
-                lock (m_SyncLock) { MemoryLog.Add(entry); }
+                m_MemoryLog.Add(entry);
             }
         }
 
@@ -126,7 +111,7 @@
                 LogEntry entry = new LogEntry(TraceEventType.Verbose, 0, line) {
                     DateTime = DateTime.Now
                 };
-                lock (m_SyncLock) { MemoryLog.Add(entry); }
+                m_MemoryLog.Add(entry);
             }
         }
 
@@ -154,7 +139,7 @@
                 Source = source,
                 ThreadId = eventCache.ThreadId
             };
-            lock (m_SyncLock) { MemoryLog.Add(entry); }
+            m_MemoryLog.Add(entry);
         }
 
         /// <summary>
@@ -182,7 +167,7 @@
                 Source = source,
                 ThreadId = eventCache.ThreadId
             };
-            lock (m_SyncLock) { MemoryLog.Add(entry); }
+            m_MemoryLog.Add(entry);
         }
 
         /// <summary>
@@ -216,7 +201,7 @@
                 Source = source,
                 ThreadId = eventCache.ThreadId
             };
-            lock (m_SyncLock) { MemoryLog.Add(entry); }
+            m_MemoryLog.Add(entry);
         }
 
         /// <summary>
@@ -245,7 +230,7 @@
                 Source = source,
                 ThreadId = eventCache.ThreadId
             };
-            lock (m_SyncLock) { MemoryLog.Add(entry); }
+            m_MemoryLog.Add(entry);
         }
 
         /// <summary>
@@ -287,7 +272,7 @@
                 Source = source,
                 ThreadId = eventCache.ThreadId
             };
-            lock (m_SyncLock) { MemoryLog.Add(entry); }
+            m_MemoryLog.Add(entry);
         }
 
         /// <summary>
@@ -298,73 +283,19 @@
             if (m_Line.IsCached) WriteLine(null);
         }
 
-        private const string LogTable = "TraceListenerLog";
-        private const string LogInternalClock = "clock";
-        private const string LogDateTime = "timestamp";
-        private const string LogEventType = "eventType";
-        private const string LogSource = "source";
-        private const string LogId = "id";
-        private const string LogThreadId = "threadid";
-        private const string LogMessage = "message";
-
-        private readonly DumpRow m_Row = new DumpRow(
-            LogInternalClock, LogDateTime, LogEventType, LogSource,
-            LogId, LogThreadId, LogMessage);
-
         /// <summary>
-        /// Dumps debug information using the provided dump interface.
+        /// Releases the unmanaged resources used by the <see cref="MemoryTraceListener"/> and optionally releases the
+        /// managed resources.
         /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        public void Dump(ICrashDataDumpFile dumpFile)
+        /// <param name="disposing">
+        /// true to release both managed and unmanaged resources; false to release only unmanaged resources.
+        /// </param>
+        protected override void Dispose(bool disposing)
         {
-            using (IDumpTable table = dumpFile.DumpTable(LogTable, "entry")) {
-                table.DumpHeader(m_Row);
-                lock (m_SyncLock) {
-                    foreach (var entry in MemoryLog) {
-                        table.DumpRow(GetLogEntry(entry, m_Row));
-                    }
-                }
-                table.Flush();
+            if (disposing) {
+                Crash.Data.Providers.Remove(m_MemoryLog);
             }
+            base.Dispose(disposing);
         }
-
-        private static DumpRow GetLogEntry(LogEntry entry, DumpRow row)
-        {
-            row[LogInternalClock] = entry.Clock.ToString();
-            row[LogDateTime] = (entry.DateTime.Ticks == 0) ? string.Empty : entry.DateTime.ToString("o");
-            row[LogEventType] = entry.EventType.ToString();
-            row[LogSource] = entry.Source;
-            row[LogId] = entry.Id.ToString();
-            row[LogThreadId] = entry.ThreadId;
-            row[LogMessage] = entry.Message;
-            return row;
-        }
-
-#if NET45_OR_GREATER || NETSTANDARD
-        /// <summary>
-        /// Asynchronously dumps debug information using the provided dump interface.
-        /// </summary>
-        /// <param name="dumpFile">The dump interface to write properties to.</param>
-        /// <returns>An awaitable task.</returns>
-        public async Task DumpAsync(ICrashDataDumpFile dumpFile)
-        {
-            using (IDumpTable table = await dumpFile.DumpTableAsync(LogTable, "entry")) {
-                await table.DumpHeaderAsync(m_Row);
-
-                // We can't use awaitable inside a lock, so we need to first copy the data.
-                List<LogEntry> list = new List<LogEntry>();
-                lock (m_SyncLock) {
-                    foreach (var entry in MemoryLog) {
-                        list.Add(entry);
-                    }
-                }
-
-                foreach (var entry in list) {
-                    await table.DumpRowAsync(GetLogEntry(entry, m_Row));
-                }
-                await table.FlushAsync();
-            }
-        }
-#endif
     }
 }

@@ -45,21 +45,22 @@
             TraceSource source2 = GetTraceSource("RJCP.CrashReporterTest2");
             source2.TraceEvent(TraceEventType.Warning, 0, "Message");
 
-            ICrashDataExport log1 = null;
+            MemoryTraceListener log1 = null;
             foreach (var listenerObject in source1.Listeners) {
-                if (log1 == null) log1 = listenerObject as ICrashDataExport;
+                if (log1 == null) log1 = listenerObject as MemoryTraceListener;
             }
             Assert.That(log1, Is.Not.Null);
 
-            ICrashDataExport log2 = null;
+            MemoryTraceListener log2 = null;
             foreach (var listenerObject in source2.Listeners) {
-                if (log2 == null) log2 = listenerObject as ICrashDataExport;
+                if (log2 == null) log2 = listenerObject as MemoryTraceListener;
             }
             Assert.That(log2, Is.Not.Null);
 
             // Now dump it. .NET will only instantiate the trace source once according to the app.config.
             using (MemoryCrashDataDumpFile dumpFile = new MemoryCrashDataDumpFile()) {
-                log1.Dump(dumpFile);
+                MemoryTraceListenerAccessor accessor = new MemoryTraceListenerAccessor(log1);
+                accessor.MemoryLogDump.Dump(dumpFile);
                 dumpFile.Flush();
 
                 Assert.That(dumpFile["TraceListenerLog"].Table[0].Row.Count, Is.GreaterThan(0));

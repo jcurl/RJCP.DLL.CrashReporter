@@ -70,6 +70,8 @@
     <Compile Include="CrashData\WinVerDumpTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFile.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Trace\MemoryLogDumpAccessor.cs" />
+    <Compile Include="Trace\MemoryTraceListenerAccessor.cs" />
     <None Include="CrashExport\MemoryCrashDataDumpFileAsyncTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDataDumpFileTest.cs" />
     <Compile Include="CrashExport\MemoryCrashDumpFactory.cs" />

@@ -1,7 +1,6 @@
 ﻿namespace RJCP.Diagnostics.CrashData.OSVersion
 {
     using System;
-    using System.Security;
     using Native.Win32;
     using Microsoft.Win32;
 
