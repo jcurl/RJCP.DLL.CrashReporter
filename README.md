@@ -58,7 +58,7 @@ and to keep high priority messages. Typically at the time of a crash, the most
 recent messages are of importance. But if there are warnings or errors, these
 may be of more importance than the most recent.
 
-On .NET Core, set the global loggers via the `LogSource` class.
+On .NET Core, add the loggers using the `.AddSimplePrioMemoryLogger()` method.
 
 ## Extensibility
 
@@ -77,7 +77,11 @@ configuration file for .NET 4.x for both a watchdog and tracing, and how to
 configure the `LogSource` explicitly for .NET Core 3.1 without having to use
 complicated dependency injection.
 
+See also the `docs` directory in the original repository for more detailed
+information.
+
 ## Dependencies
 
 This library also depends on my `RJCP.Diagnostics.Trace` library to provide a
-unified logging experience between .NET Framework and .NET Core.
+unified logging experience between .NET Framework and .NET Core, via the
+`LogSource` class.

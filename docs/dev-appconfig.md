@@ -4,7 +4,7 @@ This document covers a quick overview of the configuration file format for
 reference. For information on modifying the `app.config` file for tracing, refer
 to [Tracing](dev-tracing.md).
 
-It applies to .NET Framework as well as .NET Core.
+It applies to .NET Core as well as .NET Framework.
 
 ```xml
   <configSections>
@@ -24,7 +24,7 @@ the memory size. See [Crash Dump Config](dev-crashdumpconfig.md).
 ```xml
   <CrashReporter>
     <CrashDumper>
-      <DumpDirectory path="${LOCALAPPDIR}/CrashDumps" ageDays="45" maxLogs="40"
+      <DumpDirectory path="${CWD}/CrashDumps" ageDays="45" maxLogs="40"
         freeGb="5" freePercent="1" maxGb="1" minLogs="5"/>
     </CrashDumper>
   </CrashReporter>

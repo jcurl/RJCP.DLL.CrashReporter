@@ -2,6 +2,9 @@
 {
     using System;
     using System.Diagnostics;
+#if NETSTANDARD
+    using Microsoft.Extensions.Logging;
+#endif
 
     /// <summary>
     /// A Trace Log Entry.
@@ -36,6 +39,59 @@
             Id = id;
             Message = message;
         }
+
+#if NETSTANDARD
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogEntry"/> class with the default clock.
+        /// </summary>
+        /// <param name="level">The log level.</param>
+        /// <param name="id">The event identifier.</param>
+        /// <param name="message">The event message.</param>
+        [CLSCompliant(false)]
+        public LogEntry(LogLevel level, int id, string message)
+        {
+            Clock = InternalClock.Instance.GetClock();
+            EventType = GetTraceEventType(level);
+            Id = id;
+            Message = message;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogEntry"/> class with the given clock.
+        /// </summary>
+        /// <param name="level">The log level.</param>
+        /// <param name="id">The event identifier.</param>
+        /// <param name="message">The event message.</param>
+        /// <param name="clock">The clock when the event occurred in milliseconds.</param>
+        [CLSCompliant(false)]
+        public LogEntry(LogLevel level, int id, string message, long clock)
+        {
+            Clock = clock;
+            EventType = GetTraceEventType(level);
+            Id = id;
+            Message = message;
+        }
+
+        private static TraceEventType GetTraceEventType(LogLevel level)
+        {
+            switch (level) {
+            case LogLevel.None:
+            case LogLevel.Critical:
+                return TraceEventType.Critical;
+            case LogLevel.Error:
+                return TraceEventType.Error;
+            case LogLevel.Warning:
+                return TraceEventType.Warning;
+            case LogLevel.Information:
+                return TraceEventType.Information;
+            case LogLevel.Debug:
+            case LogLevel.Trace:
+                return TraceEventType.Verbose;
+            default:
+                return TraceEventType.Verbose;
+            }
+        }
+#endif
 
         /// <summary>
         /// A 64-bit clock time stamp, which starts at zero near the time when the program starts.

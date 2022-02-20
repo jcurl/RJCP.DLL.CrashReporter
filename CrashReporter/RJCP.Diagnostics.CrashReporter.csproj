@@ -14,7 +14,7 @@
     <RootNamespace>RJCP.Diagnostics</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2019-2021, Jason Curl</Copyright>
+    <Copyright>(C) 2019-2022, Jason Curl</Copyright>
     <Company></Company>
     <PackageId>RJCP.Diagnostics.CrashReporter</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -73,6 +73,9 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
   </ItemGroup>
@@ -137,8 +140,6 @@
     <Compile Include="CrashExport\Xml\XmlCrashDumpFactory.cs" />
     <Compile Include="CrashExport\Xml\XmlExtensions.cs" />
     <Compile Include="CrashReporter.cs" />
-    <Compile Include="Native\Win32\Kernel32+IMAGE_FILE_MACHINE.cs" />
-    <Compile Include="Native\Win32\Kernel32+PROCESSOR_ARCHITECTURE.cs" />
     <None Include="Dump\Archive\CompressZipFile.cs" />
     <None Include="Dump\Archive\CompressZipArchive.cs" />
     <Compile Include="Dump\Archive\FileSystem.cs" />
@@ -147,10 +148,16 @@
     <Compile Include="Dump\Crash.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Log.cs" />
+    <None Include="Logging\MemoryLogger.cs" />
+    <None Include="Logging\MemoryLoggerExtensions.cs" />
+    <None Include="Logging\SimplePrioMemoryLogConfig.cs" />
+    <None Include="Logging\SimplePrioMemoryLogProvider.cs" />
     <Compile Include="Native\AppDomainAccessor.cs" />
     <Compile Include="Native\Win32\DbgHelp.cs" />
     <Compile Include="Native\Win32\DbgHelp+MINIDUMP_EXCEPTION_INFORMATION.cs" />
     <Compile Include="Native\Win32\DbgHelp+MINIDUMP_TYPE.cs" />
+    <Compile Include="Native\Win32\Kernel32+IMAGE_FILE_MACHINE.cs" />
+    <Compile Include="Native\Win32\Kernel32+PROCESSOR_ARCHITECTURE.cs" />
     <Compile Include="Native\Win32\Kernel32+OSVERSIONINFO.cs" />
     <Compile Include="Native\Win32\Kernel32+OSVERSIONINFOEX.cs" />
     <Compile Include="Native\Win32\Kernel32+PROCESSOR_INFO_UNION.cs" />
@@ -188,6 +195,13 @@
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
     <Compile Include="Dump\Archive\CompressZipArchive.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETStandard'">
+    <Compile Include="Logging\MemoryLogger.cs" />
+    <Compile Include="Logging\MemoryLoggerExtensions.cs" />
+    <Compile Include="Logging\SimplePrioMemoryLogConfig.cs" />
+    <Compile Include="Logging\SimplePrioMemoryLogProvider.cs" />
   </ItemGroup>
 
   <ItemGroup>

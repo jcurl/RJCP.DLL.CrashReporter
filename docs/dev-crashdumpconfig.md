@@ -14,7 +14,7 @@ This document applies to .NET Framework as well as .NET Core.
 
   <CrashReporter>
     <CrashDumper>
-      <DumpDirectory path="${LOCALAPPDIR}/CrashDumps" ageDays="45" maxLogs="40"
+      <DumpDirectory path="${CWD}/CrashDumps" ageDays="45" maxLogs="40"
         freeGb="5" freePercent="1" maxGb="1" minLogs="5"/>
     </CrashDumper>
   </CrashReporter>

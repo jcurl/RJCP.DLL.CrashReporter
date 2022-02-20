@@ -1,0 +1,40 @@
+@startuml RJCP.Diagnostics.Logging
+
+rectangle {
+    class UserApp #ffdd33
+}
+
+rectangle {
+    interface ILogger
+    class MemoryLoggerExtensions {
+        +AddSimplePrioMemoryLogger()
+        +AddSimplePrioMemoryLogger(Action<SimplePrioMemoryLogConfig> configure)
+    }
+    class SimplePrioMemoryLog
+    class SimplePrioMemoryLogConfig
+    class SimplePrioMemoryLogProvider
+    class MemoryLogger
+    class MemoryLogDump
+    class Crash
+
+    MemoryLoggerExtensions .d.> SimplePrioMemoryLogProvider : <<registers>>
+    MemoryLoggerExtensions .d.> SimplePrioMemoryLogConfig : <<registers>>
+
+    ILogger <|.d. MemoryLogger
+
+    SimplePrioMemoryLogProvider *-r- SimplePrioMemoryLogConfig
+    SimplePrioMemoryLogProvider "1" *-d- "*" MemoryLogger
+    SimplePrioMemoryLogProvider *-d- SimplePrioMemoryLog
+    SimplePrioMemoryLogProvider *-d- MemoryLogDump
+    MemoryLogDump o-r- SimplePrioMemoryLog
+    MemoryLogger o- MemoryLogDump
+
+    Crash .u.> MemoryLogDump : <<references>>
+    SimplePrioMemoryLogProvider .d.> Crash : <<registers>>
+}
+
+'UserApp -u-> MemoryLoggerExtensions : <<registers using>>
+UserApp -r-> MemoryLogger : <<uses>>
+UserApp -r-> MemoryLoggerExtensions : <<registers with>>
+UserApp -d-> Crash : <<requests dump>>
+@enduml

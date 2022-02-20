@@ -1,0 +1,34 @@
+@startuml RJCP.Diagnostics.Trace
+
+rectangle {
+    class UserApp #ffdd33
+}
+
+rectangle {
+    interface ICollection<LogEntry>
+    interface IMemoryLog
+    interface ICrashDataExport
+    class LogEntry
+    class SimplePrioMemoryTraceListener
+    class SimplePrioMemoryLog
+    class MemoryTraceListener
+    class TraceListener
+    class MemoryLogDump
+    class Crash
+
+    IMemoryLog .u.|> ICollection
+    SimplePrioMemoryLog .u.|> IMemoryLog
+    SimplePrioMemoryLog "1" *-r- "*" LogEntry
+    SimplePrioMemoryTraceListener -u-|> MemoryTraceListener
+    SimplePrioMemoryTraceListener *-r- SimplePrioMemoryLog
+    MemoryTraceListener -u-|> TraceListener
+    SimplePrioMemoryTraceListener *-d- MemoryLogDump
+    MemoryLogDump o-r- SimplePrioMemoryLog
+    MemoryLogDump .l.|> ICrashDataExport
+    Crash .u.> MemoryLogDump : <<references>>
+    MemoryTraceListener .d.> Crash : <<registers>>
+}
+
+UserApp -r-> SimplePrioMemoryTraceListener : <<logs to>>
+UserApp -d-> Crash : <<requests dump>>
+@enduml

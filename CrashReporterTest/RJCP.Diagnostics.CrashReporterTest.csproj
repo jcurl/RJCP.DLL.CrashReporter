@@ -14,7 +14,7 @@
     <RootNamespace>RJCP.Diagnostics</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2019-2021, Jason Curl</Copyright>
+    <Copyright>(C) 2019-2022, Jason Curl</Copyright>
     <Company></Company>
     <Description>Test harness for RJCP.Diagnostics.CrashReporter.</Description>
     <Version>1.0.0</Version>

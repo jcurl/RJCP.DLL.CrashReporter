@@ -72,48 +72,16 @@ CrashReporter.Watchdog.Unregister("operationname");
 
 ### Setting up the App.Config File
 
-All information about the watchdog is logged to the `TraceSource` called
+All information about the watchdog is logged to the `LogSource` category called
 `RJCP.CrashReporter.Watchdog`. This trace source should normally be assigned the
 same logging as your application, e.g. to the `SimplePrioMemoryTraceListener`.
 
 For .NET Framework 4.x, this is done using the standard `TraceSource` logic
-present in the framework. For .NET Core the `TraceSource` is available, but the
-initialization must be done in code, and not as part of the `app.config` file
-(it isn't read). See [dev-tracing](dev-tracing.md) for more information.
+present in the framework. For .NET Core the `.AddSimplePrioMemoryLogger()`
+extension registers the trace in the Host, and not as part of the `app.config`
+file (it isn't read). See [dev-tracing](dev-tracing.md) for more information.
 
-`app.config`
-
-```xml
-  <system.diagnostics>
-    <sharedListeners>
-      <add name="myListener" type="RJCP.Diagnostics.Trace.SimplePrioMemoryTraceListener, RJCP.Diagnostics.CrashReporter"/>
-      <add name="console" type="System.Diagnostics.ConsoleTraceListener"/>
-    </sharedListeners>
-
-    <sources>
-      <source name="RJCP.CrashReporter" switchValue = "Warning">
-        <listeners>
-          <remove name="Default"/>
-          <add name="myListener"/>
-        </listeners>
-      </source>
-      <source name="RJCP.CrashReporter.Watchdog" switchValue = "Verbose">
-        <listeners>
-          <remove name="Default"/>
-          <add name="myListener"/>
-        </listeners>
-      </source>
-      <source name="CrashReporterApp" switchValue="Verbose">
-        <listeners>
-          <remove name="Default"/>
-          <add name="myListener"/>
-          <add name="myListener"/>
-        </listeners>
-      </source>
-    </sources>
-    <trace autoflush="true" useGlobalLock="false"/>
-  </system.diagnostics>
-```
+`app.config` for .NET Framework
 
 ### Trace Levels and Sources
 
@@ -125,8 +93,8 @@ Everything logged at this level includes:
   the name, the timeout that was configured, when and where it was registered,
   the last ping (and where the last ping occurred) and the current thread are
   logged.
-* `RJCP.CrashReporter` (or `CrashReporter.Source`): If there was an error
-  creating a dump on a critical watchdog timeout.
+* `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`): If
+  there was an error creating a dump on a critical watchdog timeout.
 
 #### TraceEventType.Warning
 
@@ -145,7 +113,7 @@ Everything logged at this level includes:
     Information about the name of the watchdog, the warning timeout, when and
     where it was registered, and the time and location of the last ping, as well
     as the current managed thread.
-* `RJCP.CrashReporter` (or `CrashReporter.Source`)
+* `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`)
   * If a watchdog critical dump could not be created, it is logged.
 
 #### TraceEventType.Information
@@ -157,7 +125,7 @@ Everything logged at this level includes:
     critical timeout are logged.
   * Unregistering a previously registered watchdog. The name of the watchdog is
     logged.
-* `RJCP.CrashReporter` (or `CrashReporter.Source`)
+* `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`)
   * If a watchdog warning could not be created, it is logged.
   * The location of a watchdog timeout (critical time expired).
 
@@ -167,7 +135,7 @@ Everything logged at this level includes:
 
 * `RJCP.CrashReporter.Watchdog`
   * When pinging a watchdog. The name of the watchdog is logged.
-* `RJCP.CrashReporter` (or `CrashReporter.Source`)
+* `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`)
   * Logs the location of a watchdog warning log.
 
 ## Advanced Techniques

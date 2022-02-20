@@ -12,10 +12,15 @@ Run the program with the single option
 ```text
 CrashReportApp.exe exception
 
-RJCP.CrashReporter Information: 0 : Crash dump created at: C:\Users\jcurl\AppData\Local\CrashDumps\CrashReportApp-20200119120159.2e161246-b00a-4907-8952-e5ac4f5cff9a.zip
+CrashReporterApp Information: 0 : Program Started
+CrashReporterApp Critical: 0 : Crash Reporter App - Critical
+CrashReporterApp Error: 0 : Crash Reporter App - Error
+CrashReporterApp Warning: 0 : Crash Reporter App - Warning
+CrashReporterApp Information: 0 : Crash Reporter App - Information
+CrashReporterApp Verbose: 0 : Crash Reporter App - Verbose
 
 Unhandled Exception: System.InvalidOperationException: An exception which should cause a dump
-   at CrashReportApp.Program.Main(String[] args) in C:\Users\jcurl\Documents\Programming\HELIOS\helios.devfxio\framework\crashreporter\CrashReportApp\Program.cs:line 28
+   at CrashReportApp.Program.Main(String[] args) in C:\...\framework\crashreporter\CrashReportApp\Program.cs:line 46
 ```
 
 It will generate a simple dump in the same directory where the program is run
@@ -41,8 +46,8 @@ Run the program with the single option
 ```text
 CrashReportApp.exe watchdog
 
-RJCP.CrashReporter Verbose: 0 : Watchdog warning created at: C:\Users\jcurl\AppData\Local\CrashDumps\CrashReportApp.wd-20200119120236.839de4cf-f3c6-4db9-b8a3-eb466424f195.zip
-RJCP.CrashReporter Information: 0 : Watchdog error created at: C:\Users\jcurl\AppData\Local\CrashDumps\CrashReportApp.wderr-20200119120239.36338b34-22e7-4dbc-9052-9efa81407e44.zip
+RJCP.CrashReporter Verbose: 0 : Watchdog warning created at: C:\...\AppData\Local\CrashDumps\CrashReportApp.wd-20200119120236.839de4cf-f3c6-4db9-b8a3-eb466424f195.zip
+RJCP.CrashReporter Information: 0 : Watchdog error created at: C:\...\AppData\Local\CrashDumps\CrashReportApp.wderr-20200119120239.36338b34-22e7-4dbc-9052-9efa81407e44.zip
 ```
 
 The watchdog `app` is registered with a warning of 2 seconds, and a timeout of 5
@@ -71,10 +76,10 @@ Check for the following:
 * The log file `CrashDump.xml` and `CrashDump.xsl` is in the current directory.
   Inspecting the contents should contain a single trace line indicating the
   program has started.
-* There should be a new log file in `%LOCALAPPDATA%\CrashDumps`, the precise
-  name is printed to the console output. Open this file and ensure that there is
-  a crash dump (Windows only) and that information about the exception is logged
-  in addition in the XML file. The exception should be printed twice:
+* There should be a new log file in `.\CrashDumps`, the precise name is printed
+  to the console output. Open this file and ensure that there is a crash dump
+  (Windows only) and that information about the exception is logged in addition
+  in the XML file. The exception should be printed twice:
   * An `Information` for the `FirstChanceException`, and `Critical` for an
     `UnhandledException` (it's critical as the program is about to end).
   * The `Source` should be the `CrashReportApp` as the application provided this
@@ -121,16 +126,13 @@ For .NET Framework 4.x, modify the file `CrashReportApp.exe.config` to remove
 all logging. Remove the section `<system.diagnostics>` and inner tags
 completely. Rerun the tests above.
 
-For .NET Core, logging is initialized in code, see the file `Log.cs`. The
-external library `RJCP.Diagnostics.Trace` is responsible for creating the
-internal `TraceListener` that wraps around the user `ILogger` (you need to
-instantiate where to log to yourself in your own code).
+For .NET Core, change the logging level in the `appsettings.json` file.
 
 Running `CrashReportApp.exe exception` generates a crash dump, but there are no
-traces in crash. To find the crash, go to `%LOCALAPPDATA%\CrashDumps` and find
-the most recent crash. It won't be printed to the console, as logging is
-removed. There should still be a minidump to help debugging (just that now the
-contextual information is missing).
+traces in crash. To find the crash, go to `.\CrashDumps` and find the most
+recent crash. It won't be printed to the console, as logging is removed. There
+should still be a minidump to help debugging (just that now the contextual
+information is missing).
 
 Open the minidump and ensure the crash is at the exception. The location of the
 stack at the time of the crash is at the code which caused the minidump, but
@@ -153,8 +155,8 @@ The last line is the location of the exception.
 
 Similarly, running `CrashReportApp.exe watchdog` should still generate two
 crashes, one for the watchdog warning, the other for the watchdog error. Go to
-`%LOCALAPPDATA%\CrashDumps` and find the two most recent crashes. It won't be
-printed to the console as logging is removed.
+`.\CrashDumps` and find the two most recent crashes. It won't be printed to the
+console as logging is removed.
 
 The warning should not contain any logs, and is probably less useful (other than
 the warning occurred).
