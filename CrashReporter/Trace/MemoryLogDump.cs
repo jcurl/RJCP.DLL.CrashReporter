@@ -22,6 +22,10 @@
         /// <exception cref="ArgumentNullException">
         /// <paramref name="logCollection"/> is <see langword="null"/>.
         /// </exception>
+        /// <remarks>
+        /// Once an <see cref="IMemoryLog"/> object is given to this object, this object should be used for adding logs
+        /// via the <see cref="Add(LogEntry)"/> method, so that logging and dumping are thread-safe.
+        /// </remarks>
         public MemoryLogDump(IMemoryLog logCollection)
         {
             if (logCollection == null) throw new ArgumentNullException(nameof(logCollection));
@@ -72,7 +76,9 @@
         private static DumpRow GetLogEntry(LogEntry entry, DumpRow row)
         {
             row[LogInternalClock] = entry.Clock.ToString();
-            row[LogDateTime] = (entry.DateTime.Ticks == 0) ? string.Empty : entry.DateTime.ToString("o");
+            row[LogDateTime] = (entry.DateTime.Ticks == 0) ?
+               string.Empty :
+               entry.DateTime.ToUniversalTime().ToString("o");
             row[LogEventType] = entry.EventType.ToString();
             row[LogSource] = entry.Source;
             row[LogId] = entry.Id.ToString();
