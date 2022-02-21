@@ -267,9 +267,9 @@
             string dumpPath = Dump.Crash.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath, Dump.CoreType.None);
-                Log.CrashLog.TraceEvent(TraceEventType.Verbose, "Watchdog warning created at: {0}", path);
+                Log.CrashLog.TraceEvent(TraceEventType.Information, "Watchdog warning created at: {0}", path);
             } catch {
-                Log.CrashLog.TraceEvent(TraceEventType.Information, "Watchdog warning failed");
+                Log.CrashLog.TraceEvent(TraceEventType.Warning, "Watchdog warning failed");
             }
         }
 
@@ -303,7 +303,7 @@
             string dumpPath = Dump.Crash.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath);
-                Log.CrashLog.TraceEvent(TraceEventType.Information, "Watchdog error created at: {0}", path);
+                Log.CrashLog.TraceEvent(TraceEventType.Warning, "Watchdog error created at: {0}", path);
             } catch {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, "Watchdog error failed");
             }

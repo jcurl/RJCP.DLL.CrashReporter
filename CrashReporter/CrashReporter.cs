@@ -238,7 +238,6 @@
 
             try {
                 string path = CreateDump();
-                Log.CrashLog.TraceEvent(TraceEventType.Information, "Crash dump created at: {0}", path);
             } catch {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, "Crash dump failed");
             }
@@ -380,6 +379,8 @@
                 Log.CrashLog.TraceEvent(TraceEventType.Error, "Compressing folder Exception: {0}", ex.ToString());
                 throw;
             }
+
+            Log.CrashLog.TraceEvent(TraceEventType.Warning, "Crash dump created at: {0}", dumpFileName);
             return dumpFileName;
         }
 
