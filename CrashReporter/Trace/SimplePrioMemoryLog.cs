@@ -41,6 +41,7 @@
                 {
 
                     if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "Buffer count is negative");
+                    if (value == 0) value = 1;
                     m_Minimum = value;
                 }
             }
@@ -235,7 +236,7 @@
             if (Count >= m_Max) {
                 // Remove the lowest priority entry first and add this to the correct list.
                 foreach (var log in m_Log) {
-                    int equalLevel = (item.EventType != log.Key) ? 0 : 1;
+                    int equalLevel = (log.Value.Minimum > 0 && item.EventType == log.Key) ? 1 : 0;
                     if (log.Value.LogList.Count > log.Value.Minimum - equalLevel) {
                         log.Value.LogList.Dequeue();
                         Enqueue(item);
