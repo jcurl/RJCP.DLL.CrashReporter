@@ -253,18 +253,14 @@
         private async Task DumpAsync(ICrashDataDumpFile dump)
         {
             if (dump.IsSynchronous) {
-                Console.WriteLine("DumpAsync: IsSynchronous");
                 foreach (ICrashDataExport dumper in Providers) {
-                    Console.WriteLine("DumpAsync: Dump {0}", dumper.ToString());
                     await dumper.DumpAsync(dump);
                 }
             } else {
-                Console.WriteLine("DumpAsync: !IsSynchronous");
                 List<Task> dumpers = new List<Task>(Providers.Count);
                 foreach (ICrashDataExport dumper in Providers) {
                     dumpers.Add(dumper.DumpAsync(dump));
                 }
-                Console.WriteLine("DumpAsync: !IsSynchronous waiting for all");
                 await Task.WhenAll(dumpers);
             }
             await dump.FlushAsync();
