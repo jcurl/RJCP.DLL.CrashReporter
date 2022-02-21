@@ -14,6 +14,16 @@
             uint ProcessId,
             SafeFileHandle hFile,
             MINIDUMP_TYPE DumpType,
+            ref MINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
+            IntPtr UserStreamParam,
+            IntPtr CallackParam);
+
+        [DllImport("dbghelp.dll", SetLastError = true)]
+        public static extern bool MiniDumpWriteDump(
+            IntPtr hProcess,
+            uint ProcessId,
+            SafeFileHandle hFile,
+            MINIDUMP_TYPE DumpType,
             IntPtr ExceptionParam,
             IntPtr UserStreamParam,
             IntPtr CallackParam);

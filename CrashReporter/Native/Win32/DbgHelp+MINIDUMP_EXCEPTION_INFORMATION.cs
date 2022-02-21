@@ -5,12 +5,12 @@
 
     internal static partial class DbgHelp
     {
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct MINIDUMP_EXCEPTION_INFORMATION
         {
             public uint ThreadId;
             public IntPtr ExceptionPointers;
-            public bool ClientPointers;
+            public int ClientPointers;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using RJCP.Diagnostics;
 using RJCP.Diagnostics.Dump;
@@ -47,12 +46,12 @@ namespace CrashReportApp
 
                     // This should result in a watchdog timeout, and crash the program (unless there's an override)
                     CrashReporter.Watchdog.Ping("app");
-                    System.Threading.Thread.Sleep(10000);
+                    Thread.Sleep(10000);
                     break;
                 }
-            } finally {
-                string path = Path.Combine(Environment.CurrentDirectory, Crash.Data.CrashDumpFactory.FileName);
-                Crash.Data.Dump(path);
+            } catch (Exception) {
+                CrashReporter.CreateDump(CoreType.FullHeap);
+                return -1;
             }
 
             return 0;

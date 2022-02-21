@@ -4,6 +4,9 @@
     using System.IO;
     using System.Runtime.InteropServices;
     using Native.Win32;
+#if !NETFRAMEWORK
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Methods to allow core dumps for application debugging.
@@ -103,34 +106,41 @@
 #if NETFRAMEWORK
                 DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
                     new DbgHelp.MINIDUMP_EXCEPTION_INFORMATION {
-                        ClientPointers = false,
+                        ClientPointers = 0,
                         ExceptionPointers = Marshal.GetExceptionPointers(),
                         ThreadId = Kernel32.GetCurrentThreadId()
                     };
 #else
                 DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
                     new DbgHelp.MINIDUMP_EXCEPTION_INFORMATION {
-                        ClientPointers = false,
-                        ExceptionPointers = IntPtr.Zero,
+                        ClientPointers = 0,
+                        ExceptionPointers = GetExceptionPointers(),
                         ThreadId = Kernel32.GetCurrentThreadId()
                     };
 #endif
-
-                IntPtr mem = Marshal.AllocHGlobal(Marshal.SizeOf(miniDumpInfo));
-                Marshal.StructureToPtr(miniDumpInfo, mem, false);
-
                 bool result = DbgHelp.MiniDumpWriteDump(
                     Kernel32.GetCurrentProcess(),
                     Kernel32.GetCurrentProcessId(),
                     fsToDump.SafeFileHandle,
                     dbgDumpType,
-                    miniDumpInfo.ClientPointers ? mem : IntPtr.Zero,
+                    ref miniDumpInfo,
                     IntPtr.Zero,
                     IntPtr.Zero);
 
-                Marshal.FreeHGlobal(mem);
                 return result;
             }
         }
+
+#if !NETFRAMEWORK
+        private static IntPtr GetExceptionPointers()
+        {
+            Type marshal = typeof(Marshal);
+            MethodInfo pointers = marshal.GetMethod("GetExceptionPointers");
+            if (pointers != null)
+                return (IntPtr)pointers.Invoke(null, null);
+
+            return IntPtr.Zero;
+        }
+#endif
     }
 }
