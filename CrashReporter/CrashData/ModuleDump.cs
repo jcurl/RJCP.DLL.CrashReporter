@@ -65,15 +65,15 @@
         /// </returns>
         protected override bool UpdateRow(ProcessModule item, DumpRow row)
         {
-            row[ModName] = item.ModuleName;
-            row[ModFileVersion] = item.FileVersionInfo.FileVersion;
-            row[ModFileName] = item.FileVersionInfo.FileName;
-            row[ModProdVersion] = item.FileVersionInfo.ProductVersion;
-            row[ModProdName] = item.FileVersionInfo.ProductName;
-            row[ModOrigFileName] = item.FileVersionInfo.OriginalFilename;
-            row[ModFileDesc] = item.FileVersionInfo.FileDescription;
-            row[ModMemSize] = item.ModuleMemorySize.ToString();
-            row[ModBaseAddress] = item.BaseAddress.ToString();
+            row[ModName] = GetField(() => item.ModuleName);
+            row[ModFileVersion] = GetField(() => item.FileVersionInfo.FileVersion);
+            row[ModFileName] = GetField(() => item.FileVersionInfo.FileName);
+            row[ModProdVersion] = GetField(() => item.FileVersionInfo.ProductVersion);
+            row[ModProdName] = GetField(() => item.FileVersionInfo.ProductName);
+            row[ModOrigFileName] = GetField(() => item.FileVersionInfo.OriginalFilename);
+            row[ModFileDesc] = GetField(() => item.FileVersionInfo.FileDescription);
+            row[ModMemSize] = GetField(() => item.ModuleMemorySize.ToString());
+            row[ModBaseAddress] = GetField(() => item.BaseAddress.ToString());
             return true;
         }
     }

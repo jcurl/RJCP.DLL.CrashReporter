@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Runtime.ExceptionServices;
     using System.Text.RegularExpressions;
+    using System.Threading;
     using Dump;
 
     /// <summary>
@@ -92,7 +93,9 @@
         public static bool SetFirstChanceException()
         {
             AppDomain appDomain = AppDomain.CurrentDomain;
-            return SetFirstChanceException(appDomain, FirstChanceExceptionHandler);
+            Native.AppDomainAccessor accessor = new Native.AppDomainAccessor(appDomain);
+            if (!accessor.IsSupported) return false;
+            return accessor.SetFirstChanceException(FirstChanceExceptionHandler);
         }
 
         /// <summary>
@@ -155,17 +158,27 @@
         /// <code language="csharp"><![CDATA[
         /// Log.MyTraceSource = new TraceSource("MyApp.Trace");
         /// CrashReporter.Source = Log.MyTraceSource;
-        /// CrashReporter.SetFirstChanceException(AppDomain.CurrentDomain, CrashReporter.FirstChanceExceptionHandler);
+        /// AppDomain.CurrentDomain.SetFirstChanceException(CrashReporter.FirstChanceExceptionHandler);
         /// ]]></code>
         /// </example>
         public static bool SetFirstChanceException(this AppDomain appDomain, EventHandler<FirstChanceExceptionEventArgs> handler)
         {
             if (appDomain == null) throw new ArgumentNullException(nameof(appDomain));
             if (handler == null) throw new ArgumentNullException(nameof(handler));
-
-            Native.AppDomainAccessor accessor = new Native.AppDomainAccessor(appDomain);
-            return accessor.SetFirstChanceException(handler);
+            return SetFirstChanceExceptionUser(appDomain, handler);
         }
+
+        private static bool SetFirstChanceExceptionUser(AppDomain appDomain, EventHandler<FirstChanceExceptionEventArgs> handler)
+        {
+            Native.AppDomainAccessor accessor = new Native.AppDomainAccessor(appDomain);
+            if (accessor.IsSupported) {
+                UserHandler += handler;
+                return accessor.SetFirstChanceException(FirstChanceExceptionHandlerUser);
+            }
+            return false;
+        }
+
+        private static event EventHandler<FirstChanceExceptionEventArgs> UserHandler;
 
         /// <summary>
         /// Handles the first chance exception handler.
@@ -192,12 +205,24 @@
         /// </example>
         public static void FirstChanceExceptionHandler(object sender, FirstChanceExceptionEventArgs args)
         {
+            int counter = Thread.VolatileRead(ref SuppressFirstChanceExceptionCounter);
+            if (counter > 0) return;
+
             if (Log.CrashLog.ShouldTrace(TraceEventType.Information)) {
                 StackTrace stack = new StackTrace(true);
                 Log.CrashLog.TraceEvent(TraceEventType.Information,
                     "First Chance Exception ({0}): {1}\n{2}",
                     args.Exception.GetType().ToString(), args.Exception.Message, stack.ToString());
             }
+        }
+
+        private static void FirstChanceExceptionHandlerUser(object sender, FirstChanceExceptionEventArgs args)
+        {
+            int counter = Thread.VolatileRead(ref SuppressFirstChanceExceptionCounter);
+            if (counter > 0) return;
+
+            EventHandler<FirstChanceExceptionEventArgs> handler = UserHandler;
+            if (handler != null) handler(sender, args);
         }
 
         /// <summary>
@@ -576,6 +601,30 @@
                 }
             }
             return remaining;
+        }
+
+        private static int SuppressFirstChanceExceptionCounter;
+
+        private sealed class SuppressFirstChanceExceptionBlock : IDisposable
+        {
+            public SuppressFirstChanceExceptionBlock()
+            {
+                Interlocked.Increment(ref SuppressFirstChanceExceptionCounter);
+            }
+
+            public void Dispose()
+            {
+                Interlocked.Decrement(ref SuppressFirstChanceExceptionCounter);
+            }
+        }
+
+        /// <summary>
+        /// Suppresses the first chance exception, until the object returned is disposed.
+        /// </summary>
+        /// <returns>A reference object that when disposed, enables printing first chance exceptions.</returns>
+        public static IDisposable SuppressFirstChanceException()
+        {
+            return new SuppressFirstChanceExceptionBlock();
         }
     }
 }

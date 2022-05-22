@@ -71,6 +71,37 @@
         protected virtual bool IsValid() { return true; }
 
         /// <summary>
+        /// Attempts to run the delegate, returning a string.
+        /// </summary>
+        /// <param name="fieldAccess">The delegate accessing the dump data.</param>
+        /// <returns>
+        /// The result of the delegate <paramref name="fieldAccess"/>, else a string describing if an exception
+        /// occurred.
+        /// </returns>
+        /// <remarks>
+        /// The intent of this method is to easily wrap obtaining information which might throw an exception. If an
+        /// exception is thrown, a simple string is returned indicating the error.
+        /// </remarks>
+        protected string GetField(Func<string> fieldAccess)
+        {
+            using (CrashReporter.SuppressFirstChanceException()) {
+                try {
+                    return fieldAccess();
+                } catch (PlatformNotSupportedException) {
+                    return "PlatformNotSupportedException";
+                } catch (System.IO.FileNotFoundException) {
+                    return "FileNotFoundException";
+                } catch (System.IO.IOException ex) {
+#if NET40
+                    return string.Format("IOException: {0}", ex.Message);
+#else
+                    return string.Format("IOException: {0} (0x{1:x8})", ex.Message, ex.HResult);
+#endif
+                }
+            }
+        }
+
+        /// <summary>
         /// Dumps debug information using the provided dump interface.
         /// </summary>
         /// <param name="dumpFile">The dump interface to write properties to.</param>

@@ -57,7 +57,10 @@
         /// <returns>An enumerable object.</returns>
         protected override IEnumerable<NetworkInterface> GetRows()
         {
-            return NetworkInterface.GetAllNetworkInterfaces();
+            // Under .NET Core for Windows, exceptions may be raised. We want to suppress this in our logs.
+            using (CrashReporter.SuppressFirstChanceException()) {
+                return NetworkInterface.GetAllNetworkInterfaces();
+            }
         }
 
         /// <summary>
@@ -71,25 +74,25 @@
         /// </returns>
         protected override bool UpdateRow(NetworkInterface item, DumpRow row)
         {
-            row[AdapterName] = item.Name;
-            row[AdapterDescription] = item.Description;
-            row[AdapterId] = item.Id;
-            row[AdapterInterfaceType] = item.NetworkInterfaceType.ToString();
-            row[AdapterStatus] = item.OperationalStatus.ToString();
-            row[AdapterSpeed] = item.Speed.ToString();
-            row[AdapterMulticastEnabled] = item.SupportsMulticast.ToString();
-            row[AdapterMac] = item.GetPhysicalAddress().ToString();
+            row[AdapterName] = GetField(() => item.Name);
+            row[AdapterDescription] = GetField(() => item.Description);
+            row[AdapterId] = GetField(() => item.Id);
+            row[AdapterInterfaceType] = GetField(() => item.NetworkInterfaceType.ToString());
+            row[AdapterStatus] = GetField(() => item.OperationalStatus.ToString());
+            row[AdapterSpeed] = GetField(() => item.Speed.ToString());
+            row[AdapterMulticastEnabled] = GetField(() => item.SupportsMulticast.ToString());
+            row[AdapterMac] = GetField(() => item.GetPhysicalAddress().ToString());
 
             IPInterfaceProperties properties = item.GetIPProperties();
-            row[AdapterIpDnsEnabled] = properties.IsDnsEnabled.ToString();
-            row[AdapterIpDynDnsEnabled] = properties.IsDynamicDnsEnabled.ToString();
-            row[AdapterIpDnsSuffix] = properties.DnsSuffix;
-            row[AdapterIpUnicast] = GetUnicastAddresses(properties.UnicastAddresses);
-            row[AdapterIpDns] = GetIpAddresses(properties.DnsAddresses);
-            row[AdapterIpGateway] = GetGwAddresses(properties.GatewayAddresses);
-            row[AdapterIpAnycast] = GetIpInfoAddresses(properties.AnycastAddresses);
-            row[AdapterIpMulticastAddr] = GetMulticastAddresses(properties.MulticastAddresses);
-            row[AdapterIpDhcp] = GetIpAddresses(properties.DhcpServerAddresses);
+            row[AdapterIpDnsEnabled] = GetField(() => properties.IsDnsEnabled.ToString());
+            row[AdapterIpDynDnsEnabled] = GetField(() => properties.IsDynamicDnsEnabled.ToString());
+            row[AdapterIpDnsSuffix] = GetField(() => properties.DnsSuffix);
+            row[AdapterIpUnicast] = GetField(() => GetUnicastAddresses(properties.UnicastAddresses));
+            row[AdapterIpDns] = GetField(() => GetIpAddresses(properties.DnsAddresses));
+            row[AdapterIpGateway] = GetField(() => GetGwAddresses(properties.GatewayAddresses));
+            row[AdapterIpAnycast] = GetField(() => GetIpInfoAddresses(properties.AnycastAddresses));
+            row[AdapterIpMulticastAddr] = GetField(() => GetMulticastAddresses(properties.MulticastAddresses));
+            row[AdapterIpDhcp] = GetField(() => GetIpAddresses(properties.DhcpServerAddresses));
 
             return true;
         }
