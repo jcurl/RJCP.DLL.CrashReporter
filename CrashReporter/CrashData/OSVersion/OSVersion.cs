@@ -12,14 +12,18 @@
     {
         public OSVersion()
         {
-            bool result = GetVersionEx();
-            if (!result) GetVersion();
-            DetectArchitecture();
-            GetProductInfo();
-            DetectWin2003R2();
-            DetectWinXP();
-            DetectWinXPx64();
-            DetectWin10();
+            // Ignore exceptions in the log related to the entry point not found.
+            using (CrashReporter.SuppressFirstChanceException()) {
+                bool result = GetVersionEx();
+                if (!result) GetVersion();
+                DetectArchitecture();
+                GetProductInfo();
+                DetectWin2003R2();
+                DetectWinXP();
+                DetectWinXPx64();
+                DetectWinBrand();
+                DetectWin10();
+            }
         }
 
         public OSPlatformId PlatformId { get; private set; }
@@ -235,7 +239,7 @@
                 result = Kernel32.GetProductInfo((uint)Version.Major, (uint)Version.Minor,
                     (uint)ServicePack.Major, (uint)ServicePack.Minor, ref productInfo);
             } catch (EntryPointNotFoundException) {
-                // The operating system doesn't support this function call
+                // The operating system doesn't support this function call (e.g. Windows XP)
             }
 
             if (!result) {
@@ -287,9 +291,20 @@
             }
         }
 
+        private void DetectWinBrand()
+        {
+            try {
+                // Useful to tell the difference between Windows 10 and Windows 11.
+                string release = WinBrand.BrandingFormatString("%WINDOWS_LONG%");
+                if (!string.IsNullOrWhiteSpace(release)) ReleaseInfo = release;
+            } catch (EntryPointNotFoundException) {
+                // Ignore that the DLL or the entry point can't be found
+            }
+        }
+
         private void DetectWin10()
         {
-            if (Version.Major != 10) return;
+            if (Version.Major < 10) return;
 
             try {
                 RegistryKey currentVersion =
@@ -300,9 +315,11 @@
                         Version = new Version(Version.Major, Version.Minor, Version.Build, ubr);
                     }
 
-                    if (currentVersion.GetValue("DisplayVersion") is string releaseId &&
-                        currentVersion.GetValue("ProductName") is string productName) {
-                        ReleaseInfo = $"{productName} ({releaseId})";
+                    if (string.IsNullOrWhiteSpace(ReleaseInfo)) {
+                        if (currentVersion.GetValue("DisplayVersion") is string releaseId &&
+                            currentVersion.GetValue("ProductName") is string productName) {
+                            ReleaseInfo = $"{productName} ({releaseId})";
+                        }
                     }
                 }
             } catch {

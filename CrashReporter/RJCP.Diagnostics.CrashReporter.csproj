@@ -140,6 +140,7 @@
     <Compile Include="CrashExport\Xml\XmlCrashDumpFactory.cs" />
     <Compile Include="CrashExport\Xml\XmlExtensions.cs" />
     <Compile Include="CrashReporter.cs" />
+    <Compile Include="Native\Win32\WinBrand.cs" />
     <None Include="Dump\Archive\CompressZipFile.cs" />
     <None Include="Dump\Archive\CompressZipArchive.cs" />
     <Compile Include="Dump\Archive\FileSystem.cs" />
