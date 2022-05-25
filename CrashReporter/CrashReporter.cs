@@ -262,7 +262,7 @@
             }
 
             try {
-                string path = CreateDump();
+                _ = CreateDump();
             } catch {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, "Crash dump failed");
             }
@@ -454,8 +454,6 @@
         /// A log might be required to be deleted, but if there is a file system error, it will be skipped.
         /// </para>
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value",
-            Justification = "Kept in case ordering is changed to reduce possible bugs")]
         public static void CleanUpDump(string dumpFolder, string fileMatchRegEx)
         {
             if (dumpFolder == null) throw new ArgumentNullException(nameof(dumpFolder));
@@ -500,7 +498,7 @@
 
             crashCandidates = CleanUpDumpOld(Config.CrashDumper.DumpDir.AgeDays, crashCandidates);
             crashCandidates = CleanUpDumpKeepNewest(Config.CrashDumper.DumpDir.MaxLogs, crashCandidates);
-            crashCandidates = CleanUpKeepSpace(
+            _ = CleanUpKeepSpace(
                 drive,
                 Config.CrashDumper.DumpDir.ReserveFree * GbMultiplier, Config.CrashDumper.DumpDir.ReserveFreePercent,
                 Config.CrashDumper.DumpDir.MaxDirSize * GbMultiplier, Config.CrashDumper.DumpDir.MaxDirSizeMinLogs,
