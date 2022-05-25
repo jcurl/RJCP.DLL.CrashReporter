@@ -90,12 +90,31 @@
                 dbgDumpType = DbgHelp.MINIDUMP_TYPE.MiniDumpNormal;
                 break;
             case CoreType.FullHeap:
+#if NET40
+                // Windows XP supports .NET 4.0, but not later.
+                if (Environment.OSVersion.Version.Major <= 5) {
+                    dbgDumpType =
+                        DbgHelp.MINIDUMP_TYPE.MiniDumpWithFullMemory |
+                        DbgHelp.MINIDUMP_TYPE.MiniDumpWithHandleData |
+                        DbgHelp.MINIDUMP_TYPE.MiniDumpWithUnloadedModules;
+                } else {
+                    // Windows Vista or later
+                    dbgDumpType =
+                        DbgHelp.MINIDUMP_TYPE.MiniDumpWithFullMemory |
+                        DbgHelp.MINIDUMP_TYPE.MiniDumpWithFullMemoryInfo |
+                        DbgHelp.MINIDUMP_TYPE.MiniDumpWithHandleData |
+                        DbgHelp.MINIDUMP_TYPE.MiniDumpWithThreadInfo |
+                        DbgHelp.MINIDUMP_TYPE.MiniDumpWithUnloadedModules;
+                }
+#else
+                // Windows Vista or later
                 dbgDumpType =
                     DbgHelp.MINIDUMP_TYPE.MiniDumpWithFullMemory |
                     DbgHelp.MINIDUMP_TYPE.MiniDumpWithFullMemoryInfo |
                     DbgHelp.MINIDUMP_TYPE.MiniDumpWithHandleData |
                     DbgHelp.MINIDUMP_TYPE.MiniDumpWithThreadInfo |
                     DbgHelp.MINIDUMP_TYPE.MiniDumpWithUnloadedModules;
+#endif
                 break;
             default:
                 dbgDumpType = DbgHelp.MINIDUMP_TYPE.MiniDumpNormal;
@@ -104,12 +123,33 @@
 
             using (FileStream fsToDump = OpenFile(path)) {
 #if NETFRAMEWORK
-                DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
+                if (Environment.OSVersion.Version.Major <= 5) {
+                    // Windows XP - no exception information, as this otherwise results in zero sized core dumps
+                    return DbgHelp.MiniDumpWriteDump(
+                        Kernel32.GetCurrentProcess(),
+                        Kernel32.GetCurrentProcessId(),
+                        fsToDump.SafeFileHandle,
+                        dbgDumpType,
+                        IntPtr.Zero,
+                        IntPtr.Zero,
+                        IntPtr.Zero);
+                } else {
+                    DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
                     new DbgHelp.MINIDUMP_EXCEPTION_INFORMATION {
                         ClientPointers = 0,
                         ExceptionPointers = Marshal.GetExceptionPointers(),
                         ThreadId = Kernel32.GetCurrentThreadId()
                     };
+                    return DbgHelp.MiniDumpWriteDump(
+                        Kernel32.GetCurrentProcess(),
+                        Kernel32.GetCurrentProcessId(),
+                        fsToDump.SafeFileHandle,
+                        dbgDumpType,
+                        ref miniDumpInfo,
+                        //IntPtr.Zero,
+                        IntPtr.Zero,
+                        IntPtr.Zero);
+                }
 #else
                 DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
                     new DbgHelp.MINIDUMP_EXCEPTION_INFORMATION {
@@ -117,8 +157,8 @@
                         ExceptionPointers = GetExceptionPointers(),
                         ThreadId = Kernel32.GetCurrentThreadId()
                     };
-#endif
-                bool result = DbgHelp.MiniDumpWriteDump(
+
+                return DbgHelp.MiniDumpWriteDump(
                     Kernel32.GetCurrentProcess(),
                     Kernel32.GetCurrentProcessId(),
                     fsToDump.SafeFileHandle,
@@ -126,8 +166,7 @@
                     ref miniDumpInfo,
                     IntPtr.Zero,
                     IntPtr.Zero);
-
-                return result;
+#endif
             }
         }
 
