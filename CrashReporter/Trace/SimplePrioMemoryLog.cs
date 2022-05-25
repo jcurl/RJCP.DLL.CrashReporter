@@ -21,7 +21,7 @@
         private const int OtherDefault = 200;
         private const int MaxDefault = CriticalDefault + ErrorDefault + WarningDefault + InfoDefault + VerboseDefault + OtherDefault + 200;
 
-        private class Log
+        private sealed class Log
         {
             public Log(int defaultMinimum)
             {
@@ -332,7 +332,7 @@
         #region Enumeration
         private sealed class MemoryLogEnumerator : IEnumerator<LogEntry>
         {
-            private class Indexer
+            private sealed class Indexer
             {
                 private readonly Log m_List;
                 private IEnumerator<LogEntry> m_Enumerator;
