@@ -6,5 +6,3 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "P/Invoke", Scope = "namespaceanddescendants", Target = "~N:RJCP.Diagnostics.Native")]
-[assembly: SuppressMessage("Style", "IDE0056:Use index operator", Justification = "C# 7.0 Compatibility")]
-[assembly: SuppressMessage("Style", "IDE0057:Use range operator", Justification = "C# 7.0 Compatibility")]

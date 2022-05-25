@@ -51,7 +51,11 @@
                     m_Lines.Add(lines[i]);
                 }
             }
+#if NETFRAMEWORK
             m_Line.Append(lines[lines.Length - 1]);
+#else
+            m_Line.Append(lines[^1]);
+#endif
         }
     }
 }

@@ -7,7 +7,11 @@
         internal NetFx10(string version, string key)
         {
             if (version.StartsWith("v")) {
+#if NETFRAMEWORK
                 Version = version.Substring(1);
+#else
+                Version = version[1..];
+#endif
             } else {
                 Version = version;
             }

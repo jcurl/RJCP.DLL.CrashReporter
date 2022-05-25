@@ -37,14 +37,22 @@
                 string[] path = key.Split('\\');
 
                 string netVersion = (string)registryKey.GetValue("Version");
+#if NETFRAMEWORK
                 if (netVersion == null) netVersion = path[0].Substring(1);
+#else
+                if (netVersion == null) netVersion = path[0][1..];
+#endif
                 NetVersion = new Version(netVersion);
 
                 string servicePack = registryKey.GetValue("SP", "").ToString();
                 if (servicePack.Equals("0")) servicePack = string.Empty;
 
                 StringBuilder version = new StringBuilder();
+#if NETFRAMEWORK
                 version.Append(path[0].Substring(1));
+#else
+                version.Append(path[0].AsSpan(1));
+#endif
                 if (path.Length >= 2) version.Append(' ').Append(path[1]);
                 if (!string.IsNullOrEmpty(servicePack)) version.Append(" SP").Append(servicePack);
                 Version = version.ToString();

@@ -150,16 +150,23 @@
             System.Reflection.Assembly assembly;
             string resourceName;
             int resourceClassPos = resource.LastIndexOf(',');
+
             if (resourceClassPos == -1) {
                 // Assume that the user wants the executable (entry)
                 assembly = System.Reflection.Assembly.GetEntryAssembly();
                 resourceName = resource.Trim();
             } else {
+#if NETFRAMEWORK
                 string assemblyName = resource.Substring(0, resourceClassPos).Trim();
                 resourceName = resource.Substring(resourceClassPos + 1).Trim();
-
                 assembly = GetAssemblyByName(assemblyName);
                 if (assembly == null) return GetDefaultStyleSheetResource();
+#else
+                string assemblyName = resource.AsSpan(0, resourceClassPos).Trim().ToString();
+                resourceName = resource.AsSpan(resourceClassPos + 1).Trim().ToString();
+                assembly = GetAssemblyByName(assemblyName);
+                if (assembly == null) return GetDefaultStyleSheetResource();
+#endif
             }
 
             Stream stream = assembly.GetManifestResourceStream(resourceName);
