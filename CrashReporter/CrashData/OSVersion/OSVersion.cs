@@ -146,10 +146,9 @@
 
         private void GetVersion()
         {
-            uint version = Kernel32.GetVersion();
-
-            int majorVersion = (int)(version & 0xFF);
-            int minorVersion = (int)((version & 0xFF00) >> 8);
+            int version = Kernel32.GetVersion();
+            int majorVersion = version & 0xFF;
+            int minorVersion = (version & 0xFF00) >> 8;
             int buildNumber = 0;
 
             if ((version & (1 << 31)) != 0) {
@@ -179,7 +178,8 @@
         private bool DetectArchitectureWithWow2()
         {
             try {
-                bool result = Kernel32.IsWow64Process2(Kernel32.GetCurrentProcess(), out ushort processMachine, out ushort nativeMachine);
+                bool result = Kernel32.IsWow64Process2(Kernel32.GetCurrentProcess(),
+                    out Kernel32.IMAGE_FILE_MACHINE processMachine, out Kernel32.IMAGE_FILE_MACHINE nativeMachine);
                 if (!result) return false;
 
                 NativeArchitecture = OSArchitecture.GetImageFileMachineString(nativeMachine);
@@ -197,19 +197,19 @@
 
         private void DetectArchitectureWithSystemInfo()
         {
-            Kernel32.SYSTEM_INFO lpSystemInfo = new Kernel32.SYSTEM_INFO();
+            Kernel32.SYSTEM_INFO lpSystemInfo;
 
             // GetNativeSystemInfo is independent if we're 64-bit or not But it needs _WIN32_WINNT 0x0501
             ushort processorNativeArchitecture;
             try {
-                Kernel32.GetNativeSystemInfo(ref lpSystemInfo);
+                Kernel32.GetNativeSystemInfo(out lpSystemInfo);
                 processorNativeArchitecture = lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
             } catch (EntryPointNotFoundException) {
                 processorNativeArchitecture = Kernel32.PROCESSOR_ARCHITECTURE.UNKNOWN;
             }
 
             if (processorNativeArchitecture == Kernel32.PROCESSOR_ARCHITECTURE.UNKNOWN) {
-                Kernel32.GetSystemInfo(ref lpSystemInfo);
+                Kernel32.GetSystemInfo(out lpSystemInfo);
                 processorNativeArchitecture = lpSystemInfo.uProcessorInfo.wProcessorArchitecture;
             }
 
@@ -233,26 +233,23 @@
         {
             if (!HasExtendedProperties) return;
 
-            uint productInfo = 0;
-            bool result = false;
             try {
-                result = Kernel32.GetProductInfo((uint)Version.Major, (uint)Version.Minor,
-                    (uint)ServicePack.Major, (uint)ServicePack.Minor, ref productInfo);
+                bool result = Kernel32.GetProductInfo(Version.Major, Version.Minor,
+                    ServicePack.Major, ServicePack.Minor, out OSProductInfo productInfo);
+                if (!result) {
+                    ProductInfo = OSProductInfo.Undefined;
+                } else {
+                    ProductInfo = productInfo;
+                }
             } catch (EntryPointNotFoundException) {
                 // The operating system doesn't support this function call (e.g. Windows XP)
-            }
-
-            if (!result) {
-                ProductInfo = OSProductInfo.Undefined;
-            } else {
-                ProductInfo = (OSProductInfo)productInfo;
             }
         }
 
         private void DetectWin2003R2()
         {
             if (Version.Major == 5 && Version.Minor == 2) {
-                ServerR2 = (User32.GetSystemMetrics(User32.SystemMetrics.SM_SERVERR2) != 0);
+                ServerR2 = (User32.GetSystemMetrics(User32.SYSTEM_METRICS.SM_SERVERR2) != 0);
             }
         }
 
@@ -263,13 +260,13 @@
             if (Version.Major == 5 && Version.Minor == 1) {
                 ProductInfo = OSProductInfo.Undefined;
 
-                result = User32.GetSystemMetrics(User32.SystemMetrics.SM_MEDIACENTER);
+                result = User32.GetSystemMetrics(User32.SYSTEM_METRICS.SM_MEDIACENTER);
                 if (result != 0) ProductInfo = OSProductInfo.MediaCenter;
 
-                result = User32.GetSystemMetrics(User32.SystemMetrics.SM_TABLETPC);
+                result = User32.GetSystemMetrics(User32.SYSTEM_METRICS.SM_TABLETPC);
                 if (result != 0) ProductInfo = OSProductInfo.TabletPc;
 
-                result = User32.GetSystemMetrics(User32.SystemMetrics.SM_STARTER);
+                result = User32.GetSystemMetrics(User32.SYSTEM_METRICS.SM_STARTER);
                 if (result != 0) ProductInfo = OSProductInfo.Starter;
 
                 if (ProductInfo == OSProductInfo.Undefined) {

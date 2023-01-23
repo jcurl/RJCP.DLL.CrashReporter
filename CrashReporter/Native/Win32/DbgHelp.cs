@@ -8,7 +8,7 @@
     [SuppressUnmanagedCodeSecurity]
     internal static partial class DbgHelp
     {
-        [DllImport("dbghelp.dll", SetLastError = true)]
+        [DllImport("dbghelp.dll", SetLastError = true, ExactSpelling = true)]
         public static extern bool MiniDumpWriteDump(
             IntPtr hProcess,
             uint ProcessId,
@@ -18,7 +18,7 @@
             IntPtr UserStreamParam,
             IntPtr CallackParam);
 
-        [DllImport("dbghelp.dll", SetLastError = true)]
+        [DllImport("dbghelp.dll", SetLastError = true, ExactSpelling = true)]
         public static extern bool MiniDumpWriteDump(
             IntPtr hProcess,
             uint ProcessId,

@@ -6,7 +6,7 @@
     [SuppressUnmanagedCodeSecurity]
     internal static partial class NtDll
     {
-        [DllImport("ntdll.dll", SetLastError = false, CharSet = CharSet.Unicode)]
+        [DllImport("ntdll.dll", SetLastError = false, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int RtlGetVersion([In, Out] Kernel32.OSVERSIONINFOEX osVersionInfoEx);
     }
 }

@@ -6,7 +6,7 @@
     /// <remarks>
     /// This is obtained from the function call <c>GetProductInfo()</c>.
     /// </remarks>
-    internal enum OSProductInfo : long
+    internal enum OSProductInfo
     {
         /// <summary>
         /// Product unknown.
@@ -16,7 +16,7 @@
         /// <summary>
         /// Product is unlicensed.
         /// </summary>
-        Unlicensed = 0xABCDABCD,
+        Unlicensed = unchecked((int)0xABCDABCD),
 
         /// <summary>
         /// Ultimate.
@@ -496,11 +496,11 @@
         /// <summary>
         /// Windows XP MediaCenter.
         /// </summary>
-        MediaCenter = 0xF8000001,
+        MediaCenter = unchecked((int)0xF8000001),
 
         /// <summary>
         /// Windows XP Tablet PC.
         /// </summary>
-        TabletPc = 0xF8000002
+        TabletPc = unchecked((int)0xF8000002)
     }
 }

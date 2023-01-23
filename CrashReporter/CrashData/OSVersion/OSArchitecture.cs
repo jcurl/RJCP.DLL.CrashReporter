@@ -4,7 +4,7 @@
 
     internal static class OSArchitecture
     {
-        public static string GetImageFileMachineString(ushort imageFileMachine)
+        public static string GetImageFileMachineString(Kernel32.IMAGE_FILE_MACHINE imageFileMachine)
         {
             switch (imageFileMachine) {
             case Kernel32.IMAGE_FILE_MACHINE.UNKNOWN: return "Unknown";
