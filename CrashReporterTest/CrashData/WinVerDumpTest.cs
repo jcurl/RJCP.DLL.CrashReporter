@@ -2,7 +2,7 @@
 {
     using CrashExport;
     using NUnit.Framework;
-    using OSInfo = RJCP.CodeQuality.OSInfo;
+    using RJCP.Core.Environment;
 
     [TestFixture(Category = "CrashReporter.CrashData")]
     public class WinVerDumpTest : DumpTestBase
@@ -16,7 +16,7 @@
 
         protected override bool CheckDump(MemoryCrashDataDumpFile dumpFile)
         {
-            if (OSInfo.Platform.IsUnix()) return true;
+            if (Platform.IsUnix()) return true;
             return base.CheckDump(dumpFile);
         }
     }

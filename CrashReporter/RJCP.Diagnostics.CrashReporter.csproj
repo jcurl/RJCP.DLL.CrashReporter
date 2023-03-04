@@ -14,7 +14,7 @@
     <RootNamespace>RJCP.Diagnostics</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2019-2022, Jason Curl</Copyright>
+    <Copyright>(C) 2019-2023, Jason Curl</Copyright>
     <Company></Company>
     <PackageId>RJCP.Diagnostics.CrashReporter</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -61,6 +61,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <ProjectReference Include="..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
+    <ProjectReference Include="..\..\environment\Environment\RJCP.Environment.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
@@ -167,7 +168,6 @@
     <Compile Include="Native\Win32\NtDll.cs" />
     <Compile Include="Native\Win32\User32.cs" />
     <Compile Include="Native\Win32\User32+SystemMetrics.cs" />
-    <Compile Include="Platform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Trace\InternalClock.cs" />
     <Compile Include="Trace\IMemoryLog.cs" />

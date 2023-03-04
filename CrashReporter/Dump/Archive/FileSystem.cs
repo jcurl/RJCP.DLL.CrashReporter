@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Threading;
+    using RJCP.Core.Environment;
 
     internal static class FileSystem
     {

@@ -4,6 +4,7 @@
     using System.IO;
     using System.Runtime.InteropServices;
     using Native.Win32;
+    using RJCP.Core.Environment;
 #if !NETFRAMEWORK
     using System.Reflection;
 #endif

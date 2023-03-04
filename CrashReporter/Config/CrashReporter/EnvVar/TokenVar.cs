@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using RJCP.Core.Environment;
 
     internal class TokenVar : IToken
     {

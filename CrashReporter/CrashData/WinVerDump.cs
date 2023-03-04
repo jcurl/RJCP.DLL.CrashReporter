@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using CrashExport;
+    using RJCP.Core.Environment;
 
     /// <summary>
     /// Dump some basic information about the OS.

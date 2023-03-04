@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Security;
     using Microsoft.Win32;
+    using RJCP.Core.Environment;
 
     internal class NetVersions : IEnumerable<INetVersion>
     {

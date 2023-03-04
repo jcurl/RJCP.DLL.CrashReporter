@@ -14,7 +14,7 @@
     <RootNamespace>RJCP.Diagnostics</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2019-2022, Jason Curl</Copyright>
+    <Copyright>(C) 2019-2023, Jason Curl</Copyright>
     <Company></Company>
     <Description>Test harness for RJCP.Diagnostics.CrashReporter.</Description>
     <Version>1.0.0</Version>
@@ -51,6 +51,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
     <ProjectReference Include="..\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
     <ProjectReference Include="..\..\nunitextensions\CodeQuality\RJCP.CodeQuality.csproj" />
+    <ProjectReference Include="..\..\environment\Environment\RJCP.Environment.csproj" />
   </ItemGroup>
 
   <ItemGroup>
