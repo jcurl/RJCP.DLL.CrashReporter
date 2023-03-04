@@ -5,4 +5,5 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+[assembly: SuppressMessage("Style", "IDE0074:Use compound assignment", Justification = ".NET Core only feature")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "P/Invoke", Scope = "namespaceanddescendants", Target = "~N:RJCP.Diagnostics.Native")]
