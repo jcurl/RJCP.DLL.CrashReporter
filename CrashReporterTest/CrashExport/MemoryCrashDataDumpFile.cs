@@ -123,7 +123,8 @@
             get
             {
                 lock (m_Blocks) {
-                    if (m_Blocks.ContainsKey(table)) return new TableEntry(m_Blocks[table]);
+                    if (m_Blocks.TryGetValue(table, out var tableEntry))
+                        return new TableEntry(tableEntry);
                 }
                 string message = string.Format("Table '{0}' not found", table);
                 throw new KeyNotFoundException(message);
