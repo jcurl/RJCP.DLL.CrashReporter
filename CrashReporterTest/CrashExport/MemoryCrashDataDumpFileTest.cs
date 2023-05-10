@@ -115,7 +115,7 @@
 
                 Assert.That(dump.Count, Is.EqualTo(1));
                 Assert.That(dump["element"], Is.Not.Null);
-                Assert.That(dump["element"].Table.Count, Is.EqualTo(2));
+                Assert.That(dump["element"].Table, Has.Count.EqualTo(2));
                 Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(0));
                 Assert.That(dump["element"].Table[1].Row.Count, Is.EqualTo(0));
                 dump.Flush();
@@ -351,7 +351,7 @@
                 dump.Flush();
                 Assert.That(dump["element"], Is.Not.Null);
                 Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Table[0].Row[0].Field.Count, Is.EqualTo(2));
+                Assert.That(dump["element"].Table[0].Row[0].Field, Has.Count.EqualTo(2));
                 Assert.That(dump["element"].Table[0].Row[0].Field["property"], Is.EqualTo("value"));
                 Assert.That(dump["element"].Table[0].Row[0].Field["property2"], Is.EqualTo("value2"));
             }
@@ -374,7 +374,7 @@
                 dump.Flush();
                 Assert.That(dump["element"], Is.Not.Null);
                 Assert.That(dump["element"].Table[0].Row.Count, Is.EqualTo(1));
-                Assert.That(dump["element"].Table[0].Row[0].Field.Count, Is.EqualTo(2));
+                Assert.That(dump["element"].Table[0].Row[0].Field, Has.Count.EqualTo(2));
                 Assert.That(dump["element"].Table[0].Row[0].Field["property"], Is.EqualTo("value"));
                 Assert.That(dump["element"].Table[0].Row[0].Field["property2"], Is.EqualTo("value2"));
             }

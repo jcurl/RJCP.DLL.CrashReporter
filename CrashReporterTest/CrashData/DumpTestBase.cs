@@ -28,7 +28,7 @@
 
         protected virtual bool CheckDump(MemoryCrashDataDumpFile dumpFile)
         {
-            Assert.That(dumpFile[TableName].Table.Count, Is.Not.EqualTo(0));
+            Assert.That(dumpFile[TableName].Table, Is.Not.Empty);
             return true;
         }
 

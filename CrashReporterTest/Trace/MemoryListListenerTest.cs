@@ -18,7 +18,7 @@
 
                 using (MemoryListListener listener = new MemoryListListener()) {
                     // Should be registered to the global crash handler
-                    Assert.That(Crash.Data.Providers.Count, Is.EqualTo(providers + 1));
+                    Assert.That(Crash.Data.Providers, Has.Count.EqualTo(providers + 1));
 
                     bool found = false;
                     ICrashDataExport dumper = GetCrashDataExport(listener);
@@ -35,7 +35,7 @@
 
                     Assert.That(dumpFile["TraceListenerLog"].Table[0].Row.Count, Is.EqualTo(0));
                 }
-                Assert.That(Crash.Data.Providers.Count, Is.EqualTo(providers));
+                Assert.That(Crash.Data.Providers, Has.Count.EqualTo(providers));
             }
         }
 
