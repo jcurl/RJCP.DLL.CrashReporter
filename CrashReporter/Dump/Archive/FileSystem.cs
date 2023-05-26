@@ -5,6 +5,10 @@
     using System.Threading;
     using RJCP.Core.Environment;
 
+#if NET45_OR_GREATER || NETSTANDARD
+    using System.Runtime.ExceptionServices;
+#endif
+
     internal static class FileSystem
     {
         private const int DeleteMaxTime = 5000;
@@ -205,18 +209,31 @@
             int elapsed;
             int tickCount = Environment.TickCount;
             int deletePollIntervalExp = 5;
+
+#if NET45_OR_GREATER || NETSTANDARD
+            ExceptionDispatchInfo lastException;
+#else
             Exception lastException;
+#endif
             do {
-                lastException = null;
+            lastException = null;
                 try {
                     Directory.Delete(dir.FullName);
                 } catch (UnauthorizedAccessException ex) {
                     // Occurs on Windows if a file in the directory is open.
+#if NET45_OR_GREATER || NETSTANDARD
+                    lastException = ExceptionDispatchInfo.Capture(ex);
+#else
                     lastException = ex;
+#endif
                 } catch (IOException ex) {
                     // Occurs on Windows if a file in the directory is open (or on Windows XP someone is enumerating the
                     // directory).
+#if NET45_OR_GREATER || NETSTANDARD
+                    lastException = ExceptionDispatchInfo.Capture(ex);
+#else
                     lastException = ex;
+#endif
                 }
                 if (!Directory.Exists(dir.FullName)) return;
                 Thread.Sleep(deletePollIntervalExp);
@@ -226,7 +243,13 @@
                 elapsed = unchecked(Environment.TickCount - tickCount);
             } while (elapsed < DeleteMaxTime);
 
-            if (lastException != null) throw lastException;
+            if (lastException != null) {
+#if NET45_OR_GREATER || NETSTANDARD
+                lastException.Throw();
+#else
+                throw lastException;
+#endif
+            }
             string message = string.Format("Directory '{0}' couldn't be deleted", dir.Name);
             throw new IOException(message);
         }
@@ -310,17 +333,30 @@
             int elapsed;
             int tickCount = Environment.TickCount;
             int deletePollIntervalExp = 5;
+
+#if NET45_OR_GREATER || NETSTANDARD
+            ExceptionDispatchInfo lastException;
+#else
             Exception lastException;
+#endif
             do {
                 lastException = null;
                 try {
                     File.Delete(file.FullName);
                 } catch (UnauthorizedAccessException ex) {
                     // Occurs on Windows if the file is opened by a process.
+#if NET45_OR_GREATER || NETSTANDARD
+                    lastException = ExceptionDispatchInfo.Capture(ex);
+#else
                     lastException = ex;
+#endif
                 } catch (IOException ex) {
                     // Occurs on Windows if the file is opened by a process.
+#if NET45_OR_GREATER || NETSTANDARD
+                    lastException = ExceptionDispatchInfo.Capture(ex);
+#else
                     lastException = ex;
+#endif
                 }
                 if (!File.Exists(file.FullName)) return;
                 Thread.Sleep(deletePollIntervalExp);
@@ -330,7 +366,13 @@
                 elapsed = unchecked(Environment.TickCount - tickCount);
             } while (elapsed < DeleteMaxTime);
 
-            if (lastException != null) throw lastException;
+            if (lastException != null) {
+#if NET45_OR_GREATER || NETSTANDARD
+                lastException.Throw();
+#else
+                throw lastException;
+#endif
+            }
             string message = string.Format("File '{0}' couldn't be deleted", file.Name);
             throw new IOException(message);
         }
