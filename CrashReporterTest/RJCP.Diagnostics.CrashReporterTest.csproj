@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Config\CrashReporter\ParserAccessor.cs" />
     <Compile Include="Config\CrashReporter\ParserTest.cs" />
+    <Compile Include="Crash\CoreTest.cs" />
     <Compile Include="Crash\Dumpers\AssemblyDumpTest.cs" />
     <Compile Include="Crash\Dumpers\DumpTestBase.cs" />
     <Compile Include="Crash\Dumpers\EnvironmentDumpTest.cs" />
@@ -69,19 +70,18 @@
     <Compile Include="Crash\Dumpers\TestBlockTest.cs" />
     <Compile Include="Crash\Dumpers\ThreadDumpTest.cs" />
     <Compile Include="Crash\Dumpers\WinVerDumpTest.cs" />
-    <Compile Include="CrashExport\MemoryCrashDataDumpFile.cs" />
-    <None Include="CrashExport\MemoryCrashDataDumpFileAsyncTest.cs" />
-    <Compile Include="CrashExport\MemoryCrashDataDumpFileTest.cs" />
-    <Compile Include="CrashExport\MemoryCrashDumpFactory.cs" />
-    <Compile Include="CrashExport\MemoryDump\IFields.cs" />
-    <Compile Include="CrashExport\MemoryDump\IRows.cs" />
-    <Compile Include="CrashExport\MemoryDump\ITables.cs" />
-    <Compile Include="CrashExport\MemoryDump\MemoryCrashDumpTable.cs" />
-    <Compile Include="CrashExport\Xml\XmlCrashDumperTest.cs" />
+    <Compile Include="Crash\Export\MemoryCrashDataDumpFile.cs" />
+    <None Include="Crash\Export\MemoryCrashDataDumpFileAsyncTest.cs" />
+    <Compile Include="Crash\Export\MemoryCrashDataDumpFileTest.cs" />
+    <Compile Include="Crash\Export\MemoryCrashDumpFactory.cs" />
+    <Compile Include="Crash\Export\MemoryDump\IFields.cs" />
+    <Compile Include="Crash\Export\MemoryDump\IRows.cs" />
+    <Compile Include="Crash\Export\MemoryDump\ITables.cs" />
+    <Compile Include="Crash\Export\MemoryDump\MemoryCrashDumpTable.cs" />
+    <Compile Include="Crash\Export\Xml\XmlCrashDumperTest.cs" />
     <Compile Include="CrashReporterTest.cs" />
     <Compile Include="Dump\CrashDataProvidersTest.cs" />
     <Compile Include="Dump\CrashDataTest.cs" />
-    <Compile Include="Crash\CoreTest.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Trace\AppConfigLogTest.cs" />
     <Compile Include="Trace\MemoryList.cs" />
@@ -99,7 +99,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
-    <Compile Include="CrashExport\MemoryCrashDataDumpFileAsyncTest.cs" />
+    <Compile Include="Crash\Export\MemoryCrashDataDumpFileAsyncTest.cs" />
   </ItemGroup>
 
   <ItemGroup>

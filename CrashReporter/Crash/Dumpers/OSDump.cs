@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using CrashExport;
+    using Export;
 
     /// <summary>
     /// Dump some basic information about the OS.

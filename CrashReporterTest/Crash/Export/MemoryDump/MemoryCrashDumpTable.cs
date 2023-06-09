@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.CrashExport.MemoryDump
+﻿namespace RJCP.Diagnostics.Crash.Export.MemoryDump
 {
     using System;
     using System.Collections;

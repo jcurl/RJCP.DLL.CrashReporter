@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Crash.Dumpers
 {
     using System.Collections.Generic;
-    using CrashExport;
+    using Export;
     using RJCP.Core.Environment;
 
     /// <summary>

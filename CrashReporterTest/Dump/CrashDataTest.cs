@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Dump
 {
     using System.IO;
-    using CrashExport;
+    using Crash.Export;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 #if NET45_OR_GREATER || NETCOREAPP

@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.IO;
-    using CrashExport;
+    using Crash.Export;
     using Dump;
     using NUnit.Framework;
     using NUnit.Framework.Internal;

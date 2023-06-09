@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Net.NetworkInformation;
     using System.Text;
-    using CrashExport;
+    using Export;
 
     /// <summary>
     /// Dump network information to a dump file.

@@ -5,7 +5,7 @@
     using System.Diagnostics;
     using System.IO;
     using Crash.Dumpers;
-    using CrashExport;
+    using Crash.Export;
 #if NET45_OR_GREATER || NETSTANDARD
     using System.Threading.Tasks;
 #endif

@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.CrashExport
+﻿namespace RJCP.Diagnostics.Crash.Export
 {
     using System;
 #if NET45_OR_GREATER || NETSTANDARD

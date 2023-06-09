@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.CrashExport
+﻿namespace RJCP.Diagnostics.Crash.Export
 {
     using System;
     using System.Collections.Generic;

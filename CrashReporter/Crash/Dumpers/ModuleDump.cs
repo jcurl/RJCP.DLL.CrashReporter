@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics;
-    using CrashExport;
+    using Export;
 
     /// <summary>
     /// Dumps all the OS threads to the log file.

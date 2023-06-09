@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Trace
 {
     using System;
-    using CrashExport;
+    using Crash.Export;
 #if NET45_OR_GREATER || NETSTANDARD
     using System.Collections.Generic;
     using System.Threading.Tasks;

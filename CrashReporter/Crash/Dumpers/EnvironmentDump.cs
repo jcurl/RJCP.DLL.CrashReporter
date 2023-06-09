@@ -3,7 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using CrashExport;
+    using Export;
 
     /// <summary>
     /// Dump all environment variables for the current process.

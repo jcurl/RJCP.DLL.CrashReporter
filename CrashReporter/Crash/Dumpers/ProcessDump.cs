@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics;
-    using CrashExport;
+    using Export;
 
     /// <summary>
     /// Dump details of the running process.

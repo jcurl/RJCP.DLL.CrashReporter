@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using CrashExport;
+    using Export;
 
     /// <summary>
     /// Dumps details of all loaded assemblies in the current domain.

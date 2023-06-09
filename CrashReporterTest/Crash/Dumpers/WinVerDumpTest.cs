@@ -1,6 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Crash.Dumpers
 {
-    using CrashExport;
+    using Crash.Export;
     using NUnit.Framework;
     using RJCP.Core.Environment;
 

@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.CrashExport
+﻿namespace RJCP.Diagnostics.Crash.Export
 {
 #if NET45_OR_GREATER || NETSTANDARD
     using System.Threading.Tasks;

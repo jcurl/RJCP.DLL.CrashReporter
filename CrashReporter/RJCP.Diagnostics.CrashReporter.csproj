@@ -129,19 +129,19 @@
     <Compile Include="Crash\Dumpers\ProcessDump.cs" />
     <Compile Include="Crash\Dumpers\ThreadDump.cs" />
     <Compile Include="Crash\Dumpers\WinVerDump.cs" />
-    <Compile Include="CrashExport\CrashDataExport.cs" />
-    <Compile Include="CrashExport\CrashDataProviders.cs" />
-    <Compile Include="CrashExport\CrashDumpFactory.cs" />
-    <Compile Include="CrashExport\DumpRow.cs" />
-    <Compile Include="CrashExport\DumpTable.cs" />
-    <Compile Include="CrashExport\ICrashDataDumpFile.cs" />
-    <Compile Include="CrashExport\ICrashDataExport.cs" />
-    <Compile Include="CrashExport\ICrashDumpFactory.cs" />
-    <Compile Include="CrashExport\IDumpTable.cs" />
-    <Compile Include="CrashExport\Xml\XmlDumpTable.cs" />
-    <Compile Include="CrashExport\Xml\XmlCrashDumper.cs" />
-    <Compile Include="CrashExport\Xml\XmlCrashDumpFactory.cs" />
-    <Compile Include="CrashExport\Xml\XmlExtensions.cs" />
+    <Compile Include="Crash\Export\CrashDataExport.cs" />
+    <Compile Include="Crash\Export\CrashDataProviders.cs" />
+    <Compile Include="Crash\Export\CrashDumpFactory.cs" />
+    <Compile Include="Crash\Export\DumpRow.cs" />
+    <Compile Include="Crash\Export\DumpTable.cs" />
+    <Compile Include="Crash\Export\ICrashDataDumpFile.cs" />
+    <Compile Include="Crash\Export\ICrashDataExport.cs" />
+    <Compile Include="Crash\Export\ICrashDumpFactory.cs" />
+    <Compile Include="Crash\Export\IDumpTable.cs" />
+    <Compile Include="Crash\Export\Xml\XmlDumpTable.cs" />
+    <Compile Include="Crash\Export\Xml\XmlCrashDumper.cs" />
+    <Compile Include="Crash\Export\Xml\XmlCrashDumpFactory.cs" />
+    <Compile Include="Crash\Export\Xml\XmlExtensions.cs" />
     <Compile Include="CrashReporter.cs" />
     <Compile Include="Native\Win32\WinBrand.cs" />
     <None Include="Dump\Archive\CompressZipFile.cs" />
@@ -206,7 +206,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="CrashExport\Xml\CrashDump.xsl" />
+    <EmbeddedResource Include="Crash\Export\Xml\CrashDump.xsl" />
   </ItemGroup>
 
   <ItemGroup>

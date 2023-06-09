@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.CrashExport.Xml
+﻿namespace RJCP.Diagnostics.Crash.Export.Xml
 {
     using System;
     using System.IO;
@@ -186,7 +186,7 @@
 
         private static Stream GetDefaultStyleSheetResource()
         {
-            return typeof(XmlCrashDumper).Assembly.GetManifestResourceStream("RJCP.Diagnostics.CrashExport.Xml.CrashDump.xsl");
+            return typeof(XmlCrashDumper).Assembly.GetManifestResourceStream("RJCP.Diagnostics.Crash.Export.Xml.CrashDump.xsl");
         }
 
         private static void CopyTransform(string outFileName)

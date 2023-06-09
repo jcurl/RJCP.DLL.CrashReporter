@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Crash.Dumpers
 {
     using System.Collections.Generic;
-    using CrashExport;
+    using Export;
 #if NET45_OR_GREATER || NETSTANDARD
     using System.Threading.Tasks;
 #endif

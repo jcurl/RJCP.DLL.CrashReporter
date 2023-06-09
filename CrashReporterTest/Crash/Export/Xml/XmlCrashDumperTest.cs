@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.CrashExport.Xml
+﻿namespace RJCP.Diagnostics.Crash.Export.Xml
 {
     using System.IO;
     using System.Xml;
