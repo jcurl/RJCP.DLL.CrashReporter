@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.Dump.Archive
+﻿namespace RJCP.Diagnostics.Crash.Archive
 {
     using System;
     using System.IO;

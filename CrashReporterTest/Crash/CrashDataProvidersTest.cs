@@ -1,8 +1,8 @@
-﻿namespace RJCP.Diagnostics.Dump
+﻿namespace RJCP.Diagnostics.Crash
 {
     using System;
     using System.Linq;
-    using Crash.Dumpers;
+    using Dumpers;
     using NUnit.Framework;
 
     [TestFixture(Category = "CrashReporter.Dump")]

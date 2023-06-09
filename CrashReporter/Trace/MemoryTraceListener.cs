@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.Text;
-    using Dump;
+    using Crash;
 
     /// <summary>
     /// A <see cref="TraceListener"/> that uses an <see cref="IMemoryLog"/> for tracing.

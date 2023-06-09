@@ -3,7 +3,6 @@
     using System.Diagnostics;
     using System.IO;
     using Crash;
-    using Dump;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 

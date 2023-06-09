@@ -5,7 +5,7 @@
     using System.Diagnostics;
     using System.Threading;
     using Config.CrashReporter;
-    using Dump;
+    using Crash;
 
     /// <summary>
     /// A Watchdog for threads.

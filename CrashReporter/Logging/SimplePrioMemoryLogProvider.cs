@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Diagnostics;
-    using Dump;
+    using Crash;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Trace;

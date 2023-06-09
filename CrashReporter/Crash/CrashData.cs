@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.Dump
+﻿namespace RJCP.Diagnostics.Crash
 {
     using System;
     using System.Collections.Generic;

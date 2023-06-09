@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Trace
 {
+    using Crash;
     using Crash.Export;
-    using Diagnostics.Dump;
     using NUnit.Framework;
 #if NET45_OR_GREATER || NETCOREAPP
     using System.Threading.Tasks;

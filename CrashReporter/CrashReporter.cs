@@ -9,11 +9,15 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using Crash;
-    using Dump;
+    using Crash.Archive;
 
     /// <summary>
     /// Crash Reporter static class for logging crash information.
     /// </summary>
+    /// <remarks>
+    /// Use this class to register handlers, that when an unhandled exception occurs, you receive context information
+    /// and a core dump for later debugging.
+    /// </remarks>
     public static class CrashReporter
     {
         /// <summary>
@@ -393,10 +397,10 @@
 
             string dumpFileName;
             try {
-                dumpFileName = Dump.Archive.Compress.CompressFolder(coreDumpDir);
+                dumpFileName = Compress.CompressFolder(coreDumpDir);
                 if (dumpFileName != null && File.Exists(dumpFileName)) {
                     // Only delete if compression was successful.
-                    Dump.Archive.FileSystem.DeleteFolder(coreDumpDir);
+                    FileSystem.DeleteFolder(coreDumpDir);
 
                     if (Directory.Exists(coreDumpDir))
                         Log.CrashLog.TraceEvent(TraceEventType.Warning, "Couldn't complete remove folder {0}", coreDumpDir);
@@ -515,7 +519,7 @@
             DateTime now = DateTime.UtcNow;
             foreach (var candidate in candidates) {
                 if (now.Subtract(candidate.CreationTimeUtc).TotalDays > ageDays) {
-                    Dump.Archive.FileSystem.Delete(candidate);
+                    FileSystem.Delete(candidate);
                 } else {
                     remaining.Add(candidate);
                 }
@@ -532,7 +536,7 @@
             var created = from candidate in candidates orderby candidate.CreationTime select candidate;
             foreach (var candidate in created) {
                 if (candidateCount > count) {
-                    Dump.Archive.FileSystem.Delete(candidate);
+                    FileSystem.Delete(candidate);
                     --candidateCount;
                 } else {
                     remaining.Add(candidate);
@@ -574,7 +578,7 @@
             Dictionary<FileSystemInfo, long> sizes = new Dictionary<FileSystemInfo, long>();
             long totalSize = 0;
             foreach (var candidate in candidates) {
-                long size = Dump.Archive.FileSystem.GetSize(candidate);
+                long size = FileSystem.GetSize(candidate);
                 sizes[candidate] = size;
                 totalSize += size;
             }
@@ -592,7 +596,7 @@
             foreach (var candidate in created) {
                 if (drive.AvailableFreeSpace < diskReserve ||
                     candidateCount > minFiles && totalSize >= maxUsage) {
-                    Dump.Archive.FileSystem.Delete(candidate);
+                    FileSystem.Delete(candidate);
                     totalSize -= sizes[candidate];
                     --candidateCount;
                 } else {

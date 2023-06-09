@@ -3,8 +3,8 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using Crash;
     using Crash.Export;
-    using Dump;
     using NUnit.Framework;
     using NUnit.Framework.Internal;
     using RJCP.CodeQuality.NUnitExtensions;

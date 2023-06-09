@@ -80,8 +80,8 @@
     <Compile Include="Crash\Export\MemoryDump\MemoryCrashDumpTable.cs" />
     <Compile Include="Crash\Export\Xml\XmlCrashDumperTest.cs" />
     <Compile Include="CrashReporterTest.cs" />
-    <Compile Include="Dump\CrashDataProvidersTest.cs" />
-    <Compile Include="Dump\CrashDataTest.cs" />
+    <Compile Include="Crash\CrashDataProvidersTest.cs" />
+    <Compile Include="Crash\CrashDataTest.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Trace\AppConfigLogTest.cs" />
     <Compile Include="Trace\MemoryList.cs" />
