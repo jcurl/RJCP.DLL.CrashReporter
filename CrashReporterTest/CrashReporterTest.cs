@@ -2,6 +2,7 @@
 {
     using System.Diagnostics;
     using System.IO;
+    using Dump;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 
@@ -26,7 +27,7 @@
         public void DoDumpChangedPrefix()
         {
             string prefix = string.Format("{0}.test", Process.GetCurrentProcess().ProcessName);
-            string path = Dump.Crash.GetCrashDir(prefix);
+            string path = CrashData.GetCrashDir(prefix);
             Assert.That(path, Is.Not.Null.Or.Empty);
 
             string dump = CrashReporter.CreateDump(path, Dump.CoreType.None);

@@ -353,15 +353,15 @@
                         Path.GetDirectoryName(fileName),
                         Path.GetFileNameWithoutExtension(fileName));
                 }
-                crashDumpFile = Path.Combine(fileName, Crash.Data.CrashDumpFactory.FileName);
+                crashDumpFile = Path.Combine(fileName, CrashData.Instance.CrashDumpFactory.FileName);
             }
 
             string crashDumpPath;
             try {
                 if (crashDumpFile == null) {
-                    crashDumpPath = Crash.Data.Dump();
+                    crashDumpPath = CrashData.Instance.Dump();
                 } else {
-                    crashDumpPath = Crash.Data.Dump(crashDumpFile);
+                    crashDumpPath = CrashData.Instance.Dump(crashDumpFile);
                 }
                 if (crashDumpPath == null) return null;
             } catch (Exception ex) {
@@ -423,8 +423,8 @@
         /// </remarks>
         public static void CleanUpDump()
         {
-            string dumpFolder = Crash.GetCrashFolder();
-            CleanUpDump(dumpFolder, Crash.CrashPathRegEx);
+            string dumpFolder = CrashData.GetCrashFolder();
+            CleanUpDump(dumpFolder, CrashData.CrashPathRegEx);
         }
 
         /// <summary>

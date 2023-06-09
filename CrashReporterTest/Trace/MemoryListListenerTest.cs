@@ -14,15 +14,15 @@
         public void Initialize()
         {
             using (MemoryCrashDataDumpFile dumpFile = new MemoryCrashDataDumpFile()) {
-                int providers = Crash.Data.Providers.Count;
+                int providers = CrashData.Instance.Providers.Count;
 
                 using (MemoryListListener listener = new MemoryListListener()) {
                     // Should be registered to the global crash handler
-                    Assert.That(Crash.Data.Providers, Has.Count.EqualTo(providers + 1));
+                    Assert.That(CrashData.Instance.Providers, Has.Count.EqualTo(providers + 1));
 
                     bool found = false;
                     ICrashDataExport dumper = GetCrashDataExport(listener);
-                    foreach (ICrashDataExport item in Crash.Data.Providers) {
+                    foreach (ICrashDataExport item in CrashData.Instance.Providers) {
                         // Need to compare against the real object, not the wrapped object
                         if (item == ((MemoryLogDumpAccessor)dumper).PrivateTargetObject)
                             found = true;
@@ -35,7 +35,7 @@
 
                     Assert.That(dumpFile["TraceListenerLog"].Table[0].Row.Count, Is.EqualTo(0));
                 }
-                Assert.That(Crash.Data.Providers, Has.Count.EqualTo(providers));
+                Assert.That(CrashData.Instance.Providers, Has.Count.EqualTo(providers));
             }
         }
 

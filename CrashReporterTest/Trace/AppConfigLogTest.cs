@@ -75,8 +75,8 @@
             source.TraceEvent(TraceEventType.Warning, 0, "Warning message");
 
             using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.CreateScratch | ScratchOptions.KeepCurrentDir)) {
-                Crash.Data.Dump(Path.Combine(scratch.Path, Crash.Data.CrashDumpFactory.FileName));
-                Assert.That(File.Exists(Path.Combine(scratch.Path, Crash.Data.CrashDumpFactory.FileName)), Is.True);
+                CrashData.Instance.Dump(Path.Combine(scratch.Path, CrashData.Instance.CrashDumpFactory.FileName));
+                Assert.That(File.Exists(Path.Combine(scratch.Path, CrashData.Instance.CrashDumpFactory.FileName)), Is.True);
             }
         }
     }

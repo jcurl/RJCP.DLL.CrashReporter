@@ -103,7 +103,7 @@
                             DateTime = DateTime.Now
                         };
                         m_MemoryLog.Add(entry);
-                        Crash.Data.Providers.Add(m_MemoryLog);
+                        CrashData.Instance.Providers.Add(m_MemoryLog);
                     }
                 }
             }
@@ -124,7 +124,7 @@
             m_OnChangeToken.Dispose();
             if (m_LogCollection != null) {
                 m_LogCollection.Clear();
-                Crash.Data.Providers.Remove(m_MemoryLog);
+                CrashData.Instance.Providers.Remove(m_MemoryLog);
             }
         }
     }

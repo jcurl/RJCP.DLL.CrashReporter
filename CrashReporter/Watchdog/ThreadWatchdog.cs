@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Threading;
     using Config.CrashReporter;
+    using Dump;
 
     /// <summary>
     /// A Watchdog for threads.
@@ -264,7 +265,7 @@
         public static void DefaultWarningEvent(object sender, WatchdogEventArgs args)
         {
             string prefix = string.Format("{0}.wd", Process.GetCurrentProcess().ProcessName);
-            string dumpPath = Dump.Crash.GetCrashDir(prefix);
+            string dumpPath = CrashData.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath, Dump.CoreType.None);
                 Log.CrashLog.TraceEvent(TraceEventType.Information, "Watchdog warning created at: {0}", path);
@@ -300,7 +301,7 @@
         public static void DefaultCriticalEvent(object sender, WatchdogEventArgs args)
         {
             string prefix = string.Format("{0}.wderr", Process.GetCurrentProcess().ProcessName);
-            string dumpPath = Dump.Crash.GetCrashDir(prefix);
+            string dumpPath = CrashData.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath);
                 Log.CrashLog.TraceEvent(TraceEventType.Warning, "Watchdog error created at: {0}", path);

@@ -2,6 +2,7 @@
 {
     using System.IO;
     using System.Xml;
+    using Crash.Dumpers;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 #if NET45_OR_GREATER || NETCOREAPP
@@ -18,7 +19,7 @@
                 string dumpFileName = Path.Combine(scratch.Path, "Dump.xml");
                 ICrashDumpFactory factory = new XmlCrashDumpFactory();
                 using (ICrashDataDumpFile dump = factory.Create(dumpFileName)) {
-                    ICrashDataExport block = new CrashData.TestBlock();
+                    ICrashDataExport block = new TestBlock();
                     block.Dump(dump);
                     dump.Flush();
                 }
@@ -38,7 +39,7 @@
                 ICrashDumpFactory factory = new XmlCrashDumpFactory();
                 using (MemoryStream ms = new MemoryStream()) {
                     using (ICrashDataDumpFile dump = factory.Create(ms, scratch.Path)) {
-                        ICrashDataExport block = new CrashData.TestBlock();
+                        ICrashDataExport block = new TestBlock();
                         block.Dump(dump);
                         dump.Flush();
                     }
@@ -65,7 +66,7 @@
                 ICrashDumpFactory factory = new XmlCrashDumpFactory();
                 using (MemoryStream ms = new MemoryStream()) {
                     using (ICrashDataDumpFile dump = factory.Create(ms, scratch.Path)) {
-                        CrashData.TestBlock block = new CrashData.TestBlock();
+                        TestBlock block = new TestBlock();
                         block.AddEntry("TestKey", input);
                         block.Dump(dump);
                         dump.Flush();
@@ -98,7 +99,7 @@
                 string dumpFileName = Path.Combine(scratch.Path, "Dump.xml");
                 ICrashDumpFactory factory = new XmlCrashDumpFactory();
                 using (ICrashDataDumpFile dump = await factory.CreateAsync(dumpFileName)) {
-                    ICrashDataExport block = new CrashData.TestBlock();
+                    ICrashDataExport block = new TestBlock();
                     await block.DumpAsync(dump);
                     await dump.FlushAsync();
                 }
@@ -118,7 +119,7 @@
                 ICrashDumpFactory factory = new XmlCrashDumpFactory();
                 using (MemoryStream ms = new MemoryStream()) {
                     using (ICrashDataDumpFile dump = await factory.CreateAsync(ms, scratch.Path)) {
-                        ICrashDataExport block = new CrashData.TestBlock();
+                        ICrashDataExport block = new TestBlock();
                         await block.DumpAsync(dump);
                         await dump.FlushAsync();
                     }

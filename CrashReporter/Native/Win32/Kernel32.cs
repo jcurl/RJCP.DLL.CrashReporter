@@ -3,7 +3,7 @@
     using System;
     using System.Runtime.InteropServices;
     using System.Security;
-    using CrashData.OSVersion;
+    using Crash.Dumpers.OSVersion;
 
     [SuppressUnmanagedCodeSecurity]
     internal static partial class Kernel32

@@ -28,7 +28,7 @@
             m_MemoryLog = new MemoryLogDump(logCollection);
 
             InternalClock.Instance.Initialize();
-            Crash.Data.Providers.Add(m_MemoryLog);
+            CrashData.Instance.Providers.Add(m_MemoryLog);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@
         protected override void Dispose(bool disposing)
         {
             if (disposing) {
-                Crash.Data.Providers.Remove(m_MemoryLog);
+                CrashData.Instance.Providers.Remove(m_MemoryLog);
             }
             base.Dispose(disposing);
         }

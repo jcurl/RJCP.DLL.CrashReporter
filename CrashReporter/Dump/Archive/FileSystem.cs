@@ -216,7 +216,7 @@
             Exception lastException;
 #endif
             do {
-            lastException = null;
+                lastException = null;
                 try {
                     Directory.Delete(dir.FullName);
                 } catch (UnauthorizedAccessException ex) {
