@@ -6,6 +6,7 @@
     using System.Threading;
     using Config.CrashReporter;
     using Crash;
+    using Timer;
 
     /// <summary>
     /// A Watchdog for threads.
@@ -13,7 +14,7 @@
     public sealed class ThreadWatchdog : IWatchdog
     {
         private readonly WatchdogList m_Watchdog;
-        private readonly Timer.ISingleShotTimer m_Timer;
+        private readonly ISingleShotTimer m_Timer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThreadWatchdog"/> class.
@@ -21,7 +22,7 @@
         public ThreadWatchdog()
         {
             m_Watchdog = new WatchdogList();
-            m_Timer = new Timer.SingleShotTimer();
+            m_Timer = new SingleShotTimer();
             InitializeTimer();
         }
 
@@ -39,7 +40,7 @@
         /// defaults. Virtualized timers allow for test cases to run independently of the system clock, making test
         /// case faster and more reliable (independent of any system timer jitter or system dependent behavior).
         /// </remarks>
-        public ThreadWatchdog(Timer.ITimerSource timerSource, Timer.ISingleShotTimer timer)
+        public ThreadWatchdog(ITimerSource timerSource, ISingleShotTimer timer)
         {
             if (timerSource == null) throw new ArgumentNullException(nameof(timerSource));
             if (timer == null) throw new ArgumentNullException(nameof(timer));
