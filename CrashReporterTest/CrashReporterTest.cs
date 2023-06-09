@@ -2,6 +2,7 @@
 {
     using System.Diagnostics;
     using System.IO;
+    using Crash;
     using Dump;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
@@ -19,7 +20,7 @@
         [TestCase]
         public void DoDumpNoCore()
         {
-            string dump = CrashReporter.CreateDump(Dump.CoreType.None);
+            string dump = CrashReporter.CreateDump(CoreType.None);
             Assert.That(dump, Is.Not.Null.Or.Empty);
         }
 
@@ -29,8 +30,7 @@
             string prefix = string.Format("{0}.test", Process.GetCurrentProcess().ProcessName);
             string path = CrashData.GetCrashDir(prefix);
             Assert.That(path, Is.Not.Null.Or.Empty);
-
-            string dump = CrashReporter.CreateDump(path, Dump.CoreType.None);
+            string dump = CrashReporter.CreateDump(path, CoreType.None);
             Assert.That(File.Exists(dump), Is.True);
         }
 
@@ -39,7 +39,7 @@
         {
             using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.UseDeployDir)) {
                 string path = Path.Combine(scratch.RelativePath, "dump");
-                string dump = CrashReporter.CreateDump(path, Dump.CoreType.None);
+                string dump = CrashReporter.CreateDump(path, CoreType.None);
                 Assert.That(File.Exists(dump), Is.True);
             }
         }
@@ -49,7 +49,7 @@
         {
             using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.UseDeployDir)) {
                 string path = Path.Combine(scratch.Path, "dump");
-                string dump = CrashReporter.CreateDump(path, Dump.CoreType.None);
+                string dump = CrashReporter.CreateDump(path, CoreType.None);
                 Assert.That(File.Exists(dump), Is.True);
             }
         }
@@ -59,7 +59,7 @@
         {
             using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.UseDeployDir)) {
                 string path = Path.Combine(scratch.RelativePath, "dump.zip");
-                string dump = CrashReporter.CreateDump(path, Dump.CoreType.None);
+                string dump = CrashReporter.CreateDump(path, CoreType.None);
                 Assert.That(File.Exists(dump), Is.True);
                 Assert.That(Path.GetFileNameWithoutExtension(dump), Is.EqualTo("dump"));
             }
@@ -70,7 +70,7 @@
         {
             using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.UseDeployDir)) {
                 string path = Path.Combine(scratch.Path, "dump.zip");
-                string dump = CrashReporter.CreateDump(path, Dump.CoreType.None);
+                string dump = CrashReporter.CreateDump(path, CoreType.None);
                 Assert.That(File.Exists(dump), Is.True);
                 Assert.That(Path.GetFileNameWithoutExtension(dump), Is.EqualTo("dump"));
             }

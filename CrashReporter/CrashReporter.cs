@@ -8,6 +8,7 @@
     using System.Runtime.ExceptionServices;
     using System.Text.RegularExpressions;
     using System.Threading;
+    using Crash;
     using Dump;
 
     /// <summary>
@@ -384,7 +385,7 @@
                 string coreDumpName = string.Format("{0}.{1}.dmp",
                     Process.GetCurrentProcess().ProcessName, Process.GetCurrentProcess().Id);
                 string coreDumpPath = Path.Combine(coreDumpDir, coreDumpName);
-                Core.MiniDump(coreDumpPath, coreType);
+                Core.Create(coreDumpPath, coreType);
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, "Error creating core: {0}", ex.ToString());
                 throw;

@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.Dump
+﻿namespace RJCP.Diagnostics.Crash
 {
     using System;
     using System.IO;
@@ -24,26 +24,26 @@
         }
 
         /// <summary>
-        /// Creates a crash dump using the DebugHelp library.
+        /// Creates a core dump using the DebugHelp library.
         /// </summary>
-        /// <param name="path">The path to write the dump file.</param>
-        /// <returns><see langword="true"/> if the mini-dump was successful.</returns>
+        /// <param name="path">The path to write the core dump file.</param>
+        /// <returns><see langword="true"/> if the core dump was successful.</returns>
         /// <remarks>
         /// This method is only supported on Windows. On other operating systems, the call is ignored and no crash dump
         /// is created. No exception is raised to keep the same behavior as if the program worked (i.e. a crash dump
         /// would be made for debugging purposes and then continue, it stands to reason on foreign operating systems we
         /// can't debug, so just let the program continue).
         /// </remarks>
-        public static bool MiniDump(string path)
+        public static bool Create(string path)
         {
-            return MiniDump(path, CoreType.MiniDump);
+            return Create(path, CoreType.MiniDump);
         }
 
         /// <summary>
-        /// Creates a crash dump using the DebugHelp library.
+        /// Creates a core dump using the DebugHelp library.
         /// </summary>
         /// <param name="path">The path to write the dump file.</param>
-        /// <param name="dumpType">Select the type of crash dump to perform.</param>
+        /// <param name="dumpType">Select the type of core dump to perform.</param>
         /// <returns><see langword="true"/> if the mini-dump was successful.</returns>
         /// <exception cref="ArgumentException">
         /// <paramref name="path"/> is a zero-length string, contains only white space, or contains one or more
@@ -68,12 +68,12 @@
         /// </exception>
         /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
         /// <remarks>
-        /// This method is only supported on Windows. On other operating systems, the call is ignored and no crash
-        /// dump is created. No exception is raised to keep the same behavior as if the program worked (i.e. a crash
+        /// This method is only supported on Windows. On other operating systems, the call is ignored and no core
+        /// dump is created. No exception is raised to keep the same behavior as if the program worked (i.e. a core
         /// dump would be made for debugging purposes and then continue, it stands to reason on foreign operating
         /// systems we can't debug, so just let the program continue).
         /// </remarks>
-        public static bool MiniDump(string path, CoreType dumpType)
+        public static bool Create(string path, CoreType dumpType)
         {
             if (!Platform.IsWinNT()) return false;
             if (path == null) return false;

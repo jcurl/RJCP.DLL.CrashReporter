@@ -103,6 +103,8 @@
     <Compile Include="Config\WatchdogOverrides.cs" />
     <Compile Include="Config\WatchdogPingElement.cs" />
     <Compile Include="Config\XmlCrashDumper.cs" />
+    <Compile Include="Crash\Core.cs" />
+    <Compile Include="Crash\CoreType.cs" />
     <Compile Include="Crash\Dumpers\AssemblyDump.cs" />
     <Compile Include="Crash\Dumpers\EnvironmentDump.cs" />
     <Compile Include="Crash\Dumpers\ModuleDump.cs" />
@@ -145,8 +147,6 @@
     <None Include="Dump\Archive\CompressZipFile.cs" />
     <None Include="Dump\Archive\CompressZipArchive.cs" />
     <Compile Include="Dump\Archive\FileSystem.cs" />
-    <Compile Include="Dump\Core.cs" />
-    <Compile Include="Dump\CoreType.cs" />
     <Compile Include="Dump\CrashData.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Log.cs" />

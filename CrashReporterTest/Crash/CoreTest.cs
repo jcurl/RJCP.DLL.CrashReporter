@@ -1,4 +1,4 @@
-﻿namespace RJCP.Diagnostics.Dump
+﻿namespace RJCP.Diagnostics.Crash
 {
     using System;
     using System.IO;
@@ -7,7 +7,7 @@
     using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture(Category = "CrashReporter.Dump")]
-    public class DumpTest
+    public class CoreTest
     {
         private static void CheckFile(string fileName)
         {
@@ -30,7 +30,7 @@
             Deploy.CreateDirectory("Dumps");
             string dumpName = Path.Combine(Deploy.WorkDirectory, "Dumps", fileName);
 
-            Assert.That(Core.MiniDump(dumpName, dumpType), Is.True);
+            Assert.That(Core.Create(dumpName, dumpType), Is.True);
             CheckFile(dumpName);
         }
 
@@ -41,7 +41,7 @@
             Deploy.CreateDirectory("Dumps");
             string dumpName = Path.Combine(Deploy.WorkDirectory, "Dumps", "defaultdump.dmp");
 
-            Assert.That(Core.MiniDump(dumpName), Is.True);
+            Assert.That(Core.Create(dumpName), Is.True);
             CheckFile(dumpName);
         }
 
@@ -60,7 +60,7 @@
             } catch (InvalidOperationException ex) {
                 // Capture the exception, so we can analyse it in the minidump.
                 exception = ex;
-                result = Core.MiniDump(dumpName, dumpType);
+                result = Core.Create(dumpName, dumpType);
             }
             Assert.That(result, Is.True);
             Assert.That(exception, Is.Not.Null);
@@ -81,7 +81,7 @@
             } catch (InvalidOperationException ex) {
                 // Capture the exception, so we can analyse it in the minidump.
                 exception = ex;
-                result = Core.MiniDump(dumpName);
+                result = Core.Create(dumpName);
             }
             Assert.That(result, Is.True);
             Assert.That(exception, Is.Not.Null);
@@ -95,7 +95,7 @@
             // Runs also on Linux, just that no file will be created. We don't test for that, because we just don't want
             // it to crash.
             Assert.That(() => {
-                Core.MiniDump("MinidumpLinux.dmp");
+                Core.Create("MinidumpLinux.dmp");
             }, Throws.Nothing);
         }
     }

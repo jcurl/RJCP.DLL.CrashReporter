@@ -81,7 +81,7 @@
     <Compile Include="CrashReporterTest.cs" />
     <Compile Include="Dump\CrashDataProvidersTest.cs" />
     <Compile Include="Dump\CrashDataTest.cs" />
-    <Compile Include="Dump\DumpTest.cs" />
+    <Compile Include="Crash\CoreTest.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Trace\AppConfigLogTest.cs" />
     <Compile Include="Trace\MemoryList.cs" />

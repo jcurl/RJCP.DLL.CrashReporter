@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using RJCP.Diagnostics;
-using RJCP.Diagnostics.Dump;
+using RJCP.Diagnostics.Crash;
 
 namespace CrashReportApp
 {

@@ -267,7 +267,7 @@
             string prefix = string.Format("{0}.wd", Process.GetCurrentProcess().ProcessName);
             string dumpPath = CrashData.GetCrashDir(prefix);
             try {
-                string path = CrashReporter.CreateDump(dumpPath, Dump.CoreType.None);
+                string path = CrashReporter.CreateDump(dumpPath, Crash.CoreType.None);
                 Log.CrashLog.TraceEvent(TraceEventType.Information, "Watchdog warning created at: {0}", path);
             } catch {
                 Log.CrashLog.TraceEvent(TraceEventType.Warning, "Watchdog warning failed");
