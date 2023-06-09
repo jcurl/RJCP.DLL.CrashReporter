@@ -2,7 +2,7 @@
 {
     using NUnit.Framework;
 
-    [TestFixture(Category = "CrashReporter.Watchdog")]
+    [TestFixture]
     public class ThreadWatchdogTest
     {
         // By using different initial clocks, we aim to look for potential overflow bugs and initial condition errors.

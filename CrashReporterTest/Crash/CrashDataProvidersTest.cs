@@ -5,7 +5,7 @@
     using Dumpers;
     using NUnit.Framework;
 
-    [TestFixture(Category = "CrashReporter.Dump")]
+    [TestFixture]
     public class CrashDataProvidersTest
     {
         [Test]

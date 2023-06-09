@@ -6,7 +6,7 @@
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 
-    [TestFixture(Category = "CrashReporter.Dump")]
+    [TestFixture]
     public class CoreTest
     {
         private static void CheckFile(string fileName)

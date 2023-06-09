@@ -9,7 +9,7 @@
     using System.Threading.Tasks;
 #endif
 
-    [TestFixture(Category = "CrashReporter.CrashExport")]
+    [TestFixture]
     public class XmlCrashDumperTest
     {
         [Test]

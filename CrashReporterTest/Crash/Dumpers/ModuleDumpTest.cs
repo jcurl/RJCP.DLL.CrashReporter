@@ -3,7 +3,7 @@
     using Crash.Export;
     using NUnit.Framework;
 
-    [TestFixture(Category = "CrashReporter.CrashData")]
+    [TestFixture]
     public class ModuleDumpTest : DumpTestBase
     {
         protected override ICrashDataExport GetDumper()

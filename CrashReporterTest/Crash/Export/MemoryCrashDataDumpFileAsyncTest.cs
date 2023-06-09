@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using NUnit.Framework;
 
-    [TestFixture(Category = "CrashReporter.CrashExport")]
+    [TestFixture]
     public class MemoryCrashDataDumpFileAsyncTest
     {
         // The purpose of these tests is to ensure that the MemoryCrashDataDumpFile can be used to find common errors.

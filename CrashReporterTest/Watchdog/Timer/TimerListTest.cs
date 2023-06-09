@@ -4,7 +4,7 @@
     using System.Threading;
     using NUnit.Framework;
 
-    [TestFixture(Category = "CrashReporter.Watchdog")]
+    [TestFixture]
     public class TimerListTest
     {
         [TestCase]

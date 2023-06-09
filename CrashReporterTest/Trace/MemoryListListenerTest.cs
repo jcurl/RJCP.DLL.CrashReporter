@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
 #endif
 
-    [TestFixture(Category = "CrashReporter.Trace")]
+    [TestFixture]
     public class MemoryListListenerTest
     {
         [Test]

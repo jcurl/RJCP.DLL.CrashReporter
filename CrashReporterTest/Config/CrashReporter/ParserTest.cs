@@ -4,7 +4,7 @@
     using System.IO;
     using NUnit.Framework;
 
-    [TestFixture(Category = "Config")]
+    [TestFixture]
     public class ParserTest
     {
         [Test]

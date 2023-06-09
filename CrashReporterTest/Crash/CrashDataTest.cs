@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
 #endif
 
-    [TestFixture(Category = "CrashReporter.Dump")]
+    [TestFixture]
     public class CrashDataTest
     {
         [Test]

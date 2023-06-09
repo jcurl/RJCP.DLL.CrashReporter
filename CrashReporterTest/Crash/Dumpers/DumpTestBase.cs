@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
 #endif
 
-    [TestFixture(Category = "CrashReporter.CrashData")]
+    [TestFixture]
     public abstract class DumpTestBase
     {
         protected abstract ICrashDataExport GetDumper();

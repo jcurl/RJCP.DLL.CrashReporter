@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
 #endif
 
-    [TestFixture(Category = "CrashReporter.CrashData")]
+    [TestFixture]
     public class TestBlockTest
     {
         [Test]

@@ -9,7 +9,7 @@
     using NUnit.Framework.Internal;
     using RJCP.CodeQuality.NUnitExtensions;
 
-    [TestFixture(Category = "CrashReporter.Trace")]
+    [TestFixture]
     public class AppConfigLogTest
     {
         private static TraceSource GetTraceSource(string traceSourceName)

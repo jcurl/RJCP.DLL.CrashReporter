@@ -4,7 +4,7 @@
     using System.Linq;
     using NUnit.Framework;
 
-    [TestFixture(Category = "CrashReporter.Trace")]
+    [TestFixture]
     public class SimplePrioMemoryLogTest
     {
         [Test]

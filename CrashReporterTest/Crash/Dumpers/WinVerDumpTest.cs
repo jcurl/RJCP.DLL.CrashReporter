@@ -4,7 +4,7 @@
     using NUnit.Framework;
     using RJCP.Core.Environment;
 
-    [TestFixture(Category = "CrashReporter.CrashData")]
+    [TestFixture]
     public class WinVerDumpTest : DumpTestBase
     {
         protected override ICrashDataExport GetDumper()

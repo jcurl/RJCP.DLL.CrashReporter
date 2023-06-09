@@ -6,7 +6,7 @@
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 
-    [TestFixture(Category = "CrashReporter")]
+    [TestFixture]
     public class CrashReporterTest
     {
         [TestCase]
