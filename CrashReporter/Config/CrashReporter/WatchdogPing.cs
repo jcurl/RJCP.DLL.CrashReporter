@@ -3,7 +3,7 @@
     /// <summary>
     /// Watchdog Ping Configuration Information.
     /// </summary>
-    public class WatchdogPing
+    public sealed class WatchdogPing
     {
         private readonly WatchdogPingElement m_WatchdogPing;
 

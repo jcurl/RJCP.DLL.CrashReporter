@@ -3,7 +3,7 @@
     /// <summary>
     /// CrashDumper Configuration.
     /// </summary>
-    public class CrashDumperConfig
+    public sealed class CrashDumperConfig
     {
         internal CrashDumperConfig()
         {

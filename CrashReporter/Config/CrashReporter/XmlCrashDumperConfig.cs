@@ -3,7 +3,7 @@
     /// <summary>
     /// XmlCrashDumper Configuration.
     /// </summary>
-    public class XmlCrashDumperConfig
+    public sealed class XmlCrashDumperConfig
     {
         private readonly XmlCrashDumper m_Config;
 

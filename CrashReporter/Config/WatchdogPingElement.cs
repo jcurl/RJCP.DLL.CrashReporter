@@ -2,7 +2,7 @@
 {
     using System.Configuration;
 
-    internal class WatchdogPingElement : ConfigurationElement
+    internal sealed class WatchdogPingElement : ConfigurationElement
     {
         [ConfigurationProperty("stack", DefaultValue = true, IsRequired = false)]
         public bool StackCapture

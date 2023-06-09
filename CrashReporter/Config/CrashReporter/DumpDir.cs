@@ -5,7 +5,7 @@
     /// <summary>
     /// Configuration on managing the dump directory.
     /// </summary>
-    public class DumpDir
+    public sealed class DumpDir
     {
         internal DumpDir()
         {

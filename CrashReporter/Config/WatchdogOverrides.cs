@@ -3,7 +3,7 @@
     using System;
     using System.Configuration;
 
-    internal class WatchdogOverrides : ConfigurationElementCollection
+    internal sealed class WatchdogOverrides : ConfigurationElementCollection
     {
         private const string ItemName = "Task";
 

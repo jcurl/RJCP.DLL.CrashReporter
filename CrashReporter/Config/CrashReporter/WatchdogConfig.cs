@@ -3,7 +3,7 @@
     /// <summary>
     /// Watchdog specific configuration.
     /// </summary>
-    public class WatchdogConfig
+    public sealed class WatchdogConfig
     {
         internal WatchdogConfig()
         {

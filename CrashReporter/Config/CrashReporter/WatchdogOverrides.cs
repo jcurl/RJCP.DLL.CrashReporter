@@ -3,7 +3,7 @@
     /// <summary>
     /// A collection of watchdog overrides.
     /// </summary>
-    public class WatchdogOverrides
+    public sealed class WatchdogOverrides
     {
         private readonly Config.WatchdogOverrides m_Overrides;
 

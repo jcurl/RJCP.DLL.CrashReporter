@@ -7,7 +7,7 @@
     /// <summary>
     /// Exposes the application configuration information for the CrashReporter.
     /// </summary>
-    public class CrashConfig
+    public sealed class CrashConfig
     {
         internal CrashConfig()
         {

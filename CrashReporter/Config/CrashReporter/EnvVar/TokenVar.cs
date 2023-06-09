@@ -4,7 +4,7 @@
     using System.IO;
     using RJCP.Core.Environment;
 
-    internal class TokenVar : IToken
+    internal sealed class TokenVar : IToken
     {
         public TokenVar(string envVar)
         {

@@ -2,7 +2,7 @@
 {
     using System.Configuration;
 
-    internal class WatchdogOverride : ConfigurationElement
+    internal sealed class WatchdogOverride : ConfigurationElement
     {
         [ConfigurationProperty("name", IsRequired = true)]
         public string Task

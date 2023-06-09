@@ -2,7 +2,7 @@
 {
     using System.Configuration;
 
-    internal class DumpDirElement : ConfigurationElement
+    internal sealed class DumpDirElement : ConfigurationElement
     {
         [ConfigurationProperty("path", DefaultValue = "", IsRequired = false)]
         public string Path

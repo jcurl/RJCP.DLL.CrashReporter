@@ -3,7 +3,7 @@
     using System.Configuration;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1507:Use nameof to express symbol names", Justification = "There isn't a strict relationship")]
-    internal class Watchdog : ConfigurationSection
+    internal sealed class Watchdog : ConfigurationSection
     {
         [ConfigurationProperty("Overrides", IsRequired = false, IsDefaultCollection = true)]
         [ConfigurationCollection(typeof(WatchdogOverrides))]
