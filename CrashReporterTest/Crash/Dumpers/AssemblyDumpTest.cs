@@ -8,7 +8,7 @@
     {
         protected override ICrashDataExport GetDumper()
         {
-            return new AssemblyDump();
+            return new AssemblyDumpAccessor();
         }
 
         protected override string TableName { get { return "Assemblies"; } }

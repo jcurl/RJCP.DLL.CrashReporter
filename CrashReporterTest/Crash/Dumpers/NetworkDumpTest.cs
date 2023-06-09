@@ -8,7 +8,7 @@
     {
         protected override ICrashDataExport GetDumper()
         {
-            return new NetworkDump();
+            return new NetworkDumpAccessor();
         }
 
         protected override string TableName { get { return "Network"; } }

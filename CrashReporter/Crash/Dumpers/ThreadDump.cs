@@ -12,7 +12,7 @@
     /// This dumper is not very useful, as it's difficult to map the OS threads to the .NET threads. Use WinDbg on the
     /// core and get the relevant information that way.
     /// </remarks>
-    public class ThreadDump : CrashDataExport<ProcessThread>
+    internal sealed class ThreadDump : CrashDataExport<ProcessThread>
     {
         private const string ThreadTable = "OSThreads";
         private const string ThreadId = "id";

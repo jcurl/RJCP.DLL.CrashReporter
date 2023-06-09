@@ -9,7 +9,7 @@
     /// <summary>
     /// Dump the installed .NET runtimes and the current runtime.
     /// </summary>
-    public class NetVersionDump : ICrashDataExport
+    internal sealed class NetVersionDump : ICrashDataExport
     {
         private const string NetVersionTable = "NetVersionInstalled";
         private const string NetInstalled = "Installed";

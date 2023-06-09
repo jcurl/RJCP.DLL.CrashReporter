@@ -7,7 +7,7 @@
     /// <summary>
     /// Dump details of the running process.
     /// </summary>
-    public class ProcessDump : CrashDataExport<KeyValuePair<string, string>>
+    internal sealed class ProcessDump : CrashDataExport<KeyValuePair<string, string>>
     {
         private const string ProcInfoTable = "ProcessInfo";
         private const string ProcInfoItem = "property";

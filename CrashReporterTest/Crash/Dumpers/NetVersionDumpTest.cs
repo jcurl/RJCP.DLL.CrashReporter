@@ -8,7 +8,7 @@
     {
         protected override ICrashDataExport GetDumper()
         {
-            return new NetVersionDump();
+            return new NetVersionDumpAccessor();
         }
 
         protected override string TableName { get { return "NetVersionInstalled"; } }

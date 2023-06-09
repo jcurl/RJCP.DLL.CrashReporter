@@ -8,7 +8,7 @@
     {
         protected override ICrashDataExport GetDumper()
         {
-            return new EnvironmentDump();
+            return new EnvironmentDumpAccessor();
         }
 
         protected override string TableName { get { return "EnvironmentVariables"; } }

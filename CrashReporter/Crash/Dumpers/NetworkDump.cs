@@ -8,7 +8,7 @@
     /// <summary>
     /// Dump network information to a dump file.
     /// </summary>
-    public class NetworkDump : CrashDataExport<NetworkInterface>
+    internal sealed class NetworkDump : CrashDataExport<NetworkInterface>
     {
         private const string NetworkTable = "Network";
         private const string AdapterName = "name";

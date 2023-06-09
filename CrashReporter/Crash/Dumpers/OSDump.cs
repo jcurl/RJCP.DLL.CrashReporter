@@ -7,7 +7,7 @@
     /// <summary>
     /// Dump some basic information about the OS.
     /// </summary>
-    public class OSDump : CrashDataExport<KeyValuePair<string, string>>
+    internal sealed class OSDump : CrashDataExport<KeyValuePair<string, string>>
     {
         private const string OSInfoTable = "OSInfo";
         private const string OSInfoItem = "property";

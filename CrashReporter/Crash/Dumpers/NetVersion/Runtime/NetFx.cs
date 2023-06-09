@@ -7,7 +7,7 @@
     using System.Reflection;
 #endif
 
-    internal class NetFx : INetVersion
+    internal sealed class NetFx : INetVersion
     {
         public NetFx()
         {

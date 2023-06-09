@@ -13,15 +13,15 @@
         {
             // Listeners are dynamically added. We can't know if a TraceListener test was run before or after this test.
             Assert.That(CrashData.Instance.Providers.Count - Listeners(), Is.EqualTo(9));
-            Assert.That(HasProviderType(typeof(NetVersionDump)), Is.True);
-            Assert.That(HasProviderType(typeof(AssemblyDump)), Is.True);
-            Assert.That(HasProviderType(typeof(EnvironmentDump)), Is.True);
-            Assert.That(HasProviderType(typeof(NetworkDump)), Is.True);
-            Assert.That(HasProviderType(typeof(ThreadDump)), Is.True);
-            Assert.That(HasProviderType(typeof(OSDump)), Is.True);
-            Assert.That(HasProviderType(typeof(WinVerDump)), Is.True);
-            Assert.That(HasProviderType(typeof(ProcessDump)), Is.True);
-            Assert.That(HasProviderType(typeof(ModuleDump)), Is.True);
+            Assert.That(HasProviderType(NetVersionDumpAccessor.AccType.ReferencedType), Is.True);
+            Assert.That(HasProviderType(AssemblyDumpAccessor.AccType.ReferencedType), Is.True);
+            Assert.That(HasProviderType(EnvironmentDumpAccessor.AccType.ReferencedType), Is.True);
+            Assert.That(HasProviderType(NetworkDumpAccessor.AccType.ReferencedType), Is.True);
+            Assert.That(HasProviderType(ThreadDumpAccessor.AccType.ReferencedType), Is.True);
+            Assert.That(HasProviderType(OSDumpAccessor.AccType.ReferencedType), Is.True);
+            Assert.That(HasProviderType(WinVerDumpAccessor.AccType.ReferencedType), Is.True);
+            Assert.That(HasProviderType(ProcessDumpAccessor.AccType.ReferencedType), Is.True);
+            Assert.That(HasProviderType(ModuleDumpAccessor.AccType.ReferencedType), Is.True);
         }
 
         private static bool HasProviderType(Type provider)

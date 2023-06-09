@@ -6,7 +6,7 @@
     using Microsoft.Win32;
 
     // See https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
-    internal class NetFxLegacy : INetVersion
+    internal sealed class NetFxLegacy : INetVersion
     {
         internal NetFxLegacy(string key)
         {

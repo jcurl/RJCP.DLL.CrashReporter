@@ -8,7 +8,7 @@
     using System.Runtime.InteropServices;
 #endif
 
-    internal class OSVersion
+    internal sealed class OSVersion
     {
         public OSVersion()
         {

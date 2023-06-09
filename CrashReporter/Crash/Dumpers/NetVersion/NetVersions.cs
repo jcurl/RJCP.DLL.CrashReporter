@@ -7,7 +7,7 @@
     using Microsoft.Win32;
     using RJCP.Core.Environment;
 
-    internal class NetVersions : IEnumerable<INetVersion>
+    internal sealed class NetVersions : IEnumerable<INetVersion>
     {
         private readonly List<INetVersion> m_Installed = new List<INetVersion>();
 

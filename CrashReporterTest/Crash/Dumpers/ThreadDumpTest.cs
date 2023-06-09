@@ -8,7 +8,7 @@
     {
         protected override ICrashDataExport GetDumper()
         {
-            return new ThreadDump();
+            return new ThreadDumpAccessor();
         }
 
         protected override string TableName { get { return "OSThreads"; } }

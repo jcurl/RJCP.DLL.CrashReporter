@@ -3,7 +3,7 @@
     using System;
     using System.Reflection;
 
-    internal class Mono : INetVersion
+    internal sealed class Mono : INetVersion
     {
         public Mono()
         {

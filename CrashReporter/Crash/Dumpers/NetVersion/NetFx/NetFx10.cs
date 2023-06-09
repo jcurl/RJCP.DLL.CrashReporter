@@ -2,7 +2,7 @@
 {
     using Microsoft.Win32;
 
-    internal class NetFx10 : INetVersion
+    internal sealed class NetFx10 : INetVersion
     {
         internal NetFx10(string version, string key)
         {

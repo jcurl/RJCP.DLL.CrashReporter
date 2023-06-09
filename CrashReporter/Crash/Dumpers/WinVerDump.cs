@@ -7,7 +7,7 @@
     /// <summary>
     /// Dump some basic information about the OS.
     /// </summary>
-    public class WinVerDump : CrashDataExport<KeyValuePair<string, string>>
+    internal sealed class WinVerDump : CrashDataExport<KeyValuePair<string, string>>
     {
         private const string OSInfoTable = "WinOSInfo";
         private const string OSInfoItem = "property";

@@ -8,7 +8,7 @@
     /// <summary>
     /// Dump all environment variables for the current process.
     /// </summary>
-    public class EnvironmentDump : CrashDataExport<KeyValuePair<string, string>>
+    internal sealed class EnvironmentDump : CrashDataExport<KeyValuePair<string, string>>
     {
         private const string EnvTable = "EnvironmentVariables";
         private const string EnvName = "name";

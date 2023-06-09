@@ -11,7 +11,7 @@
     /// This dumper is not very useful, as it's difficult to map the OS threads to the .NET threads. Use WinDbg on the
     /// core and get the relevant information that way.
     /// </remarks>
-    public class ModuleDump : CrashDataExport<ProcessModule>
+    internal sealed class ModuleDump : CrashDataExport<ProcessModule>
     {
         private const string ModuleTable = "Modules";
         private const string ModName = "name";

@@ -9,7 +9,7 @@
     {
         protected override ICrashDataExport GetDumper()
         {
-            return new WinVerDump();
+            return new WinVerDumpAccessor();
         }
 
         protected override string TableName { get { return "WinOSInfo"; } }

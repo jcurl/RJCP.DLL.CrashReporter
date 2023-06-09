@@ -8,7 +8,7 @@
     {
         protected override ICrashDataExport GetDumper()
         {
-            return new ModuleDump();
+            return new ModuleDumpAccessor();
         }
 
         protected override string TableName { get { return "Modules"; } }

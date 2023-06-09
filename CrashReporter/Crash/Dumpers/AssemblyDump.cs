@@ -8,7 +8,7 @@
     /// <summary>
     /// Dumps details of all loaded assemblies in the current domain.
     /// </summary>
-    public class AssemblyDump : CrashDataExport<Assembly>
+    internal sealed class AssemblyDump : CrashDataExport<Assembly>
     {
         private const string AssemblyTable = "Assemblies";
         private const string AssemblyName = "name";

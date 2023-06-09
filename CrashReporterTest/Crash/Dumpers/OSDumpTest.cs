@@ -8,7 +8,7 @@
     {
         protected override ICrashDataExport GetDumper()
         {
-            return new OSDump();
+            return new OSDumpAccessor();
         }
 
         protected override string TableName { get { return "OSInfo"; } }

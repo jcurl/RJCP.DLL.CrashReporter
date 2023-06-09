@@ -4,11 +4,11 @@
     using NUnit.Framework;
 
     [TestFixture(Category = "CrashReporter.CrashData")]
-    public class ProcDumpTest : DumpTestBase
+    public class ProcessDumpTest : DumpTestBase
     {
         protected override ICrashDataExport GetDumper()
         {
-            return new ProcessDump();
+            return new ProcessDumpAccessor();
         }
 
         protected override string TableName { get { return "ProcessInfo"; } }
