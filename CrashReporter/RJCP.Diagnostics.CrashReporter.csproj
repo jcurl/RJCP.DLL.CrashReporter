@@ -22,7 +22,7 @@
     <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.CrashReporter</PackageProjectUrl>
 
     <Description>Library tools to allow developers to capture debug information.</Description>
-    <Version>0.4.4</Version>
+    <Version>0.5.0</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 
