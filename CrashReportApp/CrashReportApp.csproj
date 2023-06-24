@@ -3,7 +3,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net461;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net40;net462;net48;netcoreapp3.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release</Configurations>
@@ -15,7 +15,7 @@
     <RootNamespace>CrashReportApp</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2019-2021, Jason Curl</Copyright>
+    <Copyright>(C) 2019-2023, Jason Curl</Copyright>
     <Company></Company>
 
     <Description>Test application to create core dumps.</Description>
