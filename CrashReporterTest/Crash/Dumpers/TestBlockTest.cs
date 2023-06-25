@@ -2,7 +2,7 @@
 {
     using Crash.Export;
     using NUnit.Framework;
-#if NET45_OR_GREATER || NETCOREAPP
+#if !NET40_LEGACY
     using System.Threading.Tasks;
 #endif
 
@@ -21,7 +21,7 @@
             }
         }
 
-#if NET45_OR_GREATER || NETCOREAPP
+#if !NET40_LEGACY
         [Test]
         public async Task DumpTestBlockAsync()
         {

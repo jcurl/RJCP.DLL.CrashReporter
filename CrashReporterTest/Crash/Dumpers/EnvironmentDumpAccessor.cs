@@ -2,7 +2,7 @@
 {
     using Export;
     using RJCP.CodeQuality;
-#if NET45_OR_GREATER || NETCOREAPP
+#if !NET40_LEGACY
     using System.Threading.Tasks;
 #endif
 
@@ -23,7 +23,7 @@
             Invoke(nameof(Dump), dumpFile);
         }
 
-#if NET45_OR_GREATER || NETCOREAPP
+#if !NET40_LEGACY
         /// <summary>
         /// Asynchronously dumps debug information using the provided dump interface.
         /// </summary>

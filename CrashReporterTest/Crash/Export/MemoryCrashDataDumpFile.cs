@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using CodeQuality.NUnitExtensions;
     using MemoryDump;
-#if NET45_OR_GREATER || NETCOREAPP
+#if !NET40_LEGACY
     using System.Threading.Tasks;
 #endif
 
@@ -91,7 +91,7 @@
             m_IsFlushed = true;
         }
 
-#if NET45_OR_GREATER || NETCOREAPP
+#if !NET40_LEGACY
         public Task<IDumpTable> DumpTableAsync(string tableName, string rowName)
         {
             if (tableName == null) throw new ArgumentNullException(nameof(tableName));

@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Crash.Export
 {
     using System.IO;
-#if NET45_OR_GREATER || NETCOREAPP
+#if !NET40_LEGACY
     using System.Threading.Tasks;
 #endif
 
@@ -29,7 +29,7 @@
             return dump;
         }
 
-#if NET45_OR_GREATER || NETCOREAPP
+#if !NET40_LEGACY
         public Task<ICrashDataDumpFile> CreateAsync(string fileName)
         {
             return Task.FromResult(CreateDefault());

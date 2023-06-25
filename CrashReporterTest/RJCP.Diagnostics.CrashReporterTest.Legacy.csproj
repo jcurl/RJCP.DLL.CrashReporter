@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+  <!-- Implicit top import required explicitly to change build output path -->
+  <PropertyGroup>
+    <MSBuildProjectExtensionsPath>legacy</MSBuildProjectExtensionsPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectExtensionsPath)\obj</BaseIntermediateOutputPath>
+    <OutputPath Condition="'$(Configuration)' != ''">$(MSBuildProjectExtensionsPath)\bin\$(Configuration)</OutputPath>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>net462;net48;netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>net48</TargetFramework>
     <OutputType>Library</OutputType>
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release</Configurations>
+    <DefineConstants>$(DefineConstants);NET40_LEGACY</DefineConstants>
 
-    <AssemblyName>RJCP.Diagnostics.CrashReporterTest</AssemblyName>
+    <AssemblyName>RJCP.Diagnostics.CrashReporterTest40</AssemblyName>
     <AssemblyTitle>RJCP.Diagnostics.CrashReporterTest</AssemblyTitle>
     <Product>RJCP.Diagnostics.CrashReporter</Product>
     <RootNamespace>RJCP.Diagnostics</RootNamespace>
@@ -38,7 +46,7 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -49,9 +57,13 @@
     <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.16.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-    <ProjectReference Include="..\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
+    <ProjectReference Include="..\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj">
+      <SetTargetFramework>TargetFramework=net40</SetTargetFramework>
+    </ProjectReference>
+    <ProjectReference Include="..\..\environment\Environment\RJCP.Environment.csproj">
+      <SetTargetFramework>TargetFramework=net40</SetTargetFramework>
+    </ProjectReference>
     <ProjectReference Include="..\..\nunitextensions\CodeQuality\RJCP.CodeQuality.csproj" />
-    <ProjectReference Include="..\..\environment\Environment\RJCP.Environment.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,7 +92,6 @@
     <Compile Include="Crash\Dumpers\WinVerDumpAccessor.cs" />
     <Compile Include="Crash\Dumpers\WinVerDumpTest.cs" />
     <Compile Include="Crash\Export\MemoryCrashDataDumpFile.cs" />
-    <None Include="Crash\Export\MemoryCrashDataDumpFileAsyncTest.cs" />
     <Compile Include="Crash\Export\MemoryCrashDataDumpFileTest.cs" />
     <Compile Include="Crash\Export\MemoryCrashDumpFactory.cs" />
     <Compile Include="Crash\Export\MemoryDump\IFields.cs" />
@@ -107,12 +118,10 @@
     <Compile Include="Watchdog\Timer\VirtualTimerSource.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
-    <Compile Include="Crash\Export\MemoryCrashDataDumpFileAsyncTest.cs" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
 
+  <!-- Implicit top import required explicitly to change build output path -->
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
