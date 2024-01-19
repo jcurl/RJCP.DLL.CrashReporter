@@ -7,3 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations", Justification = "Performance not required and Keep Compatible with .NET 4.0")]
 [assembly: SuppressMessage("Style", "IDE0074:Use compound assignment", Justification = ".NET Core only feature")]
+[assembly: SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments", Justification = "Test case only")]
