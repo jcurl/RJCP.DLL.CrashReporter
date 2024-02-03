@@ -1,7 +1,7 @@
 ﻿namespace CrashReportApp
 {
     using RJCP.Diagnostics.Trace;
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using RJCP.Diagnostics.Logging;
@@ -13,7 +13,7 @@
 
         static Log()
         {
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
             IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true, false)
                 .Build();

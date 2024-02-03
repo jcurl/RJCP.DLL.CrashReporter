@@ -69,7 +69,7 @@
             //   S_IFSOCK 0140000  /* socket */
             const int unixAttributes = 0x81A0;
 
-#if NETSTANDARD || NET471_OR_GREATER
+#if NET6_0_OR_GREATER || NET471_OR_GREATER
             entry.ExternalAttributes = (entry.ExternalAttributes & 0xFFFF) | (unixAttributes << 16);
 #else
             Type rti = typeof(ZipArchiveEntry);

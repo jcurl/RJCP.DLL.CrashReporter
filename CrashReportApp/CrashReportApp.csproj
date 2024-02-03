@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>net40;net462;net48;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net40;net462;net48;net60</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release</Configurations>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <RollForward>Major</RollForward>
 
     <AssemblyName>CrashReportApp</AssemblyName>
     <AssemblyTitle>CrashReportApp</AssemblyTitle>
@@ -15,30 +14,27 @@
     <RootNamespace>CrashReportApp</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2019-2023, Jason Curl</Copyright>
+    <Copyright>(C) 2019-2024, Jason Curl</Copyright>
     <Company></Company>
-
     <Description>Test application to create core dumps.</Description>
     <Version>1.0.0</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>Default</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
-
     <EnableDefaultItems>false</EnableDefaultItems>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
 
     <RevisionControl>git</RevisionControl>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
   </PropertyGroup>
@@ -49,18 +45,15 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.22" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="3.1.22" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.22" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.22" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.22" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.4" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
     <ProjectReference Include="..\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
   </ItemGroup>
@@ -70,8 +63,9 @@
     <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
     <None Include="App.net40.config" />
-    <None Include="App.net461.config" />
-    <None Include="App.netcoreapp3.1.config" />
+    <None Include="App.net462.config" />
+    <None Include="App.net48.config" />
+    <None Include="App.net60.config" />
     <None Include="appsettings.json" />
   </ItemGroup>
 

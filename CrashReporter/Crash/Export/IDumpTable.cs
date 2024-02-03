@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -40,7 +40,7 @@
         /// </summary>
         void Flush();
 
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
         /// <summary>
         /// Writes the header for the table.
         /// </summary>

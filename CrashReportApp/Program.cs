@@ -25,7 +25,7 @@ namespace CrashReportApp
             Log.App.TraceEvent(TraceEventType.Transfer, "Crash Reporter App - Transfer");
 
             if (args.Length != 1 || !Enum.TryParse(args[0], true, out ExecutionMode mode)) {
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
                 // If the user logs via the console, we need to wait before exiting. .NET Core ConsoleLogger has a
                 // thread running in the background that delays the output to the console, which might not print if the
                 // program exits too quickly.

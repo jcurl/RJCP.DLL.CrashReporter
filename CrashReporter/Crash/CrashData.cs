@@ -6,7 +6,7 @@
     using System.IO;
     using Crash.Dumpers;
     using Crash.Export;
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -206,7 +206,7 @@
             return false;
         }
 
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
         /// <summary>
         /// Dumps debugging information to disk, using an automatically generated path.
         /// </summary>

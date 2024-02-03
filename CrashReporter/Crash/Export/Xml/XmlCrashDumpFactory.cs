@@ -2,7 +2,7 @@
 {
     using System;
     using System.IO;
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -77,7 +77,7 @@
             return dumper;
         }
 
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
         /// <summary>
         /// Creates the dump from the given file name asynchronously.
         /// </summary>

@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Crash.Export
 {
     using System.IO;
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -66,7 +66,7 @@
         /// </remarks>
         ICrashDataDumpFile Create(Stream stream, string path);
 
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
         /// <summary>
         /// Creates the dump from the given file name asynchronously.
         /// </summary>

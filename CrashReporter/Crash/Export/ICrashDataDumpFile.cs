@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Crash.Export
 {
     using System;
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -48,7 +48,7 @@
         /// </summary>
         void Flush();
 
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
         /// <summary>
         /// Allocates a region for dumping information in a table asynchronously.
         /// </summary>

@@ -98,7 +98,7 @@
             }
         }
 
-#if NET461_OR_GREATER || NETSTANDARD
+#if NET461_OR_GREATER || NET6_0_OR_GREATER
         private static readonly string[] EmptyList = Array.Empty<string>();
 #else
         private static readonly string[] EmptyList = new string[0];

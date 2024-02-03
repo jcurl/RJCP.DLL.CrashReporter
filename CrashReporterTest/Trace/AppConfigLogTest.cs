@@ -17,7 +17,7 @@
             // this method is required for .NET Core, as the TraceSource doesn't read a .NET App.Config file to
             // instantiate itself.
             TraceSource traceSource = new TraceSource(traceSourceName);
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
             traceSource.Switch = new SourceSwitch(traceSourceName, "Verbose");
             traceSource.Listeners.Clear();
 

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Diagnostics;
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
     using Microsoft.Extensions.Logging;
 #endif
 
@@ -40,7 +40,7 @@
             Message = message;
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Initializes a new instance of the <see cref="LogEntry"/> class with the default clock.
         /// </summary>
