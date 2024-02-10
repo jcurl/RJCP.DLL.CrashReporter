@@ -17,14 +17,21 @@
         private const string AssemblyInfoVersion = "versioninfo";
         private const string AssemblyFileVersion = "versionfile";
         private const string AssemblyLocation = "location";
-        private const string AssemblyCodeBase = "codebase";
         private const string AssemblyProcessor = "processor";
+#if NETFRAMEWORK
+        private const string AssemblyCodeBase = "codebase";
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyDump"/> class.
         /// </summary>
+#if NETFRAMEWORK
         public AssemblyDump() : base(new DumpRow(AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
             AssemblyFileVersion, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase))
+#else
+        public AssemblyDump() : base(new DumpRow(AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
+            AssemblyFileVersion, AssemblyProcessor, AssemblyLocation))
+#endif
         { }
 
         /// <summary>
@@ -66,14 +73,26 @@
             row[AssemblyFileVersion] = GetAssemblyFileVersion(item);
             try {
                 row[AssemblyLocation] = item.Location;
+#if NET6_0_OR_GREATER
+                if (string.IsNullOrEmpty(row[AssemblyLocation]))
+                    row[AssemblyLocation] = "(Bundled Assembly)";
+#endif
             } catch (NotSupportedException) {
                 row[AssemblyLocation] = "(Dynamic Assembly)";
             }
+#if NETFRAMEWORK
             try {
+                // Raises `NotImplementedException` on .NET 5+ for bundled assemblies.
+                //
+                // Returns Gets the location of the assembly as specified originally, for example, in an AssemblyName
+                // object.
                 row[AssemblyCodeBase] = item.CodeBase;
             } catch (NotSupportedException) {
                 row[AssemblyCodeBase] = "(Dynamic Assembly)";
+            } catch (NotImplementedException) {
+                row[AssemblyCodeBase] = "(Unknown)";
             }
+#endif
             row[AssemblyProcessor] = item.GetName().ProcessorArchitecture.ToString();
             return true;
         }
