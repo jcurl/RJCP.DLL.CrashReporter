@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Crash.Dumpers.NetVersion.NetFx
 {
     using System;
+    using System.Runtime.Versioning;
     using System.Security;
     using Microsoft.Win32;
     using Net45;
@@ -8,6 +9,7 @@
     // See https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
     internal sealed class NetFx45 : INetVersion
     {
+        [SupportedOSPlatform("windows")]
         internal NetFx45()
         {
             GetNetFx45Details();
@@ -18,6 +20,7 @@
             GetNetVersion(netfx45release);
         }
 
+        [SupportedOSPlatform("windows")]
         private void GetNetFx45Details()
         {
             try {

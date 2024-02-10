@@ -1,9 +1,11 @@
 ﻿namespace RJCP.Diagnostics.Crash.Dumpers.NetVersion.NetFx
 {
+    using System.Runtime.Versioning;
     using Microsoft.Win32;
 
     internal sealed class NetFx10 : INetVersion
     {
+        [SupportedOSPlatform("windows")]
         internal NetFx10(string version, string key)
         {
             if (version.StartsWith("v")) {
@@ -18,6 +20,7 @@
             GetNetFxDetails(key);
         }
 
+        [SupportedOSPlatform("windows")]
         private void GetNetFxDetails(string key)
         {
             string fullKeyPath = string.Format(@"SOFTWARE\Microsoft\NET Framework Setup\Product\{0}", key);

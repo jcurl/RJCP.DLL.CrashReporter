@@ -6,6 +6,7 @@
     using System.IO;
     using Crash.Dumpers;
     using Crash.Export;
+    using RJCP.Core.Environment;
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
     using System.Threading.Tasks;
 #endif
@@ -89,12 +90,16 @@
                                 new AssemblyDump(),
                                 new EnvironmentDump(),
                                 new NetworkDump(),
-                                new ThreadDump(),
                                 new OSDump(),
-                                new WinVerDump(),
                                 new ProcessDump(),
                                 new ModuleDump()
                             };
+                            if (Platform.IsWinNT()) {
+                                m_Providers.Add(new WinVerDump());
+                                m_Providers.Add(new ThreadDump());
+                            } else if (Platform.IsUnix()) {
+                                m_Providers.Add(new ThreadDump());
+                            }
                         }
                     }
                 }

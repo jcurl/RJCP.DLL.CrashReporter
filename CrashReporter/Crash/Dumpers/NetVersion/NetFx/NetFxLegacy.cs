@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Crash.Dumpers.NetVersion.NetFx
 {
     using System;
+    using System.Runtime.Versioning;
     using System.Security;
     using System.Text;
     using Microsoft.Win32;
@@ -8,6 +9,7 @@
     // See https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
     internal sealed class NetFxLegacy : INetVersion
     {
+        [SupportedOSPlatform("windows")]
         internal NetFxLegacy(string key)
         {
             try {
@@ -19,6 +21,7 @@
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private void GetNetFxDetails(string key)
         {
             if (!key.StartsWith("v")) {

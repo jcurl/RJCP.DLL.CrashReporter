@@ -1,12 +1,14 @@
 ﻿namespace RJCP.Diagnostics.Crash.Dumpers
 {
     using System.Collections.Generic;
+    using System.Runtime.Versioning;
     using Export;
     using RJCP.Core.Environment;
 
     /// <summary>
     /// Dump some basic information about the OS.
     /// </summary>
+    [SupportedOSPlatform("windows")]
     internal sealed class WinVerDump : CrashDataExport<KeyValuePair<string, string>>
     {
         private const string OSInfoTable = "WinOSInfo";

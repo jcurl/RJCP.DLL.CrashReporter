@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Runtime.Versioning;
     using System.Security;
     using Microsoft.Win32;
     using RJCP.Core.Environment;
@@ -18,6 +19,7 @@
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private void FindNetFxVersions()
         {
             FindNetFx10();
@@ -31,6 +33,7 @@
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private void FindNetFx10()
         {
             try {
@@ -58,6 +61,7 @@
         }
 
         // See https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
+        [SupportedOSPlatform("windows")]
         private void FindNetFxLegacy()
         {
             string netKey;
@@ -101,6 +105,7 @@
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private static bool IsInstalled(RegistryKey key)
         {
             string install = key.GetValue("Install", "").ToString();

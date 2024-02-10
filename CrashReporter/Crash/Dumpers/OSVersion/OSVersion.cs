@@ -3,11 +3,13 @@
     using System;
     using Native.Win32;
     using Microsoft.Win32;
+    using System.Runtime.Versioning;
 
 #if DEBUG
     using System.Runtime.InteropServices;
 #endif
 
+    [SupportedOSPlatform("windows")]
     internal sealed class OSVersion
     {
         public OSVersion()
@@ -288,6 +290,7 @@
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private void DetectWinBrand()
         {
             try {
@@ -299,6 +302,7 @@
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private void DetectWin10()
         {
             if (Version.Major < 10) return;

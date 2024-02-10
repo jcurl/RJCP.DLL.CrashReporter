@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Runtime.Versioning;
     using Export;
 
     /// <summary>
@@ -12,6 +13,8 @@
     /// This dumper is not very useful, as it's difficult to map the OS threads to the .NET threads. Use WinDbg on the
     /// core and get the relevant information that way.
     /// </remarks>
+    [SupportedOSPlatform("windows")]
+    [SupportedOSPlatform("linux")]
     internal sealed class ThreadDump : CrashDataExport<ProcessThread>
     {
         private const string ThreadTable = "OSThreads";
