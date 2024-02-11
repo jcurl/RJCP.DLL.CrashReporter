@@ -5,9 +5,6 @@
     using System.Runtime.InteropServices;
     using Native.Win32;
     using RJCP.Core.Environment;
-#if !NETFRAMEWORK
-    using System.Reflection;
-#endif
 
     /// <summary>
     /// Methods to allow core dumps for application debugging.
@@ -155,7 +152,7 @@
                 DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
                     new DbgHelp.MINIDUMP_EXCEPTION_INFORMATION {
                         ClientPointers = 0,
-                        ExceptionPointers = GetExceptionPointers(),
+                        ExceptionPointers = Marshal.GetExceptionPointers(),
                         ThreadId = Kernel32.GetCurrentThreadId()
                     };
 
@@ -170,17 +167,5 @@
 #endif
             }
         }
-
-#if !NETFRAMEWORK
-        private static IntPtr GetExceptionPointers()
-        {
-            Type marshal = typeof(Marshal);
-            MethodInfo pointers = marshal.GetMethod("GetExceptionPointers");
-            if (pointers != null)
-                return (IntPtr)pointers.Invoke(null, null);
-
-            return IntPtr.Zero;
-        }
-#endif
     }
 }
