@@ -26,11 +26,13 @@
         [TestCase]
         public void DoDumpChangedPrefix()
         {
-            string prefix = string.Format("{0}.test", Process.GetCurrentProcess().ProcessName);
-            string path = CrashData.GetCrashDir(prefix);
-            Assert.That(path, Is.Not.Null.Or.Empty);
-            string dump = CrashReporter.CreateDump(path, CoreType.None);
-            Assert.That(File.Exists(dump), Is.True);
+            using (Process proc = Process.GetCurrentProcess()) {
+                string prefix = string.Format("{0}.test", proc.ProcessName);
+                string path = CrashData.GetCrashDir(prefix);
+                Assert.That(path, Is.Not.Null.Or.Empty);
+                string dump = CrashReporter.CreateDump(path, CoreType.None);
+                Assert.That(File.Exists(dump), Is.True);
+            }
         }
 
         [TestCase]

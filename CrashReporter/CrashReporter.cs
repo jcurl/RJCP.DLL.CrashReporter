@@ -387,7 +387,7 @@
                 }
 
                 string coreDumpName = string.Format("{0}.{1}.dmp",
-                    Process.GetCurrentProcess().ProcessName, Process.GetCurrentProcess().Id);
+                    ProcessInfo.ProcessName, ProcessInfo.ProcessId);
                 string coreDumpPath = Path.Combine(coreDumpDir, coreDumpName);
                 Core.Create(coreDumpPath, coreType);
             } catch (Exception ex) {

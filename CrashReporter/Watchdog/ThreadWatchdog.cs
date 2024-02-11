@@ -265,7 +265,7 @@
         /// </remarks>
         public static void DefaultWarningEvent(object sender, WatchdogEventArgs args)
         {
-            string prefix = string.Format("{0}.wd", Process.GetCurrentProcess().ProcessName);
+            string prefix = string.Format("{0}.wd", ProcessInfo.ProcessName);
             string dumpPath = CrashData.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath, Crash.CoreType.None);
@@ -301,7 +301,7 @@
         /// </remarks>
         public static void DefaultCriticalEvent(object sender, WatchdogEventArgs args)
         {
-            string prefix = string.Format("{0}.wderr", Process.GetCurrentProcess().ProcessName);
+            string prefix = string.Format("{0}.wderr", ProcessInfo.ProcessName);
             string dumpPath = CrashData.GetCrashDir(prefix);
             try {
                 string path = CrashReporter.CreateDump(dumpPath);

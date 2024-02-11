@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using Crash.Dumpers;
     using Crash.Export;
@@ -176,7 +175,7 @@
         /// <returns>A fully qualified path that can be given to <see cref="Dump(string)"/>.</returns>
         public static string GetCrashDir(string prefix)
         {
-            if (string.IsNullOrWhiteSpace(prefix)) prefix = Process.GetCurrentProcess().ProcessName;
+            if (string.IsNullOrWhiteSpace(prefix)) prefix = ProcessInfo.ProcessName;
             string name = string.Format("{0}-{1:yyyyMMddHHmmss}.{2}", prefix, DateTime.Now, Guid.NewGuid().ToString());
             string crashDir = Path.Combine(GetCrashFolder(), name);
 

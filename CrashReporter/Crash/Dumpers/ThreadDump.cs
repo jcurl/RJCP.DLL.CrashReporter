@@ -50,8 +50,10 @@
         /// <returns>An enumerable object.</returns>
         protected override IEnumerable<ProcessThread> GetRows()
         {
-            foreach (ProcessThread thread in Process.GetCurrentProcess().Threads) {
-                if (thread != null) yield return thread;
+            using (Process proc = Process.GetCurrentProcess()) {
+                foreach (ProcessThread thread in proc.Threads) {
+                    if (thread != null) yield return thread;
+                }
             }
         }
 

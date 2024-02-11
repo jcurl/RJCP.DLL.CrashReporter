@@ -49,8 +49,10 @@
         /// <returns>An enumerable object.</returns>
         protected override IEnumerable<ProcessModule> GetRows()
         {
-            foreach (ProcessModule module in Process.GetCurrentProcess().Modules) {
-                yield return module;
+            using (Process proc = Process.GetCurrentProcess()) {
+                foreach (ProcessModule module in proc.Modules) {
+                    yield return module;
+                }
             }
         }
 

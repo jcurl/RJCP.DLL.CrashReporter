@@ -97,6 +97,7 @@
     <Compile Include="Config\WatchdogOverrides.cs" />
     <Compile Include="Config\WatchdogPingElement.cs" />
     <Compile Include="Config\XmlCrashDumper.cs" />
+    <Compile Include="ProcessInfo.cs" />
     <None Include="Crash\Archive\CompressZipFile.cs" />
     <None Include="Crash\Archive\CompressZipArchive.cs" />
     <Compile Include="Crash\Archive\FileSystem.cs" />
