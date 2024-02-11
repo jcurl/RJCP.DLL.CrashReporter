@@ -2,10 +2,12 @@
 {
     using System;
     using System.Runtime.InteropServices;
+    using System.Runtime.Versioning;
     using System.Security;
     using Crash.Dumpers.OSVersion;
 
     [SuppressUnmanagedCodeSecurity]
+    [SupportedOSPlatform("windows")]
     internal static partial class Kernel32
     {
         [DllImport("kernel32.dll", ExactSpelling = true)]

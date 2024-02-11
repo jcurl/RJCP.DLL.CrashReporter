@@ -2,10 +2,12 @@
 {
     using System;
     using System.Runtime.InteropServices;
+    using System.Runtime.Versioning;
     using System.Security;
     using Microsoft.Win32.SafeHandles;
 
     [SuppressUnmanagedCodeSecurity]
+    [SupportedOSPlatform("windows")]
     internal static partial class DbgHelp
     {
         [DllImport("dbghelp.dll", SetLastError = true, ExactSpelling = true)]

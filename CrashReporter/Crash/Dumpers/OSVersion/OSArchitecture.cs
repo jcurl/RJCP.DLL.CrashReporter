@@ -1,7 +1,9 @@
 ﻿namespace RJCP.Diagnostics.Crash.Dumpers.OSVersion
 {
+    using System.Runtime.Versioning;
     using Native.Win32;
 
+    [SupportedOSPlatform("windows")]
     internal static class OSArchitecture
     {
         public static string GetImageFileMachineString(Kernel32.IMAGE_FILE_MACHINE imageFileMachine)

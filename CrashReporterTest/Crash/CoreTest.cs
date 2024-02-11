@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Runtime.Versioning;
     using System.Threading;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
@@ -25,6 +26,7 @@
         [Platform(Include = "Win32NT")]
         [TestCase(CoreType.MiniDump, "minidump.dmp", TestName = "MiniDump_Windows_MiniDump")]
         [TestCase(CoreType.FullHeap, "fulldump.dmp", TestName = "MiniDump_Windows_FullDump")]
+        [SupportedOSPlatform("windows")]
         public void MiniDump_Windows(CoreType dumpType, string fileName)
         {
             Deploy.CreateDirectory("Dumps");
@@ -36,6 +38,7 @@
 
         [Test]
         [Platform(Include = "Win32NT")]
+        [SupportedOSPlatform("windows")]
         public void MiniDump_Windows_DefaultDump()
         {
             Deploy.CreateDirectory("Dumps");
@@ -48,6 +51,7 @@
         [Platform(Include = "Win32NT")]
         [TestCase(CoreType.MiniDump, "minidumpexception.dmp", TestName = "MiniDumpException_Windows_MiniDump")]
         [TestCase(CoreType.FullHeap, "fulldumpexception.dmp", TestName = "MiniDump_WindowsException_FullDump")]
+        [SupportedOSPlatform("windows")]
         public void MiniDumpException_Windows(CoreType dumpType, string fileName)
         {
             Deploy.CreateDirectory("Dumps");
@@ -69,6 +73,7 @@
 
         [Test]
         [Platform(Include = "Win32NT")]
+        [SupportedOSPlatform("windows")]
         public void MiniDumpException_Windows_DefaultDump()
         {
             Deploy.CreateDirectory("Dumps");
@@ -90,6 +95,7 @@
 
         [Test]
         [Platform(Exclude = "Win32NT")]
+        [SupportedOSPlatform("linux")]
         public void MiniDump_Linux()
         {
             // Runs also on Linux, just that no file will be created. We don't test for that, because we just don't want

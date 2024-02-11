@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Runtime.Versioning;
     using System.Threading;
     using RJCP.Core.Environment;
 
@@ -196,6 +197,7 @@
             }
         }
 
+        [SupportedOSPlatform("linux")]
         private static void DeleteEmptyFolderUnix(DirectoryInfo dir)
         {
             Directory.Delete(dir.FullName);
@@ -204,6 +206,7 @@
             throw new IOException(message);
         }
 
+        [SupportedOSPlatform("windows")]
         private static void DeleteEmptyFolderWindows(DirectoryInfo dir)
         {
             int elapsed;
@@ -320,6 +323,7 @@
             }
         }
 
+        [SupportedOSPlatform("linux")]
         private static void DeleteFileUnix(FileInfo file)
         {
             File.Delete(file.FullName);
@@ -328,6 +332,7 @@
             throw new IOException(message);
         }
 
+        [SupportedOSPlatform("windows")]
         private static void DeleteFileWindows(FileInfo file)
         {
             int elapsed;
