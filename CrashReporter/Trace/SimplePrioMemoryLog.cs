@@ -297,7 +297,7 @@
         /// </exception>
         public void CopyTo(LogEntry[] array, int arrayIndex)
         {
-            if (array == null) throw new ArgumentNullException(nameof(array));
+            ThrowHelper.ThrowIfNull(array);
             if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Array Index is less than 0");
 
             int requiredLength = 0;

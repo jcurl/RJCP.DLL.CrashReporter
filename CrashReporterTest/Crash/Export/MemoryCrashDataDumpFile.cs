@@ -42,8 +42,8 @@
 
         public IDumpTable DumpTable(string tableName, string rowName)
         {
-            if (tableName == null) throw new ArgumentNullException(nameof(tableName));
-            if (rowName == null) throw new ArgumentNullException(nameof(rowName));
+            ThrowHelper.ThrowIfNull(tableName);
+            ThrowHelper.ThrowIfNull(rowName);
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
 
@@ -94,8 +94,8 @@
 #if !NET40_LEGACY
         public Task<IDumpTable> DumpTableAsync(string tableName, string rowName)
         {
-            if (tableName == null) throw new ArgumentNullException(nameof(tableName));
-            if (rowName == null) throw new ArgumentNullException(nameof(rowName));
+            ThrowHelper.ThrowIfNull(tableName);
+            ThrowHelper.ThrowIfNull(rowName);
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
 

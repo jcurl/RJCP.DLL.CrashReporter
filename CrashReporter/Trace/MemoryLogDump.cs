@@ -28,7 +28,7 @@
         /// </remarks>
         public MemoryLogDump(IMemoryLog logCollection)
         {
-            if (logCollection == null) throw new ArgumentNullException(nameof(logCollection));
+            ThrowHelper.ThrowIfNull(logCollection);
             m_MemoryLog = logCollection;
         }
 

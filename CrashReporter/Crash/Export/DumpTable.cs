@@ -18,7 +18,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         public void DumpHeader(DumpRow row)
         {
-            if (row == null) throw new ArgumentNullException(nameof(row));
+            ThrowHelper.ThrowIfNull(row);
             DumpHeader(row.GetHeader());
         }
 
@@ -35,7 +35,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         public void DumpRow(DumpRow row)
         {
-            if (row == null) throw new ArgumentNullException(nameof(row));
+            ThrowHelper.ThrowIfNull(row);
             DumpRow(row.GetRow());
             row.Clear();
         }
@@ -60,7 +60,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         public Task DumpHeaderAsync(DumpRow row)
         {
-            if (row == null) throw new ArgumentNullException(nameof(row));
+            ThrowHelper.ThrowIfNull(row);
             return DumpHeaderAsync(row.GetHeader());
         }
 
@@ -79,7 +79,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         public Task DumpRowAsync(DumpRow row)
         {
-            if (row == null) throw new ArgumentNullException(nameof(row));
+            ThrowHelper.ThrowIfNull(row);
             return DumpRowInternalAsync(row);
         }
 

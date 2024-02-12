@@ -42,8 +42,8 @@
         /// </remarks>
         public ThreadWatchdog(ITimerSource timerSource, ISingleShotTimer timer)
         {
-            if (timerSource == null) throw new ArgumentNullException(nameof(timerSource));
-            if (timer == null) throw new ArgumentNullException(nameof(timer));
+            ThrowHelper.ThrowIfNull(timerSource);
+            ThrowHelper.ThrowIfNull(timer);
 
             m_Watchdog = new WatchdogList(timerSource);
             m_Timer = timer;
@@ -70,7 +70,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public bool Register(string name, int warning, int critical)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
 
             bool overrideActive = CrashReporter.Config.Watchdog.Overrides.TryGetOverride(name, out WatchdogOverride wdOverride);
             if (overrideActive) {
@@ -113,7 +113,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public bool Unregister(string name)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
 
             lock (m_TimerSyncLock) {
                 bool removed = m_Watchdog.Remove(name);
@@ -145,7 +145,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public bool Ping(string name)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             lock (m_TimerSyncLock) {
                 bool ping = m_Watchdog.Reset(name, CrashReporter.Config.Watchdog.Ping.StackCapture);
                 if (ping) {

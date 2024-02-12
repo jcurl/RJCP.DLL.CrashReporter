@@ -63,7 +63,7 @@
             }
             set
             {
-                if (value == null) throw new ArgumentNullException(nameof(value));
+                ThrowHelper.ThrowIfNull(value);
                 lock (s_SyncRoot) {
                     m_CrashFactory = value;
                 }

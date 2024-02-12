@@ -11,7 +11,7 @@
 
         protected override void InsertItem(int index, ICrashDataExport item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            ThrowHelper.ThrowIfNull(item);
 
             lock (m_SyncLock) {
                 if (m_Providers.Contains(item))
@@ -24,7 +24,7 @@
 
         protected override void SetItem(int index, ICrashDataExport item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            ThrowHelper.ThrowIfNull(item);
 
             lock (m_SyncLock) {
                 if (item.Equals(base[index]) || !m_Providers.Contains(item)) {

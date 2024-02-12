@@ -24,7 +24,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="row"/> is <see langword="null"/>.</exception>
         protected CrashDataExport(DumpRow row)
         {
-            if (row == null) throw new ArgumentNullException(nameof(row));
+            ThrowHelper.ThrowIfNull(row);
             m_Row = row;
         }
 

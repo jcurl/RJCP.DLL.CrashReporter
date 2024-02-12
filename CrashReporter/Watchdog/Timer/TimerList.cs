@@ -21,7 +21,7 @@
 
         public TimerList(ITimerSource timerSource)
         {
-            if (timerSource == null) throw new ArgumentNullException(nameof(timerSource));
+            ThrowHelper.ThrowIfNull(timerSource);
             m_TimerSource = timerSource;
         }
 
@@ -31,7 +31,7 @@
 
         public void Add(string item, int timeout)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            ThrowHelper.ThrowIfNull(item);
             if (m_Items.ContainsKey(item)) throw new ArgumentException("An element with the same name already exists", nameof(item));
 
             TimerItem timerItem = new TimerItem(item);
@@ -63,7 +63,7 @@
 
         public void Change(string item, int timeout)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            ThrowHelper.ThrowIfNull(item);
             if (!m_Items.TryGetValue(item, out LinkedListNode<TimerItem> timerNode))
                 throw new ArgumentException("Item doesn't exist in timer list", nameof(item));
 
@@ -73,7 +73,7 @@
 
         public bool Remove(string item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            ThrowHelper.ThrowIfNull(item);
             if (!m_Items.TryGetValue(item, out LinkedListNode<TimerItem> timerNode)) return false;
 
             m_Items.Remove(item);

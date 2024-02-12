@@ -9,7 +9,7 @@
 
         public VirtualSingleShotTimer(VirtualTimerSource timerSource)
         {
-            if (timerSource == null) throw new ArgumentNullException(nameof(timerSource));
+            ThrowHelper.ThrowIfNull(timerSource);
             m_TimerSource = timerSource;
             m_TimerSource.ClockUpdatedEvent += ClockUpdatedEvent;
         }

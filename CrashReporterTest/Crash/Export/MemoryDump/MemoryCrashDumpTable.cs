@@ -16,8 +16,8 @@
 
         internal MemoryCrashDumpTable(string tableName, string rowName)
         {
-            if (tableName == null) throw new ArgumentNullException(nameof(tableName));
-            if (rowName == null) throw new ArgumentNullException(nameof(rowName));
+            ThrowHelper.ThrowIfNull(tableName);
+            ThrowHelper.ThrowIfNull(rowName);
             TableName = tableName;
             RowName = rowName;
         }
@@ -46,7 +46,7 @@
         /// </remarks>
         public override void DumpHeader(IEnumerable<string> header)
         {
-            if (header == null) throw new ArgumentNullException(nameof(header));
+            ThrowHelper.ThrowIfNull(header);
             if (m_Rows.Count > 0) throw new InvalidOperationException("Dump header after dumping at least one row is invalid");
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             DumpHeaderInternal(header);
@@ -94,7 +94,7 @@
         /// </remarks>
         public override void DumpRow(IDictionary<string, string> row)
         {
-            if (row == null) throw new ArgumentNullException(nameof(row));
+            ThrowHelper.ThrowIfNull(row);
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
             DumpRowInternal(row);
@@ -154,7 +154,7 @@
 #if !NET40_LEGACY
         public override Task DumpHeaderAsync(IEnumerable<string> header)
         {
-            if (header == null) throw new ArgumentNullException(nameof(header));
+            ThrowHelper.ThrowIfNull(header);
             if (m_Rows.Count > 0) throw new InvalidOperationException("Dump header after dumping at least one row is invalid");
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             return Task.Run(() => { DumpHeaderInternal(header); });
@@ -162,7 +162,7 @@
 
         public override Task DumpRowAsync(IDictionary<string, string> row)
         {
-            if (row == null) throw new ArgumentNullException(nameof(row));
+            ThrowHelper.ThrowIfNull(row);
             if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
             return Task.Run(() => { DumpRowInternal(row); });

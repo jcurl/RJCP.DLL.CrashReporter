@@ -23,7 +23,7 @@
         /// </exception>
         public DumpRow(params string[] header)
         {
-            if (header == null) throw new ArgumentNullException(nameof(header));
+            ThrowHelper.ThrowIfNull(header);
             if (header.Length == 0) throw new ArgumentException("Header must have at least one field", nameof(header));
 
             m_Header = new List<string>(header.Length);

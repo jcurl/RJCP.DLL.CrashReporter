@@ -168,8 +168,8 @@
         /// </example>
         public static bool SetFirstChanceException(this AppDomain appDomain, EventHandler<FirstChanceExceptionEventArgs> handler)
         {
-            if (appDomain == null) throw new ArgumentNullException(nameof(appDomain));
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            ThrowHelper.ThrowIfNull(appDomain);
+            ThrowHelper.ThrowIfNull(handler);
             return SetFirstChanceExceptionUser(appDomain, handler);
         }
 
@@ -461,7 +461,7 @@
         /// </remarks>
         public static void CleanUpDump(string dumpFolder, string fileMatchRegEx)
         {
-            if (dumpFolder == null) throw new ArgumentNullException(nameof(dumpFolder));
+            ThrowHelper.ThrowIfNull(dumpFolder);
             if (!Directory.Exists(dumpFolder)) return;
 
             Regex crashFileRegex = null;

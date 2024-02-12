@@ -19,7 +19,7 @@
 
         public void CreateFile(string fileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            ThrowHelper.ThrowIfNull(fileName);
             if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
 
             if (Directory.Exists(fileName)) {
@@ -42,8 +42,8 @@
 
         public void CreateFile(Stream stream, string path)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-            if (path == null) throw new ArgumentNullException(nameof(path));
+            ThrowHelper.ThrowIfNull(stream);
+            ThrowHelper.ThrowIfNull(path);
             if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
 
             m_Stream = stream;
@@ -200,7 +200,7 @@
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
         public Task CreateFileAsync(string fileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            ThrowHelper.ThrowIfNull(fileName);
             Path = System.IO.Path.GetDirectoryName(fileName);
             return CreateFileInternalAsync(fileName);
         }
@@ -220,8 +220,8 @@
 
         public Task CreateFileAsync(Stream stream, string path)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-            if (path == null) throw new ArgumentNullException(nameof(path));
+            ThrowHelper.ThrowIfNull(stream);
+            ThrowHelper.ThrowIfNull(path);
             if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
 
             m_Stream = stream;

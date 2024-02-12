@@ -36,7 +36,7 @@
         /// </remarks>
         public ICrashDataDumpFile Create(string fileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            ThrowHelper.ThrowIfNull(fileName);
 
             XmlCrashDumper dumper = new XmlCrashDumper();
             try {
@@ -64,8 +64,8 @@
         /// </exception>
         public ICrashDataDumpFile Create(Stream stream, string path)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-            if (path == null) throw new ArgumentNullException(nameof(path));
+            ThrowHelper.ThrowIfNull(stream);
+            ThrowHelper.ThrowIfNull(path);
 
             XmlCrashDumper dumper = new XmlCrashDumper();
             try {
@@ -94,7 +94,7 @@
         /// </remarks>
         public Task<ICrashDataDumpFile> CreateAsync(string fileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            ThrowHelper.ThrowIfNull(fileName);
             return CreateAsyncInternal(fileName);
         }
 
@@ -126,8 +126,8 @@
         /// </exception>
         public Task<ICrashDataDumpFile> CreateAsync(Stream stream, string path)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-            if (path == null) throw new ArgumentNullException(nameof(path));
+            ThrowHelper.ThrowIfNull(stream);
+            ThrowHelper.ThrowIfNull(path);
             return CreateAsyncInternal(stream, path);
         }
 
