@@ -25,26 +25,26 @@
         {
             try {
                 using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full")) {
-                    if (key == null) {
+                    if (key is null) {
                         IsValid = false;
                         return;
                     }
 
                     object objRelease = key.GetValue("Release");
-                    if (objRelease == null) return;
+                    if (objRelease is null) return;
                     GetNetVersion((int)objRelease);
 
                     object objTargetVersion = key.GetValue("TargetVersion");
-                    if (objTargetVersion != null) {
+                    if (objTargetVersion is not null) {
                         TargetVersion = new Version(objTargetVersion as string);
                     }
 
                     object objNetVersion = key.GetValue("Version");
-                    if (objNetVersion != null) {
+                    if (objNetVersion is not null) {
                         NetVersion = new Version(objNetVersion as string);
                     }
 
-                    if (Version == null) {
+                    if (Version is null) {
                         Version = NetVersion.ToString();
                         Description = string.Format(".NET Framework Net Version {0}, Release {1}", NetVersion, Net45Release);
                     }
@@ -63,7 +63,7 @@
             Net45Release = release;
 
             NetFxVersion details = NetFxConfig.GetNetFxVersion(release);
-            if (details == null) return;
+            if (details is null) return;
             Version = details.Version;
             Description = details.Description;
         }

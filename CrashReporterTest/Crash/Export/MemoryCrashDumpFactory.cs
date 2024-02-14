@@ -23,7 +23,7 @@
 
         private ICrashDataDumpFile CreateDefault()
         {
-            MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile {
+            MemoryCrashDataDumpFile dump = new() {
                 IsSynchronous = IsSynchronous
             };
             return dump;

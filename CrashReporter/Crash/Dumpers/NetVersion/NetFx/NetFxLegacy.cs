@@ -32,10 +32,10 @@
             string fullKeyPath = string.Format(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\{0}", key);
             using (RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(fullKeyPath)) {
                 IsValid = false;
-                if (registryKey == null) return;
+                if (registryKey is null) return;
 
                 string installed = registryKey.GetValue("Install", "").ToString();
-                if (installed == null || installed != "1") return;
+                if (installed is not "1") return;
 
                 string[] path = key.Split('\\');
 
@@ -51,7 +51,7 @@
                 string servicePack = registryKey.GetValue("SP", "").ToString();
                 if (servicePack.Equals("0")) servicePack = string.Empty;
 
-                StringBuilder version = new StringBuilder();
+                StringBuilder version = new();
 #if NETFRAMEWORK
                 version.Append(path[0].Substring(1));
 #else
@@ -61,7 +61,7 @@
                 if (!string.IsNullOrEmpty(servicePack)) version.Append(" SP").Append(servicePack);
                 Version = version.ToString();
 
-                StringBuilder description = new StringBuilder();
+                StringBuilder description = new();
                 description.Append(".NET Framework ").Append(netVersion);
                 if (path.Length >= 2) description.Append(" Profile ").Append(path[1]);
                 if (!string.IsNullOrEmpty(servicePack)) description.Append(" SP").Append(servicePack);

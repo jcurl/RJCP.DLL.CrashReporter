@@ -7,7 +7,7 @@
     {
         private const string AssemblyName = "RJCP.Diagnostics.CrashReporter";
         private const string TypeName = "RJCP.Diagnostics.Watchdog.Timer.TimerList";
-        public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
         public TimerListAccessor(ITimerSource timerSource) : base(AccType, timerSource) { }
 

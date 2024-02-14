@@ -13,7 +13,7 @@
     internal class MemoryLogDump : ICrashDataExport
     {
         private readonly IMemoryLog m_MemoryLog;
-        private readonly object m_SyncLock = new object();
+        private readonly object m_SyncLock = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryLogDump"/> class.
@@ -52,7 +52,7 @@
         private const string LogThreadId = "threadid";
         private const string LogMessage = "message";
 
-        private readonly DumpRow m_Row = new DumpRow(
+        private readonly DumpRow m_Row = new(
             LogInternalClock, LogDateTime, LogEventType, LogSource,
             LogId, LogThreadId, LogMessage);
 
@@ -99,7 +99,7 @@
                 await table.DumpHeaderAsync(m_Row);
 
                 // We can't use awaitable inside a lock, so we need to first copy the data.
-                List<LogEntry> list = new List<LogEntry>();
+                List<LogEntry> list = new();
                 lock (m_SyncLock) {
                     foreach (var entry in m_MemoryLog) {
                         list.Add(entry);

@@ -13,7 +13,7 @@
         private void GetMonoVersion()
         {
             Type monoType = Type.GetType("Mono.Runtime");
-            if (monoType == null) {
+            if (monoType is null) {
                 IsValid = false;
                 return;
             }
@@ -21,7 +21,7 @@
             Version = Environment.Version.ToString();
 
             MethodInfo displayName = monoType.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
-            if (displayName != null) {
+            if (displayName is not null) {
                 Description = string.Format("Mono {0}", displayName.Invoke(null, null));
             }
 

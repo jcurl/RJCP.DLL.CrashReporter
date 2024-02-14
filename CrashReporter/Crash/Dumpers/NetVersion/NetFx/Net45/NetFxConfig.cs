@@ -6,7 +6,7 @@
     internal static class NetFxConfig
     {
         // https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
-        private readonly static Dictionary<int, NetFxVersion> Versions = new Dictionary<int, NetFxVersion>() {
+        private readonly static Dictionary<int, NetFxVersion> Versions = new() {
             { 378389, new NetFxVersion("4.5", ".NET Framework 4.5") },
             { 378675, new NetFxVersion("4.5.1", ".NET Framework 4.5.1 installed with Windows 8.1 or Windows Server 2012 R2") },
             { 378758, new NetFxVersion("4.5.1", ".NET Framework 4.5.1 installed on Windows 8, Windows 7 SP1, or Windows Vista SP2") },
@@ -39,7 +39,7 @@
             NetFxVersion derivedVersion = null;
             foreach (var netVersion in versionList) {
                 if (netVersion.Key >= release) {
-                    if (derivedVersion == null) {
+                    if (derivedVersion is null) {
                         return new NetFxVersion("< 4.5", $"Unknown .NET version before .NET 4.5 ({release})");
                     }
                     derivedVersion = netVersion.Value;
@@ -50,7 +50,7 @@
 
             // This can't happen, because the enumeration will always have at least one element, but quiesces a
             // possible null pointer warning.
-            if (derivedVersion == null) return null;
+            if (derivedVersion is null) return null;
 
             return new NetFxVersion(derivedVersion.Version,
                 $".NET {derivedVersion.Version} or later, release {release}");

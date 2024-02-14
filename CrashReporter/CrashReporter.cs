@@ -98,7 +98,7 @@
         public static bool SetFirstChanceException()
         {
             AppDomain appDomain = AppDomain.CurrentDomain;
-            Native.AppDomainAccessor accessor = new Native.AppDomainAccessor(appDomain);
+            Native.AppDomainAccessor accessor = new(appDomain);
             if (!accessor.IsSupported) return false;
             return accessor.SetFirstChanceException(FirstChanceExceptionHandler);
         }
@@ -175,7 +175,7 @@
 
         private static bool SetFirstChanceExceptionUser(AppDomain appDomain, EventHandler<FirstChanceExceptionEventArgs> handler)
         {
-            Native.AppDomainAccessor accessor = new Native.AppDomainAccessor(appDomain);
+            Native.AppDomainAccessor accessor = new(appDomain);
             if (accessor.IsSupported) {
                 UserHandler += handler;
                 return accessor.SetFirstChanceException(FirstChanceExceptionHandlerUser);
@@ -214,7 +214,7 @@
             if (counter > 0) return;
 
             if (Log.CrashLog.ShouldTrace(TraceEventType.Information)) {
-                StackTrace stack = new StackTrace(true);
+                StackTrace stack = new(true);
                 Log.CrashLog.TraceEvent(TraceEventType.Information,
                     "First Chance Exception ({0}): {1}\n{2}",
                     args.Exception.GetType().ToString(), args.Exception.Message, stack.ToString());
@@ -227,7 +227,7 @@
             if (counter > 0) return;
 
             EventHandler<FirstChanceExceptionEventArgs> handler = UserHandler;
-            if (handler != null) handler(sender, args);
+            if (handler is not null) handler(sender, args);
         }
 
         /// <summary>
@@ -254,8 +254,8 @@
                 if (args.IsTerminating) {
                     Log.CrashLog.TraceEvent(TraceEventType.Critical, "Unhandled Exception: Terminating!");
                 }
-                StackTrace stack = new StackTrace(true);
-                if (!(args.ExceptionObject is Exception ex)) {
+                StackTrace stack = new(true);
+                if (args.ExceptionObject is not Exception ex) {
                     Log.CrashLog.TraceEvent(TraceEventType.Critical,
                         "Unhandled Exception ({0}): {1}\n{2}",
                         args.ExceptionObject.GetType().ToString(), args.ExceptionObject.ToString(), stack.ToString());
@@ -343,14 +343,14 @@
         /// </remarks>
         public static string CreateDump(string fileName, CoreType coreType)
         {
-            if (fileName == null) {
+            if (fileName is null) {
                 try {
                     CleanUpDump();
                 } catch { /* Ignore any errors while trying to clean up the dump, so we can continue to crash */ }
             }
 
             string crashDumpFile = null;
-            if (fileName != null) {
+            if (fileName is not null) {
                 // If the file name has a known extension, then remove it. It will be added back later.
                 string extension = Path.GetExtension(fileName);
                 if (extension.Equals(".zip", StringComparison.OrdinalIgnoreCase)) {
@@ -363,12 +363,12 @@
 
             string crashDumpPath;
             try {
-                if (crashDumpFile == null) {
+                if (crashDumpFile is null) {
                     crashDumpPath = CrashData.Instance.Dump();
                 } else {
                     crashDumpPath = CrashData.Instance.Dump(crashDumpFile);
                 }
-                if (crashDumpPath == null) return null;
+                if (crashDumpPath is null) return null;
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, "Error creating dump: {0}", ex.ToString());
                 throw;
@@ -398,7 +398,7 @@
             string dumpFileName;
             try {
                 dumpFileName = Compress.CompressFolder(coreDumpDir);
-                if (dumpFileName != null && File.Exists(dumpFileName)) {
+                if (dumpFileName is not null && File.Exists(dumpFileName)) {
                     // Only delete if compression was successful.
                     FileSystem.DeleteFolder(coreDumpDir);
 
@@ -465,7 +465,7 @@
             if (!Directory.Exists(dumpFolder)) return;
 
             Regex crashFileRegex = null;
-            if (fileMatchRegEx != null) {
+            if (fileMatchRegEx is not null) {
                 try {
                     crashFileRegex = new Regex(fileMatchRegEx);
                 } catch (ArgumentException) {
@@ -481,21 +481,21 @@
             } catch (PathTooLongException) {
                 return;
             }
-            DriveInfo drive = new DriveInfo(directory.Root.FullName);
+            DriveInfo drive = new(directory.Root.FullName);
 
             DirectoryInfo[] subDirs = directory.GetDirectories();
-            if (subDirs != null) {
+            if (subDirs is not null) {
                 foreach (DirectoryInfo subDir in subDirs) {
-                    if (crashFileRegex == null || crashFileRegex.IsMatch(subDir.Name)) {
+                    if (crashFileRegex is null || crashFileRegex.IsMatch(subDir.Name)) {
                         crashCandidates.Add(subDir);
                     }
                 }
             }
 
             FileInfo[] files = directory.GetFiles();
-            if (files != null) {
+            if (files is not null) {
                 foreach (FileInfo file in files) {
-                    if (crashFileRegex == null || crashFileRegex.IsMatch(file.Name)) {
+                    if (crashFileRegex is null || crashFileRegex.IsMatch(file.Name)) {
                         crashCandidates.Add(file);
                     }
                 }
@@ -575,7 +575,7 @@
         {
             if (candidates.Count == 0) return candidates;
 
-            Dictionary<FileSystemInfo, long> sizes = new Dictionary<FileSystemInfo, long>();
+            Dictionary<FileSystemInfo, long> sizes = new();
             long totalSize = 0;
             foreach (var candidate in candidates) {
                 long size = FileSystem.GetSize(candidate);

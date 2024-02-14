@@ -31,7 +31,7 @@
         protected virtual void OnClockUpdatedEvent(object sender, EventArgs args)
         {
             EventHandler handler = ClockUpdatedEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is not null) handler(sender, args);
         }
     }
 }

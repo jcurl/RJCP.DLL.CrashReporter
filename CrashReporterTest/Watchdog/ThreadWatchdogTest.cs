@@ -13,18 +13,18 @@
         [TestCase]
         public void RegisterWatchdog()
         {
-            Timer.VirtualTimerSource vTimerSource = new Timer.VirtualTimerSource(0);
-            Timer.VirtualSingleShotTimer vTimer = new Timer.VirtualSingleShotTimer(vTimerSource);
-            ThreadWatchdog watchdog = new ThreadWatchdog(vTimerSource, vTimer);
+            Timer.VirtualTimerSource vTimerSource = new(0);
+            Timer.VirtualSingleShotTimer vTimer = new(vTimerSource);
+            ThreadWatchdog watchdog = new(vTimerSource, vTimer);
             Assert.That(watchdog.Register("1", 30000, 45000), Is.True);
         }
 
         [TestCaseSource(nameof(InitialClocks))]
         public void WatchdogWarningCritical(int initialClock)
         {
-            Timer.VirtualTimerSource vTimerSource = new Timer.VirtualTimerSource(initialClock);
-            Timer.VirtualSingleShotTimer vTimer = new Timer.VirtualSingleShotTimer(vTimerSource);
-            ThreadWatchdog watchdog = new ThreadWatchdog(vTimerSource, vTimer);
+            Timer.VirtualTimerSource vTimerSource = new(initialClock);
+            Timer.VirtualSingleShotTimer vTimer = new(vTimerSource);
+            ThreadWatchdog watchdog = new(vTimerSource, vTimer);
 
             bool warning = false; bool critical = false;
             watchdog.WarningEvent += (s, e) => { warning = true; };
@@ -69,9 +69,9 @@
         [TestCaseSource(nameof(InitialClocks))]
         public void WatchdogNoWarningPing(int initialClock)
         {
-            Timer.VirtualTimerSource vTimerSource = new Timer.VirtualTimerSource(initialClock);
-            Timer.VirtualSingleShotTimer vTimer = new Timer.VirtualSingleShotTimer(vTimerSource);
-            ThreadWatchdog watchdog = new ThreadWatchdog(vTimerSource, vTimer);
+            Timer.VirtualTimerSource vTimerSource = new(initialClock);
+            Timer.VirtualSingleShotTimer vTimer = new(vTimerSource);
+            ThreadWatchdog watchdog = new(vTimerSource, vTimer);
 
             bool warning = false; bool critical = false;
             watchdog.WarningEvent += (s, e) => { warning = true; };
@@ -102,9 +102,9 @@
         [TestCaseSource(nameof(InitialClocks))]
         public void WatchdogWarningPing(int initialClock)
         {
-            Timer.VirtualTimerSource vTimerSource = new Timer.VirtualTimerSource(initialClock);
-            Timer.VirtualSingleShotTimer vTimer = new Timer.VirtualSingleShotTimer(vTimerSource);
-            ThreadWatchdog watchdog = new ThreadWatchdog(vTimerSource, vTimer);
+            Timer.VirtualTimerSource vTimerSource = new(initialClock);
+            Timer.VirtualSingleShotTimer vTimer = new(vTimerSource);
+            ThreadWatchdog watchdog = new(vTimerSource, vTimer);
 
             bool warning = false; bool critical = false;
             watchdog.WarningEvent += (s, e) => { warning = true; };
@@ -140,9 +140,9 @@
         [TestCaseSource(nameof(InitialClocks))]
         public void WatchdogWarningCriticalPing(int initialClock)
         {
-            Timer.VirtualTimerSource vTimerSource = new Timer.VirtualTimerSource(initialClock);
-            Timer.VirtualSingleShotTimer vTimer = new Timer.VirtualSingleShotTimer(vTimerSource);
-            ThreadWatchdog watchdog = new ThreadWatchdog(vTimerSource, vTimer);
+            Timer.VirtualTimerSource vTimerSource = new(initialClock);
+            Timer.VirtualSingleShotTimer vTimer = new(vTimerSource);
+            ThreadWatchdog watchdog = new(vTimerSource, vTimer);
 
             bool warning = false; bool critical = false;
             watchdog.WarningEvent += (s, e) => { warning = true; };
@@ -179,9 +179,9 @@
         [TestCaseSource(nameof(InitialClocks))]
         public void MultipleWatchdogsCritical(int initialClock)
         {
-            Timer.VirtualTimerSource vTimerSource = new Timer.VirtualTimerSource(initialClock);
-            Timer.VirtualSingleShotTimer vTimer = new Timer.VirtualSingleShotTimer(vTimerSource);
-            ThreadWatchdog watchdog = new ThreadWatchdog(vTimerSource, vTimer);
+            Timer.VirtualTimerSource vTimerSource = new(initialClock);
+            Timer.VirtualSingleShotTimer vTimer = new(vTimerSource);
+            ThreadWatchdog watchdog = new(vTimerSource, vTimer);
 
             int warning = 0; int critical = 0;
             watchdog.WarningEvent += (s, e) => { warning++; };
@@ -213,9 +213,9 @@
         [TestCaseSource(nameof(InitialClocks))]
         public void UnregisterBeforeWarning(int initialClock)
         {
-            Timer.VirtualTimerSource vTimerSource = new Timer.VirtualTimerSource(initialClock);
-            Timer.VirtualSingleShotTimer vTimer = new Timer.VirtualSingleShotTimer(vTimerSource);
-            ThreadWatchdog watchdog = new ThreadWatchdog(vTimerSource, vTimer);
+            Timer.VirtualTimerSource vTimerSource = new(initialClock);
+            Timer.VirtualSingleShotTimer vTimer = new(vTimerSource);
+            ThreadWatchdog watchdog = new(vTimerSource, vTimer);
 
             int warning = 0; int critical = 0;
             watchdog.WarningEvent += (s, e) => { warning++; };

@@ -23,7 +23,7 @@
         internal DumpDir(DumpDirElement dumpDir) : this()
         {
             string path = Parser.ParseEnvVar(dumpDir.Path);
-            if (path != null) Path = path;
+            if (path is not null) Path = path;
 
             if (int.TryParse(dumpDir.AgeDays, out int ageDays)) {
                 if (ageDays <= 0) ageDays = 1;

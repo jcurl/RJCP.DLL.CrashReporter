@@ -52,7 +52,7 @@
         {
             using (Process proc = Process.GetCurrentProcess()) {
                 foreach (ProcessThread thread in proc.Threads) {
-                    if (thread != null) yield return thread;
+                    if (thread is not null) yield return thread;
                 }
             }
         }

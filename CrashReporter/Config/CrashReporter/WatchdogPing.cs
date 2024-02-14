@@ -32,7 +32,7 @@
                 if (m_DisableStack) return false;
 
                 // Default behavior is to capture the stack (i.e. return true if null).
-                return m_WatchdogPing == null ||
+                return m_WatchdogPing is null ||
                     m_WatchdogPing.StackCapture;
             }
             set

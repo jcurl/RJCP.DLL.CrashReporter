@@ -10,14 +10,14 @@
         [Test]
         public void DefaultSettings()
         {
-            SimplePrioMemoryLog log = new SimplePrioMemoryLog();
+            SimplePrioMemoryLog log = new();
             Assert.That(log.Critical + log.Error + log.Warning + log.Info + log.Verbose, Is.LessThanOrEqualTo(log.Total));
         }
 
         [Test]
         public void DiscardLowerPriority()
         {
-            SimplePrioMemoryLog log = new SimplePrioMemoryLog {
+            SimplePrioMemoryLog log = new() {
                 Critical = 3,
                 Error = 3,
                 Warning = 3,

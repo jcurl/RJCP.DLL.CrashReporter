@@ -10,7 +10,7 @@
     {
         private const string AssemblyName = "RJCP.Diagnostics.CrashReporter";
         private const string TypeName = "RJCP.Diagnostics.Crash.Dumpers.ThreadDump";
-        public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
         public ThreadDumpAccessor() : base(AccType) { }
 

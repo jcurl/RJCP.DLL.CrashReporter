@@ -6,7 +6,7 @@
 
     internal static class ProcessInfo
     {
-        private static readonly object ProcessInfoLock = new object();
+        private static readonly object ProcessInfoLock = new();
         private static string s_ProcessName;
 
 #if NETFRAMEWORK
@@ -17,9 +17,9 @@
         {
             get
             {
-                if (s_ProcessName == null) {
+                if (s_ProcessName is null) {
                     lock (ProcessInfoLock) {
-                        if (s_ProcessName == null) {
+                        if (s_ProcessName is null) {
 #if NET6_0_OR_GREATER
                             string name = Environment.ProcessPath;
                             if (File.Exists(name)) {

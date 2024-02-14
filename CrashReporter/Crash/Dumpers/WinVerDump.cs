@@ -47,19 +47,19 @@
         /// <returns>An enumerable object.</returns>
         protected override IEnumerable<KeyValuePair<string, string>> GetRows()
         {
-            OSVersion.OSVersion winVer = new OSVersion.OSVersion();
+            OSVersion.OSVersion winVer = new();
             return new List<KeyValuePair<string, string>>() {
-                new KeyValuePair<string, string>("version", winVer.Version.ToString()),
-                new KeyValuePair<string, string>("servicepack", winVer.ServicePack.ToString()),
-                new KeyValuePair<string, string>("csdversion", winVer.CsdVersion),
-                new KeyValuePair<string, string>("platform", winVer.PlatformId.ToString()),
-                new KeyValuePair<string, string>("productInfo", winVer.ProductInfo.ToString()),
-                new KeyValuePair<string, string>("productType", winVer.ProductType.ToString()),
-                new KeyValuePair<string, string>("suite", winVer.SuiteFlags.ToString()),
-                new KeyValuePair<string, string>("nativearchitecture", winVer.NativeArchitecture),
-                new KeyValuePair<string, string>("architecture", winVer.Architecture),
-                new KeyValuePair<string, string>("r2", winVer.ServerR2.ToString()),
-                new KeyValuePair<string, string>("releaseInfo", winVer.ReleaseInfo)
+                new("version", winVer.Version.ToString()),
+                new("servicepack", winVer.ServicePack.ToString()),
+                new("csdversion", winVer.CsdVersion),
+                new("platform", winVer.PlatformId.ToString()),
+                new("productInfo", winVer.ProductInfo.ToString()),
+                new("productType", winVer.ProductType.ToString()),
+                new("suite", winVer.SuiteFlags.ToString()),
+                new("nativearchitecture", winVer.NativeArchitecture),
+                new("architecture", winVer.Architecture),
+                new("r2", winVer.ServerR2.ToString()),
+                new("releaseInfo", winVer.ReleaseInfo)
             };
         }
 

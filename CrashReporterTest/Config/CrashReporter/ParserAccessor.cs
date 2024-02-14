@@ -5,7 +5,7 @@
     public static class ParserAccessor
     {
         private static readonly PrivateType AccessorType =
-            new PrivateType("RJCP.Diagnostics.CrashReporter", "RJCP.Diagnostics.Config.CrashReporter.Parser");
+            new("RJCP.Diagnostics.CrashReporter", "RJCP.Diagnostics.Config.CrashReporter.Parser");
 
         public static string ParseEnvVar(string envVar)
         {

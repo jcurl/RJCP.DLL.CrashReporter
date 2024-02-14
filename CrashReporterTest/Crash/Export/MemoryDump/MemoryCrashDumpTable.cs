@@ -10,9 +10,9 @@
 
     public sealed class MemoryCrashDumpTable : DumpTable, IEnumerable<IFields>
     {
-        private readonly object m_SyncRoot = new object();
-        private readonly List<string> m_Fields = new List<string>();
-        private readonly List<IFields> m_Rows = new List<IFields>();
+        private readonly object m_SyncRoot = new();
+        private readonly List<string> m_Fields = new();
+        private readonly List<IFields> m_Rows = new();
 
         internal MemoryCrashDumpTable(string tableName, string rowName)
         {
@@ -55,7 +55,7 @@
         private void DumpHeaderInternal(IEnumerable<string> header)
         {
             lock (m_SyncRoot) {
-                HashSet<string> fields = new HashSet<string>();
+                HashSet<string> fields = new();
                 foreach (string field in header) {
                     if (string.IsNullOrEmpty(field)) throw new ArgumentException("Field provided that is null or empty", nameof(header));
                     if (!CheckField(field)) {

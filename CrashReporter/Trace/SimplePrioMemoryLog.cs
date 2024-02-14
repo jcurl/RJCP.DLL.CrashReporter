@@ -28,7 +28,7 @@
                 Minimum = defaultMinimum;
             }
 
-            private readonly Queue<LogEntry> m_Log = new Queue<LogEntry>();
+            private readonly Queue<LogEntry> m_Log = new();
 
             public Queue<LogEntry> LogList { get { return m_Log; } }
 
@@ -48,12 +48,12 @@
         }
 
         // The logs. m_Other is the lowest priority for all undefined log levels.
-        private readonly Log m_Critical = new Log(CriticalDefault);
-        private readonly Log m_Error = new Log(ErrorDefault);
-        private readonly Log m_Warning = new Log(WarningDefault);
-        private readonly Log m_Info = new Log(InfoDefault);
-        private readonly Log m_Verbose = new Log(VerboseDefault);
-        private readonly Log m_Other = new Log(OtherDefault);
+        private readonly Log m_Critical = new(CriticalDefault);
+        private readonly Log m_Error = new(ErrorDefault);
+        private readonly Log m_Warning = new(WarningDefault);
+        private readonly Log m_Info = new(InfoDefault);
+        private readonly Log m_Verbose = new(VerboseDefault);
+        private readonly Log m_Other = new(OtherDefault);
 
         // Defines the prioritized order of the logs. First is lowest priority.
         private readonly List<KeyValuePair<TraceEventType, Log>> m_Log;
@@ -67,11 +67,11 @@
         public SimplePrioMemoryLog()
         {
             m_Log = new List<KeyValuePair<TraceEventType, Log>>() {
-                new KeyValuePair<TraceEventType, Log>(TraceEventType.Verbose, m_Verbose),
-                new KeyValuePair<TraceEventType, Log>(TraceEventType.Information, m_Info),
-                new KeyValuePair<TraceEventType, Log>(TraceEventType.Warning, m_Warning),
-                new KeyValuePair<TraceEventType, Log>(TraceEventType.Error, m_Error),
-                new KeyValuePair<TraceEventType, Log>(TraceEventType.Critical, m_Critical),
+                new(TraceEventType.Verbose, m_Verbose),
+                new(TraceEventType.Information, m_Info),
+                new(TraceEventType.Warning, m_Warning),
+                new(TraceEventType.Error, m_Error),
+                new(TraceEventType.Critical, m_Critical),
             };
             m_LogMap = new Dictionary<TraceEventType, Log>() {
                 { TraceEventType.Verbose, m_Verbose },
@@ -357,7 +357,7 @@
 
                 public void Reset()
                 {
-                    if (m_Enumerator != null) m_Enumerator.Dispose();
+                    if (m_Enumerator is not null) m_Enumerator.Dispose();
                     m_Enumerator = m_List.LogList.GetEnumerator();
                     IsValid = true;
                     MoveNext();
@@ -365,7 +365,7 @@
 
                 public void Close()
                 {
-                    if (m_Enumerator != null) m_Enumerator.Dispose();
+                    if (m_Enumerator is not null) m_Enumerator.Dispose();
                     Current = null;
                     m_Enumerator = null;
                     IsValid = false;
@@ -377,12 +377,12 @@
             public MemoryLogEnumerator(SimplePrioMemoryLog parent)
             {
                 m_Logs = new List<Indexer>() {
-                    new Indexer(parent.m_Critical),
-                    new Indexer(parent.m_Error),
-                    new Indexer(parent.m_Warning),
-                    new Indexer(parent.m_Info),
-                    new Indexer(parent.m_Verbose),
-                    new Indexer(parent.m_Other),
+                    new(parent.m_Critical),
+                    new(parent.m_Error),
+                    new(parent.m_Warning),
+                    new(parent.m_Info),
+                    new(parent.m_Verbose),
+                    new(parent.m_Other),
                 };
             }
 
@@ -398,14 +398,14 @@
 
                 foreach (var log in m_Logs) {
                     if (log.IsValid) {
-                        if (next == null) {
+                        if (next is null) {
                             next = log;
                         } else if (log.Current.DateTime < next.Current.DateTime) {
                             next = log;
                         }
                     }
                 }
-                if (next == null) return false;
+                if (next is null) return false;
                 m_Current = next.Current;
                 next.MoveNext();
                 return true;

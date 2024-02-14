@@ -73,7 +73,7 @@
         public static bool Create(string path, CoreType dumpType)
         {
             if (!Platform.IsWinNT()) return false;
-            if (path == null) return false;
+            if (path is null) return false;
             if (dumpType == CoreType.None) return false;
 
             // For some useful information about making dumps:
@@ -133,7 +133,7 @@
                         IntPtr.Zero);
                 } else {
                     DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
-                    new DbgHelp.MINIDUMP_EXCEPTION_INFORMATION {
+                    new() {
                         ClientPointers = 0,
                         ExceptionPointers = Marshal.GetExceptionPointers(),
                         ThreadId = Kernel32.GetCurrentThreadId()
@@ -150,7 +150,7 @@
                 }
 #else
                 DbgHelp.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
-                    new DbgHelp.MINIDUMP_EXCEPTION_INFORMATION {
+                    new() {
                         ClientPointers = 0,
                         ExceptionPointers = Marshal.GetExceptionPointers(),
                         ThreadId = Kernel32.GetCurrentThreadId()

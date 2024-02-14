@@ -23,7 +23,7 @@
         {
             get
             {
-                if (m_Overrides == null || name == null) return null;
+                if (m_Overrides is null || name is null) return null;
                 return new WatchdogOverride(m_Overrides[name]);
             }
         }
@@ -40,12 +40,12 @@
         /// </returns>
         public bool TryGetOverride(string name, out WatchdogOverride wdOverride)
         {
-            if (m_Overrides == null) {
+            if (m_Overrides is null) {
                 wdOverride = null;
                 return false;
             }
             wdOverride = this[name];
-            return wdOverride != null;
+            return wdOverride is not null;
         }
     }
 }

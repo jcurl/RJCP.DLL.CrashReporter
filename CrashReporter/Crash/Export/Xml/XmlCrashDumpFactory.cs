@@ -38,7 +38,7 @@
         {
             ThrowHelper.ThrowIfNull(fileName);
 
-            XmlCrashDumper dumper = new XmlCrashDumper();
+            XmlCrashDumper dumper = new();
             try {
                 dumper.CreateFile(fileName);
             } catch {
@@ -67,7 +67,7 @@
             ThrowHelper.ThrowIfNull(stream);
             ThrowHelper.ThrowIfNull(path);
 
-            XmlCrashDumper dumper = new XmlCrashDumper();
+            XmlCrashDumper dumper = new();
             try {
                 dumper.CreateFile(stream, path);
             } catch {
@@ -100,7 +100,7 @@
 
         private static async Task<ICrashDataDumpFile> CreateAsyncInternal(string fileName)
         {
-            XmlCrashDumper dumper = new XmlCrashDumper();
+            XmlCrashDumper dumper = new();
             try {
                 await dumper.CreateFileAsync(fileName);
             } catch {
@@ -133,7 +133,7 @@
 
         private static async Task<ICrashDataDumpFile> CreateAsyncInternal(Stream stream, string path)
         {
-            XmlCrashDumper dumper = new XmlCrashDumper();
+            XmlCrashDumper dumper = new();
             try {
                 await dumper.CreateFileAsync(stream, path);
             } catch {

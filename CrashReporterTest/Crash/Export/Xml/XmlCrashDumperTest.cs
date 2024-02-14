@@ -26,7 +26,7 @@
 
                 Assert.That(File.Exists(dumpFileName), Is.True);
 
-                XmlDocument document = new XmlDocument();
+                XmlDocument document = new();
                 document.Load(dumpFileName);
                 Assert.That(CheckDocument(document), Is.True);
             }
@@ -37,7 +37,7 @@
         {
             using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.CreateScratch | ScratchOptions.KeepCurrentDir)) {
                 ICrashDumpFactory factory = new XmlCrashDumpFactory();
-                using (MemoryStream ms = new MemoryStream()) {
+                using (MemoryStream ms = new()) {
                     using (ICrashDataDumpFile dump = factory.Create(ms, scratch.Path)) {
                         ICrashDataExport block = new TestBlock();
                         block.Dump(dump);
@@ -45,7 +45,7 @@
                     }
                     ms.Seek(0, SeekOrigin.Begin);
 
-                    XmlDocument document = new XmlDocument();
+                    XmlDocument document = new();
                     document.Load(ms);
                     Assert.That(CheckDocument(document), Is.True);
                 }
@@ -64,16 +64,16 @@
         {
             using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.CreateScratch | ScratchOptions.KeepCurrentDir)) {
                 ICrashDumpFactory factory = new XmlCrashDumpFactory();
-                using (MemoryStream ms = new MemoryStream()) {
+                using (MemoryStream ms = new()) {
                     using (ICrashDataDumpFile dump = factory.Create(ms, scratch.Path)) {
-                        TestBlock block = new TestBlock();
+                        TestBlock block = new();
                         block.AddEntry("TestKey", input);
                         block.Dump(dump);
                         dump.Flush();
                     }
                     ms.Seek(0, SeekOrigin.Begin);
 
-                    XmlDocument document = new XmlDocument();
+                    XmlDocument document = new();
                     document.Load(ms);
                     Assert.That(CheckDocument(document), Is.True);
 
@@ -106,7 +106,7 @@
 
                 Assert.That(File.Exists(dumpFileName), Is.True);
 
-                XmlDocument document = new XmlDocument();
+                XmlDocument document = new();
                 document.Load(dumpFileName);
                 Assert.That(CheckDocument(document), Is.True);
             }
@@ -117,7 +117,7 @@
         {
             using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.CreateScratch | ScratchOptions.KeepCurrentDir)) {
                 ICrashDumpFactory factory = new XmlCrashDumpFactory();
-                using (MemoryStream ms = new MemoryStream()) {
+                using (MemoryStream ms = new()) {
                     using (ICrashDataDumpFile dump = await factory.CreateAsync(ms, scratch.Path)) {
                         ICrashDataExport block = new TestBlock();
                         await block.DumpAsync(dump);
@@ -125,7 +125,7 @@
                     }
                     ms.Seek(0, SeekOrigin.Begin);
 
-                    XmlDocument document = new XmlDocument();
+                    XmlDocument document = new();
                     document.Load(ms);
                     Assert.That(CheckDocument(document), Is.True);
                 }

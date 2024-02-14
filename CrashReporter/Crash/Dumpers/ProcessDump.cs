@@ -38,21 +38,21 @@
         {
             using (Process process = Process.GetCurrentProcess()) {
                 return new List<KeyValuePair<string, string>>() {
-                    new KeyValuePair<string, string>("name", ProcessInfo.ProcessName),
-                    new KeyValuePair<string, string>("id", ProcessInfo.ProcessId.ToString()),
-                    new KeyValuePair<string, string>("basePrio", process.BasePriority.ToString()),
-                    new KeyValuePair<string, string>("prioClass", process.PriorityClass.ToString()),
-                    new KeyValuePair<string, string>("memPaged", process.PagedMemorySize64.ToString()),
-                    new KeyValuePair<string, string>("memWorking", process.WorkingSet64.ToString()),
-                    new KeyValuePair<string, string>("memVirtual", process.VirtualMemorySize64.ToString()),
-                    new KeyValuePair<string, string>("memPrivate", process.PrivateMemorySize64.ToString()),
-                    new KeyValuePair<string, string>("memNonpagedSystem", process.NonpagedSystemMemorySize64.ToString()),
-                    new KeyValuePair<string, string>("memPagedSystem", process.PagedSystemMemorySize64.ToString()),
-                    new KeyValuePair<string, string>("memPeakPaged", process.PeakPagedMemorySize64.ToString()),
-                    new KeyValuePair<string, string>("memPeakVirtual", process.PeakVirtualMemorySize64.ToString()),
-                    new KeyValuePair<string, string>("userTime", process.UserProcessorTime.TotalSeconds.ToString()),
-                    new KeyValuePair<string, string>("totalTime", process.TotalProcessorTime.TotalSeconds.ToString()),
-                    new KeyValuePair<string, string>("privilegedTime", process.PrivilegedProcessorTime.TotalSeconds.ToString())
+                    new("name", ProcessInfo.ProcessName),
+                    new("id", ProcessInfo.ProcessId.ToString()),
+                    new("basePrio", process.BasePriority.ToString()),
+                    new("prioClass", process.PriorityClass.ToString()),
+                    new("memPaged", process.PagedMemorySize64.ToString()),
+                    new("memWorking", process.WorkingSet64.ToString()),
+                    new("memVirtual", process.VirtualMemorySize64.ToString()),
+                    new("memPrivate", process.PrivateMemorySize64.ToString()),
+                    new("memNonpagedSystem", process.NonpagedSystemMemorySize64.ToString()),
+                    new("memPagedSystem", process.PagedSystemMemorySize64.ToString()),
+                    new("memPeakPaged", process.PeakPagedMemorySize64.ToString()),
+                    new("memPeakVirtual", process.PeakVirtualMemorySize64.ToString()),
+                    new("userTime", process.UserProcessorTime.TotalSeconds.ToString()),
+                    new("totalTime", process.TotalProcessorTime.TotalSeconds.ToString()),
+                    new("privilegedTime", process.PrivilegedProcessorTime.TotalSeconds.ToString())
                 };
             }
         }

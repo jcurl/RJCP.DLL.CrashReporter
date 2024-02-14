@@ -20,7 +20,7 @@
         public void CreateFile(string fileName)
         {
             ThrowHelper.ThrowIfNull(fileName);
-            if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
+            if (m_Writer is not null) throw new InvalidOperationException("File is already created, cannot create twice");
 
             if (Directory.Exists(fileName)) {
                 Path = fileName;
@@ -44,7 +44,8 @@
         {
             ThrowHelper.ThrowIfNull(stream);
             ThrowHelper.ThrowIfNull(path);
-            if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
+
+            if (m_Writer is not null) throw new InvalidOperationException("File is already created, cannot create twice");
 
             m_Stream = stream;
             Path = path;
@@ -82,7 +83,7 @@
             }
 
             XmlWriter xmlWriter = XmlWriter.Create(stream, SaveXmlSettings(isAsync));
-            if (styleSheet != null) {
+            if (styleSheet is not null) {
                 string stylesheetInstruction = string.Format("type=\"text/xsl\" href=\"{0}\"", styleSheet);
                 xmlWriter.WriteProcessingInstruction("xml-stylesheet", stylesheetInstruction);
             }
@@ -160,17 +161,17 @@
                 string assemblyName = resource.Substring(0, resourceClassPos).Trim();
                 resourceName = resource.Substring(resourceClassPos + 1).Trim();
                 assembly = GetAssemblyByName(assemblyName);
-                if (assembly == null) return GetDefaultStyleSheetResource();
+                if (assembly is null) return GetDefaultStyleSheetResource();
 #else
                 string assemblyName = resource.AsSpan(0, resourceClassPos).Trim().ToString();
                 resourceName = resource.AsSpan(resourceClassPos + 1).Trim().ToString();
                 assembly = GetAssemblyByName(assemblyName);
-                if (assembly == null) return GetDefaultStyleSheetResource();
+                if (assembly is null) return GetDefaultStyleSheetResource();
 #endif
             }
 
             Stream stream = assembly.GetManifestResourceStream(resourceName);
-            if (stream == null) return GetDefaultStyleSheetResource();
+            if (stream is null) return GetDefaultStyleSheetResource();
             return stream;
         }
 
@@ -192,7 +193,7 @@
         private static void CopyTransform(string outFileName)
         {
             using (Stream stream = GetStyleSheetResource())
-            using (FileStream fileCopyStream = new FileStream(outFileName, FileMode.Create, FileAccess.Write, FileShare.None)) {
+            using (FileStream fileCopyStream = new(outFileName, FileMode.Create, FileAccess.Write, FileShare.None)) {
                 stream.CopyTo(fileCopyStream);
             }
         }
@@ -222,7 +223,7 @@
         {
             ThrowHelper.ThrowIfNull(stream);
             ThrowHelper.ThrowIfNull(path);
-            if (m_Writer != null) throw new InvalidOperationException("File is already created, cannot create twice");
+            if (m_Writer is not null) throw new InvalidOperationException("File is already created, cannot create twice");
 
             m_Stream = stream;
             Path = path;
@@ -274,10 +275,10 @@
         {
             if (!m_IsFlushed) Flush();
 
-            if (m_Writer != null) ((IDisposable)m_Writer).Dispose();
+            if (m_Writer is not null) ((IDisposable)m_Writer).Dispose();
             m_Writer = null;
 
-            if (m_OwnsStream && m_Stream != null) m_Stream.Dispose();
+            if (m_OwnsStream && m_Stream is not null) m_Stream.Dispose();
             m_Stream = null;
         }
 

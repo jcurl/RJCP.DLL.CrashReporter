@@ -59,7 +59,7 @@
         protected virtual void OnAlarmEvent(object sender, EventArgs args)
         {
             EventHandler handler = AlarmEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is not null) handler(sender, args);
         }
     }
 }

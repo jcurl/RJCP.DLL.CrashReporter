@@ -6,8 +6,8 @@
 
     internal class CrashDataProviders : Collection<ICrashDataExport>
     {
-        private readonly object m_SyncLock = new object();
-        private readonly HashSet<ICrashDataExport> m_Providers = new HashSet<ICrashDataExport>();
+        private readonly object m_SyncLock = new();
+        private readonly HashSet<ICrashDataExport> m_Providers = new();
 
         protected override void InsertItem(int index, ICrashDataExport item)
         {

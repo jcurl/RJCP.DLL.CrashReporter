@@ -55,7 +55,7 @@
             m_Timer.AlarmEvent += WatchdogTimeoutEvent;
         }
 
-        private readonly object m_TimerSyncLock = new object();
+        private readonly object m_TimerSyncLock = new();
 
         /// <summary>
         /// Registers the watchdog of the specified name.
@@ -227,14 +227,14 @@
 
         private static string GetStack(StackTrace stackTrace)
         {
-            if (stackTrace == null) return " (none)\n";
+            if (stackTrace is null) return " (none)\n";
             return string.Format("\n{0}", stackTrace.ToString());
         }
 
         private static string GetThread(Thread thread)
         {
-            if (thread == null) return "(none)";
-            if (thread.Name == null)
+            if (thread is null) return "(none)";
+            if (thread.Name is null)
                 return thread.ManagedThreadId.ToString(System.Globalization.CultureInfo.InvariantCulture);
             return string.Format("{0} ({1})", thread.Name, thread.ManagedThreadId);
         }
@@ -247,7 +247,7 @@
         private void OnWarningEvent(object sender, WatchdogEventArgs args)
         {
             EventHandler<WatchdogEventArgs> handler = WarningEvent;
-            if (handler != null) {
+            if (handler is not null) {
                 handler(sender, args);
             } else {
                 DefaultWarningEvent(sender, args);
@@ -283,7 +283,7 @@
         private void OnCriticalEvent(object sender, WatchdogEventArgs args)
         {
             EventHandler<WatchdogEventArgs> handler = CriticalEvent;
-            if (handler != null) {
+            if (handler is not null) {
                 handler(sender, args);
             } else {
                 DefaultCriticalEvent(sender, args);

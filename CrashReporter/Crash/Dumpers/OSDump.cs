@@ -37,14 +37,14 @@
         protected override IEnumerable<KeyValuePair<string, string>> GetRows()
         {
             return new List<KeyValuePair<string, string>>() {
-                new KeyValuePair<string, string>("version", Environment.OSVersion.VersionString),
-                new KeyValuePair<string, string>("platform", Environment.OSVersion.Platform.ToString()),
-                new KeyValuePair<string, string>("servicepack", Environment.OSVersion.ServicePack),
-                new KeyValuePair<string, string>("os64bit", Environment.Is64BitOperatingSystem.ToString()),
-                new KeyValuePair<string, string>("proc64bit", Environment.Is64BitProcess.ToString()),
-                new KeyValuePair<string, string>("hostname", Environment.MachineName),
-                new KeyValuePair<string, string>("domain", Environment.UserDomainName),
-                new KeyValuePair<string, string>("username", Environment.UserName),
+                new("version", Environment.OSVersion.VersionString),
+                new("platform", Environment.OSVersion.Platform.ToString()),
+                new("servicepack", Environment.OSVersion.ServicePack),
+                new("os64bit", Environment.Is64BitOperatingSystem.ToString()),
+                new("proc64bit", Environment.Is64BitProcess.ToString()),
+                new("hostname", Environment.MachineName),
+                new("domain", Environment.UserDomainName),
+                new("username", Environment.UserName),
             };
         }
 

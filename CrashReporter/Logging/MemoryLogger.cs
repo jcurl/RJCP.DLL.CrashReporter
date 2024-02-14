@@ -32,7 +32,7 @@
             if (!IsEnabled(logLevel)) return;
 
             string message = formatter(state, exception);
-            LogEntry entry = new LogEntry(logLevel, eventId.Id, message) {
+            LogEntry entry = new(logLevel, eventId.Id, message) {
                 DateTime = DateTime.Now,
                 Source = m_Category
             };

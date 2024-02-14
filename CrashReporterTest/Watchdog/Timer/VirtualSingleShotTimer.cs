@@ -19,7 +19,7 @@
 
         public void SetDelay(int timeout)
         {
-            if (timeout < 0 && timeout != Timeout.Infinite)
+            if (timeout is < 0 and not Timeout.Infinite)
                 throw new ArgumentException("VirtualSingleShotTimer SetDelay with invalid timeout");
 
             if (timeout == Timeout.Infinite) {
@@ -38,7 +38,7 @@
         private void OnAlarmEvent(object sender, EventArgs args)
         {
             EventHandler handler = AlarmEvent;
-            if (handler != null) AlarmEvent(sender, args);
+            if (handler is not null) AlarmEvent(sender, args);
         }
 
         private void ClockUpdatedEvent(object sender, EventArgs e)

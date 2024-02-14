@@ -99,16 +99,16 @@
 
         private static string GetAssemblyInformationalVersion(Assembly assembly)
         {
-            if (!(Attribute.GetCustomAttribute(assembly, typeof(AssemblyInformationalVersionAttribute))
-                is AssemblyInformationalVersionAttribute infoVersion)) return null;
-            return infoVersion.InformationalVersion;
+            if (Attribute.GetCustomAttribute(assembly, typeof(AssemblyInformationalVersionAttribute))
+                is AssemblyInformationalVersionAttribute infoVersion) return infoVersion.InformationalVersion;
+            return null;
         }
 
         private static string GetAssemblyFileVersion(Assembly assembly)
         {
-            if (!(Attribute.GetCustomAttribute(assembly, typeof(AssemblyFileVersionAttribute))
-                is AssemblyFileVersionAttribute fileVersion)) return null;
-            return fileVersion.Version;
+            if (Attribute.GetCustomAttribute(assembly, typeof(AssemblyFileVersionAttribute))
+                is AssemblyFileVersionAttribute fileVersion) return fileVersion.Version;
+            return null;
         }
     }
 }

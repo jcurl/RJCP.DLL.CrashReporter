@@ -9,7 +9,7 @@
     {
         private readonly Timer.TimerList m_WarningTimer;
         private readonly Timer.TimerList m_CriticalTimer;
-        private readonly Dictionary<string, WatchdogData> m_Timers = new Dictionary<string, WatchdogData>();
+        private readonly Dictionary<string, WatchdogData> m_Timers = new();
 
         public WatchdogList()
         {
@@ -27,7 +27,7 @@
         {
             if (m_Timers.ContainsKey(name)) return false;
 
-            WatchdogData data = new WatchdogData() {
+            WatchdogData data = new() {
                 WarningTimeout = warningTimeout,
                 CriticalTimeout = criticalTimeout,
                 RegisterTime = DateTime.Now,

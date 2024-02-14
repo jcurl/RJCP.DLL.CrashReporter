@@ -16,7 +16,7 @@
         private uint m_Zero;
         private uint m_Last;
 
-        public static readonly InternalClock Instance = new InternalClock();
+        public static readonly InternalClock Instance = new();
 
         /// <summary>
         /// Gets the clock.

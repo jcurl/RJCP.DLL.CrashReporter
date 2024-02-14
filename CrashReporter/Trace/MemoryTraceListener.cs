@@ -68,18 +68,18 @@
             if (m_Line.IsCached) WriteLine(null);
 
             string logMessage;
-            if (detailMessage == null) {
+            if (detailMessage is null) {
                 logMessage = message;
             } else {
                 logMessage = new StringBuilder().Append(message).Append(": ").Append(detailMessage).ToString();
             }
-            LogEntry entry = new LogEntry(TraceEventType.Warning, 0, logMessage) {
+            LogEntry entry = new(TraceEventType.Warning, 0, logMessage) {
                 DateTime = DateTime.Now
             };
             m_MemoryLog.Add(entry);
         }
 
-        private readonly LineSplitter m_Line = new LineSplitter();
+        private readonly LineSplitter m_Line = new();
 
         /// <summary>
         /// Writes the specified message to the listener.
@@ -91,7 +91,7 @@
             CheckInit();
 
             foreach (string line in m_Line.Append(message)) {
-                LogEntry entry = new LogEntry(TraceEventType.Verbose, 0, line) {
+                LogEntry entry = new(TraceEventType.Verbose, 0, line) {
                     DateTime = DateTime.Now
                 };
                 m_MemoryLog.Add(entry);
@@ -108,7 +108,7 @@
             CheckInit();
 
             foreach (string line in m_Line.AppendLine(message)) {
-                LogEntry entry = new LogEntry(TraceEventType.Verbose, 0, line) {
+                LogEntry entry = new(TraceEventType.Verbose, 0, line) {
                     DateTime = DateTime.Now
                 };
                 m_MemoryLog.Add(entry);
@@ -134,7 +134,7 @@
             CheckInit();
             if (m_Line.IsCached) WriteLine(null);
 
-            LogEntry entry = new LogEntry(eventType, id, string.Empty) {
+            LogEntry entry = new(eventType, id, string.Empty) {
                 DateTime = eventCache.DateTime,
                 Source = source,
                 ThreadId = eventCache.ThreadId
@@ -162,7 +162,7 @@
             CheckInit();
             if (m_Line.IsCached) WriteLine(null);
 
-            LogEntry entry = new LogEntry(eventType, id, message) {
+            LogEntry entry = new(eventType, id, message) {
                 DateTime = eventCache.DateTime,
                 Source = source,
                 ThreadId = eventCache.ThreadId
@@ -196,7 +196,7 @@
             if (m_Line.IsCached) WriteLine(null);
 
             string message = string.Format(format, args);
-            LogEntry entry = new LogEntry(eventType, id, message) {
+            LogEntry entry = new(eventType, id, message) {
                 DateTime = eventCache.DateTime,
                 Source = source,
                 ThreadId = eventCache.ThreadId
@@ -225,7 +225,7 @@
             if (m_Line.IsCached) WriteLine(null);
 
             string message = data.ToString();
-            LogEntry entry = new LogEntry(eventType, id, message) {
+            LogEntry entry = new(eventType, id, message) {
                 DateTime = eventCache.DateTime,
                 Source = source,
                 ThreadId = eventCache.ThreadId
@@ -254,12 +254,12 @@
             if (m_Line.IsCached) WriteLine(null);
 
             string message;
-            if (data != null) {
-                StringBuilder sb = new StringBuilder();
+            if (data is not null) {
+                StringBuilder sb = new();
                 for (int i = 0; i < data.Length; i++) {
                     if (i != 0)
                         sb.Append(", ");
-                    if (data[i] != null)
+                    if (data[i] is not null)
                         sb.Append(data[i].ToString());
                 }
                 message = sb.ToString();
@@ -267,7 +267,7 @@
                 message = string.Empty;
             }
 
-            LogEntry entry = new LogEntry(eventType, id, message) {
+            LogEntry entry = new(eventType, id, message) {
                 DateTime = eventCache.DateTime,
                 Source = source,
                 ThreadId = eventCache.ThreadId

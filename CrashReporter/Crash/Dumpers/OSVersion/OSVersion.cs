@@ -58,7 +58,7 @@
 
             // Get the basic information. If this shows we've got a newer operating
             // system, we can get more detailed information later.
-            Kernel32.OSVERSIONINFO info = new Kernel32.OSVERSIONINFO();
+            Kernel32.OSVERSIONINFO info = new();
             try {
                 result = Kernel32.GetVersionEx(info);
                 if (!result) {
@@ -94,7 +94,7 @@
                 return true;
             }
 
-            Kernel32.OSVERSIONINFOEX infoex = new Kernel32.OSVERSIONINFOEX();
+            Kernel32.OSVERSIONINFOEX infoex = new();
             result = Kernel32.GetVersionEx(infoex);
             if (!result) {
 #if DEBUG
@@ -106,7 +106,7 @@
             }
 
             int ntstatus = -1;
-            Kernel32.OSVERSIONINFOEX rtlInfoEx = new Kernel32.OSVERSIONINFOEX();
+            Kernel32.OSVERSIONINFOEX rtlInfoEx = new();
             try {
                 ntstatus = NtDll.RtlGetVersion(rtlInfoEx);
             } catch (EntryPointNotFoundException) {
@@ -115,8 +115,8 @@
             }
 
             bool newer = false;
-            Version vInfo = new Version(infoex.MajorVersion, infoex.MinorVersion, infoex.BuildNumber);
-            Version vRtl = new Version(rtlInfoEx.MajorVersion, rtlInfoEx.MinorVersion, rtlInfoEx.BuildNumber);
+            Version vInfo = new(infoex.MajorVersion, infoex.MinorVersion, infoex.BuildNumber);
+            Version vRtl = new(rtlInfoEx.MajorVersion, rtlInfoEx.MinorVersion, rtlInfoEx.BuildNumber);
             if (ntstatus == 0) {
                 // The direct call worked, and should overcome the API breakage that
                 // depends on a manifest. Just in case that the real method returns a
@@ -227,8 +227,7 @@
                 break;
             }
 
-            if (Architecture == null)
-                Architecture = NativeArchitecture;
+            Architecture ??= NativeArchitecture;
         }
 
         private void GetProductInfo()
@@ -310,7 +309,7 @@
             try {
                 RegistryKey currentVersion =
                     Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-                if (currentVersion != null) {
+                if (currentVersion is not null) {
                     object ubrobj = currentVersion.GetValue("UBR");
                     if (ubrobj is int ubr) {
                         Version = new Version(Version.Major, Version.Minor, Version.Build, ubr);

@@ -12,7 +12,7 @@
         [Test]
         public void DumpTestBlock()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 ICrashDataExport testBlock = new TestBlock();
                 testBlock.Dump(dump);
                 dump.Flush();
@@ -25,7 +25,7 @@
         [Test]
         public async Task DumpTestBlockAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 ICrashDataExport testBlock = new TestBlock();
                 await testBlock.DumpAsync(dump);
                 await dump.FlushAsync();

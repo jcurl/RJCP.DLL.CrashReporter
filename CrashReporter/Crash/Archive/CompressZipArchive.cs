@@ -9,10 +9,10 @@
     {
         public static string CompressFolder(string path)
         {
-            if (path == null) return null;
+            if (path is null) return null;
             if (!Directory.Exists(path)) return null;
 
-            DirectoryInfo sourceDir = new DirectoryInfo(path);
+            DirectoryInfo sourceDir = new(path);
             string zipFileName = string.Format("{0}.zip", path);
             using (ZipArchive archive = ZipFile.Open(zipFileName, ZipArchiveMode.Create)) {
                 ZipDirectoryTree(archive, sourceDir, Path.GetFileName(path));
@@ -32,7 +32,7 @@
             } catch (PathTooLongException) {
                 // Ignore, as it shouldn't happen
             }
-            if (files != null) {
+            if (files is not null) {
                 foreach (FileInfo file in files) {
                     string zipEntry = Path.Combine(zipDir, file.Name);
                     _ = CreateEntryFromFile(archive, file.FullName, zipEntry);
@@ -77,7 +77,7 @@
             // This information is available in .NET 4.7.1 and later. But as we also target earlier frameworks, get this
             // information dynamically.
             PropertyInfo property = rti.GetProperty("ExternalAttributes");
-            if (property == null) return entry;
+            if (property is null) return entry;
 
             int attributes = (int)property.GetValue(entry);
             attributes = (attributes & 0xFFFF) | (unixAttributes << 16);

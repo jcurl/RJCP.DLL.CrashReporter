@@ -13,7 +13,7 @@
         [Test]
         public async Task GetTableAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
                     Assert.That(table, Is.Not.Null);
                     await table.FlushAsync();
@@ -41,7 +41,7 @@
                 Assert.That(dump["element"], Is.Not.Null);
                 if (flush) await dump.FlushAsync();
             } finally {
-                if (dump != null) dump.Dispose();
+                if (dump is not null) dump.Dispose();
             }
 
             Assert.That(async () => { _ = await dump.DumpTableAsync("element2", "item"); }, Throws.TypeOf<ObjectDisposedException>());
@@ -60,7 +60,7 @@
                 }
                 if (flush) await dump.FlushAsync();
             } finally {
-                if (dump != null) dump.Dispose();
+                if (dump is not null) dump.Dispose();
             }
 
             Assert.That(async () => { await dump.FlushAsync(); }, Throws.TypeOf<ObjectDisposedException>());
@@ -69,7 +69,7 @@
         [Test]
         public async Task GeTableAfterFlushAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
                     Assert.That(table, Is.Not.Null);
                     await table.FlushAsync();
@@ -83,7 +83,7 @@
         [Test]
         public async Task GetDuplicateTableAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
                     Assert.That(table, Is.Not.Null);
                     await table.FlushAsync();
@@ -105,7 +105,7 @@
         [Test]
         public async Task GetNullTableNameAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 Assert.That(async () => { _ = await dump.DumpTableAsync(null, "item"); }, Throws.TypeOf<ArgumentNullException>());
                 await dump.FlushAsync();
             }
@@ -114,7 +114,7 @@
         [Test]
         public async Task GetNullRowNameAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 Assert.That(async () => { _ = await dump.DumpTableAsync("element", null); }, Throws.TypeOf<ArgumentNullException>());
                 await dump.FlushAsync();
             }
@@ -123,7 +123,7 @@
         [Test]
         public async Task FlushDumpTwiceAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 await dump.FlushAsync();
                 Assert.That(async () => { await dump.FlushAsync(); }, Throws.TypeOf<InvalidOperationException>());
             }
@@ -132,7 +132,7 @@
         [Test]
         public async Task FlushTableTwiceAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
                     await table.FlushAsync();
                     Assert.That(async () => { await table.FlushAsync(); }, Throws.TypeOf<InvalidOperationException>());
@@ -144,9 +144,9 @@
         [Test]
         public async Task SetRowAsync()
         {
-            Dictionary<string, string> row = new Dictionary<string, string> { { "property", "value" } };
+            Dictionary<string, string> row = new() { { "property", "value" } };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
                     Assert.That(table, Is.Not.Null);
                     await table.DumpRowAsync(row);
@@ -163,7 +163,7 @@
         [Test]
         public async Task SetRowNullAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
                     Assert.That(async () => { await table.DumpRowAsync((IDictionary<string, string>)null); }, Throws.TypeOf<ArgumentNullException>());
                     await table.FlushAsync();
@@ -177,7 +177,7 @@
         [Test]
         public async Task SetRowNullDumpRowAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
                     Assert.That(async () => { await table.DumpRowAsync((DumpRow)null); }, Throws.TypeOf<ArgumentNullException>());
                     await table.FlushAsync();
@@ -198,9 +198,9 @@
         [TestCase("ab&cd", TestName = "SetFieldInvalidCharAmpersandAsync")]
         public async Task SetFieldInvalidAsync(string field)
         {
-            Dictionary<string, string> row = new Dictionary<string, string> { [field] = "value" };
+            Dictionary<string, string> row = new() { [field] = "value" };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
                     Assert.That(async () => { await table.DumpRowAsync(row); }, Throws.TypeOf<ArgumentException>());
                     await table.FlushAsync();
@@ -214,17 +214,17 @@
         [Test]
         public async Task SetRowAfterDisposeAsync()
         {
-            Dictionary<string, string> row1 = new Dictionary<string, string> { { "property", "value" } };
-            Dictionary<string, string> row2 = new Dictionary<string, string> { { "property2", "value2" } };
+            Dictionary<string, string> row1 = new() { { "property", "value" } };
+            Dictionary<string, string> row2 = new() { { "property2", "value2" } };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 IDumpTable table = null;
                 try {
                     table = await dump.DumpTableAsync("element", "item");
                     await table.DumpRowAsync(row1);
                     await table.FlushAsync();
                 } finally {
-                    if (table != null) table.Dispose();
+                    if (table is not null) table.Dispose();
                 }
                 Assert.That(async () => { await table.DumpRowAsync(row2); }, Throws.TypeOf<ObjectDisposedException>());
 
@@ -239,10 +239,10 @@
         [Test]
         public async Task SetRowAfterFlushAsync()
         {
-            Dictionary<string, string> row1 = new Dictionary<string, string> { { "property", "value" } };
-            Dictionary<string, string> row2 = new Dictionary<string, string> { { "property2", "value2" } };
+            Dictionary<string, string> row1 = new() { { "property", "value" } };
+            Dictionary<string, string> row2 = new() { { "property2", "value2" } };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
                     Assert.That(table, Is.Not.Null);
                     await table.DumpRowAsync(row1);
@@ -257,16 +257,16 @@
         [Test]
         public async Task SetRowFlushAfterDisposeAsync()
         {
-            Dictionary<string, string> row = new Dictionary<string, string> { { "property", "value" } };
+            Dictionary<string, string> row = new() { { "property", "value" } };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 IDumpTable table = null;
                 try {
                     table = await dump.DumpTableAsync("element", "item");
                     await table.DumpRowAsync(row);
                     await table.FlushAsync();
                 } finally {
-                    if (table != null) table.Dispose();
+                    if (table is not null) table.Dispose();
                 }
                 Assert.That(async () => { await table.FlushAsync(); }, Throws.TypeOf<ObjectDisposedException>());
                 await dump.FlushAsync();
@@ -277,7 +277,7 @@
         [TestCase(false, TestName = "DisposeDumpUndisposedFlushedTableAsync")]
         public async Task DisposeDumpUndisposedTableAsync(bool blockFlush)
         {
-            MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile();
+            MemoryCrashDataDumpFile dump = new();
             IDumpTable table = await dump.DumpTableAsync("element", "item");
             if (blockFlush) await table.FlushAsync();
             Assert.That(() => { dump.Dispose(); }, Throws.TypeOf<InvalidOperationException>());
@@ -288,7 +288,7 @@
         [Test]
         public async Task SynchronousDumpTableAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 IDumpTable table = await dump.DumpTableAsync("element1", "item");
                 Assert.That(async () => { _ = await dump.DumpTableAsync("element2", "item"); }, Throws.TypeOf<InvalidOperationException>());
                 await table.FlushAsync();
@@ -301,7 +301,7 @@
         [Test]
         public async Task AsynchronousDumpTableAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 dump.IsSynchronous = false;
                 Task<IDumpTable> table1Task = dump.DumpTableAsync("element1", "item");
                 Task<IDumpTable> table2Task = dump.DumpTableAsync("element2", "item");
@@ -319,12 +319,12 @@
         [Test]
         public async Task SetTableHeaderAsync()
         {
-            Dictionary<string, string> row = new Dictionary<string, string> {
+            Dictionary<string, string> row = new() {
                 { "property", "value" },
                 { "property2", "value2" }
             };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
                     await table.DumpHeaderAsync(row.Keys);
                     await table.DumpRowAsync(row);
@@ -342,12 +342,12 @@
         [Test]
         public async Task SetTableHeaderAfterRowAsync()
         {
-            Dictionary<string, string> row = new Dictionary<string, string> {
+            Dictionary<string, string> row = new() {
                 { "property", "value" },
                 { "property2", "value2" }
             };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
                     await table.DumpRowAsync(row);
                     Assert.That(async () => { await table.DumpHeaderAsync(row.Keys); }, Throws.TypeOf<InvalidOperationException>());
@@ -365,7 +365,7 @@
         [Test]
         public async Task SetTableHeaderNullAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
                     Assert.That(async () => { await table.DumpHeaderAsync((IEnumerable<string>)null); }, Throws.TypeOf<ArgumentNullException>());
                     await table.FlushAsync();
@@ -377,7 +377,7 @@
         [Test]
         public async Task SetTableHeaderNullDumpRowAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
                     Assert.That(async () => { await table.DumpHeaderAsync((DumpRow)null); }, Throws.TypeOf<ArgumentNullException>());
                     await table.FlushAsync();
@@ -389,7 +389,7 @@
         [Test]
         public async Task SetTableHeaderEmptyAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
                     Assert.That(async () => { await table.DumpHeaderAsync(new string[] { }); }, Throws.TypeOf<ArgumentException>());
                     await table.FlushAsync();
@@ -401,12 +401,12 @@
         [Test]
         public async Task SetTableRowMissingFieldAsync()
         {
-            Dictionary<string, string> row = new Dictionary<string, string> {
+            Dictionary<string, string> row = new() {
                 { "property", "value" },
                 { "property2", "value2" }
             };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
                     await table.DumpHeaderAsync(new[] { "property", "property2", "extra" });
                     Assert.That(async () => { await table.DumpRowAsync(row); }, Throws.TypeOf<ArgumentException>());
@@ -421,12 +421,12 @@
         [Test]
         public async Task SetTableRowExtraFieldAsync()
         {
-            Dictionary<string, string> row = new Dictionary<string, string> {
+            Dictionary<string, string> row = new() {
                 { "property", "value" },
                 { "property2", "value2" }
             };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
                     await table.DumpHeaderAsync(new[] { "property" });
                     Assert.That(async () => { await table.DumpRowAsync(row); }, Throws.TypeOf<ArgumentException>());
@@ -441,12 +441,12 @@
         [Test]
         public async Task TableNotFoundAsync()
         {
-            Dictionary<string, string> row = new Dictionary<string, string> {
+            Dictionary<string, string> row = new() {
                 { "property", "value" },
                 { "property2", "value2" }
             };
 
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "Item")) {
                     await table.DumpRowAsync(row);
                     await table.FlushAsync();
@@ -460,7 +460,7 @@
         [Test]
         public async Task SetHeaderAfterDisposeAsync()
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 IDumpTable table = await dump.DumpTableAsync("element", "item");
                 table.Dispose();
                 Assert.That(async () => { await table.DumpHeaderAsync(new string[] { "element" }); }, Throws.TypeOf<ObjectDisposedException>());
@@ -480,7 +480,7 @@
         [TestCase("ab&cd", TestName = "SetHeaderFieldInvalidCharAmpersandAsync")]
         public async Task SetHeaderFieldInvalidAsync(string field)
         {
-            using (MemoryCrashDataDumpFile dump = new MemoryCrashDataDumpFile()) {
+            using (MemoryCrashDataDumpFile dump = new()) {
                 using (IDumpTable table = await dump.DumpTableAsync("element", "item")) {
                     Assert.That(async () => { await table.DumpHeaderAsync(new string[] { field }); }, Throws.TypeOf<ArgumentException>());
                     await table.FlushAsync();

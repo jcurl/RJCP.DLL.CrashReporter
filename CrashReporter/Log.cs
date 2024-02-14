@@ -4,7 +4,7 @@
 
     internal static class Log
     {
-        public readonly static LogSource CrashLog = new LogSource("RJCP.CrashReporter");
-        public readonly static LogSource Watchdog = new LogSource("RJCP.CrashReporter.Watchdog");
+        public readonly static LogSource CrashLog = new("RJCP.CrashReporter");
+        public readonly static LogSource Watchdog = new("RJCP.CrashReporter.Watchdog");
     }
 }

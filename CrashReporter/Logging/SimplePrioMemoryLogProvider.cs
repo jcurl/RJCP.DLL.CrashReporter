@@ -19,9 +19,9 @@
         private readonly IDisposable m_OnChangeToken;
         private SimplePrioMemoryLogConfig m_CurrentConfig;
         private readonly ConcurrentDictionary<string, MemoryLogger> m_Loggers =
-            new ConcurrentDictionary<string, MemoryLogger>(StringComparer.OrdinalIgnoreCase);
+            new(StringComparer.OrdinalIgnoreCase);
 
-        private readonly object m_Lock = new object();
+        private readonly object m_Lock = new();
         private MemoryLogDump m_MemoryLog;
         private IMemoryLog m_LogCollection;
 
@@ -68,13 +68,13 @@
         /// </remarks>
         public ILogger CreateLogger(string categoryName)
         {
-            if (m_MemoryLog == null) {
+            if (m_MemoryLog is null) {
                 lock (m_Lock) {
-                    if (m_MemoryLog == null) {
+                    if (m_MemoryLog is null) {
                         InternalClock.Instance.Initialize();
 
-                        SimplePrioMemoryLog log = new SimplePrioMemoryLog();
-                        if (m_CurrentConfig != null) {
+                        SimplePrioMemoryLog log = new();
+                        if (m_CurrentConfig is not null) {
                             try {
                                 if (m_CurrentConfig.Critical != 0) log.Critical = m_CurrentConfig.Critical;
                                 if (m_CurrentConfig.Error != 0) log.Error = m_CurrentConfig.Error;
@@ -98,7 +98,7 @@
 
                         string message = string.Format("Initialized: C={0}; E={1}; W={2}; I={3}; V={4}; O={5}; T={6}",
                             log.Critical, log.Error, log.Warning, log.Info, log.Verbose, log.Other, log.Total);
-                        LogEntry entry = new LogEntry(TraceEventType.Verbose, 0, message) {
+                        LogEntry entry = new(TraceEventType.Verbose, 0, message) {
                             Source = categoryName,
                             DateTime = DateTime.Now
                         };
@@ -122,7 +122,7 @@
         {
             m_Loggers.Clear();
             m_OnChangeToken.Dispose();
-            if (m_LogCollection != null) {
+            if (m_LogCollection is not null) {
                 m_LogCollection.Clear();
                 CrashData.Instance.Providers.Remove(m_MemoryLog);
             }

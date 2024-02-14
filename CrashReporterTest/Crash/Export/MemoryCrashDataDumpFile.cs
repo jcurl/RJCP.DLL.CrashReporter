@@ -10,7 +10,7 @@
 
     public sealed class MemoryCrashDataDumpFile : ICrashDataDumpFile
     {
-        private readonly Dictionary<string, List<MemoryCrashDumpTable>> m_Blocks = new Dictionary<string, List<MemoryCrashDumpTable>>();
+        private readonly Dictionary<string, List<MemoryCrashDumpTable>> m_Blocks = new();
 
         /// <summary>
         /// Gets a value indicating if this instance can support writing blocks asynchronously.
@@ -33,9 +33,7 @@
         {
             get
             {
-                if (m_Scratch == null) {
-                    m_Scratch = new ScratchPad(ScratchOptions.CreateScratch | ScratchOptions.KeepCurrentDir);
-                }
+                m_Scratch ??= new ScratchPad(ScratchOptions.CreateScratch | ScratchOptions.KeepCurrentDir);
                 return m_Scratch.Path;
             }
         }
@@ -52,7 +50,7 @@
 
         private IDumpTable DumpTableInternal(string tableName, string rowName)
         {
-            MemoryCrashDumpTable block = new MemoryCrashDumpTable(tableName, rowName);
+            MemoryCrashDumpTable block = new(tableName, rowName);
             lock (m_Blocks) {
                 if (IsSynchronous && CheckIncomplete(out string _))
                     throw new InvalidOperationException("DumpBlock requested while another DumpBlock is active in synchronous mode");
@@ -167,7 +165,7 @@
 
         public void Dispose()
         {
-            if (m_Scratch != null) m_Scratch.Dispose();
+            if (m_Scratch is not null) m_Scratch.Dispose();
 
             if (!m_IsFlushed) {
                 Console.WriteLine("Dispose called on file without flushing. Recommend flushing. Not critical, but can lead to synchronous flush");

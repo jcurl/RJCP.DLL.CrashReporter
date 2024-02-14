@@ -24,7 +24,7 @@
                     return;
                 }
 
-                if (grp != null) {
+                if (grp is not null) {
                     foreach (ConfigurationSection section in grp.Sections) {
                         try {
                             switch (section.SectionInformation.Name) {
@@ -50,9 +50,9 @@
 
             // Provide default implementations is it is not in the configuration. Code doesn't need to check for 'null'
             // making it safer.
-            if (XmlCrashDumper == null) XmlCrashDumper = new XmlCrashDumperConfig();
-            if (Watchdog == null) Watchdog = new WatchdogConfig();
-            if (CrashDumper == null) CrashDumper = new CrashDumperConfig();
+            XmlCrashDumper ??= new XmlCrashDumperConfig();
+            Watchdog ??= new WatchdogConfig();
+            CrashDumper ??= new CrashDumperConfig();
         }
 
         /// <summary>

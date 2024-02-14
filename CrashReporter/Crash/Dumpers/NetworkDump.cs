@@ -99,7 +99,7 @@
 
         private static string GetUnicastAddresses(UnicastIPAddressInformationCollection list)
         {
-            StringBuilder addresses = new StringBuilder();
+            StringBuilder addresses = new();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
                 addresses.Append(item.Address.AddressFamily.ToString()).Append('/').Append(item.Address.ToString());
@@ -109,7 +109,7 @@
 
         private static string GetGwAddresses(GatewayIPAddressInformationCollection list)
         {
-            StringBuilder addresses = new StringBuilder();
+            StringBuilder addresses = new();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
                 addresses.Append(item.Address.AddressFamily.ToString()).Append('/').Append(item.Address.ToString());
@@ -119,7 +119,7 @@
 
         private static string GetIpInfoAddresses(IPAddressInformationCollection list)
         {
-            StringBuilder addresses = new StringBuilder();
+            StringBuilder addresses = new();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
                 addresses.Append(item.Address.AddressFamily.ToString()).Append('/').Append(item.Address.ToString());
@@ -129,7 +129,7 @@
 
         private static string GetMulticastAddresses(MulticastIPAddressInformationCollection list)
         {
-            StringBuilder addresses = new StringBuilder();
+            StringBuilder addresses = new();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
                 addresses.Append(item.Address.AddressFamily.ToString()).Append('/').Append(item.Address.ToString());
@@ -139,7 +139,7 @@
 
         private static string GetIpAddresses(IPAddressCollection list)
         {
-            StringBuilder addresses = new StringBuilder();
+            StringBuilder addresses = new();
             foreach (var item in list) {
                 if (addresses.Length != 0) addresses.Append("; ");
                 addresses.Append(item.AddressFamily.ToString()).Append('/').Append(item.ToString());

@@ -19,13 +19,13 @@
         /// </remarks>
         public static string SanitizeXml10(string input)
         {
-            if (input == null) return string.Empty;
+            if (input is null) return string.Empty;
             StringBuilder sb = null;
             int pos = 0;
             int cp = 0;
             foreach (char c in input) {
                 if (!IsValidXml10(c)) {
-                    if (sb == null) sb = new StringBuilder(input.Length + 128);
+                    sb ??= new StringBuilder(input.Length + 128);
 #if NETFRAMEWORK
                     if (pos > cp) sb.Append(input.Substring(cp, pos - cp));
 #else
@@ -36,7 +36,7 @@
                 }
                 pos++;
             }
-            if (sb == null) return input;
+            if (sb is null) return input;
 #if NETFRAMEWORK
             if (pos > cp) sb.Append(input.Substring(cp, pos - cp));
 #else
@@ -48,10 +48,10 @@
         private static bool IsValidXml10(char c)
         {
             if (c <= 8) return false;
-            if (c == 11 || c == 12) return false;
-            if (c >= 14 && c < 32) return false;
-            if (c >= 0xD800 && c < 0xE000) return false;
-            if (c == 0xFFFE || c == 0xFFFF) return false;
+            if (c is (char)11 or (char)12) return false;
+            if (c is >= (char)14 and < (char)32) return false;
+            if (c is >= (char)0xD800 and < (char)0xE000) return false;
+            if (c is (char)0xFFFE or (char)0xFFFF) return false;
             return true;
         }
 

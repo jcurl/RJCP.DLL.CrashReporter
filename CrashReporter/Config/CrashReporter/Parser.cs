@@ -30,8 +30,8 @@
 
             // As this is a small ABNF syntax, we translate it directly into a state machine in code. The routine is
             // not on any critical path, so there are no real optimizations applied for the sake of readability.
-            List<EnvVar.IToken> tokens = new List<EnvVar.IToken>();
-            StringBuilder component = new StringBuilder();
+            List<EnvVar.IToken> tokens = new();
+            StringBuilder component = new();
             EnvVar.VarState state = EnvVar.VarState.Expansion;
             int l = envVar.Length;
             for (int i = 0; i < l; i++) {
@@ -105,7 +105,7 @@
         private static bool IsChar(char c)
         {
             if (IsFirstChar(c)) return true;
-            if (c >= '0' && c <= '9') return true;
+            if (c is >= '0' and <= '9') return true;
             if (c == '-') return true;
             return false;
         }
@@ -127,7 +127,7 @@
 
         private static bool IsDirSep(char c)
         {
-            return (c == '/') || (c == '\\');
+            return c is '/' or '\\';
         }
     }
 }

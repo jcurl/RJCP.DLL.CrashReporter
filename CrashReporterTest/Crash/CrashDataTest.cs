@@ -35,9 +35,8 @@
         {
             // Set up our test factory to allow asynchronous dumps. The implementation may, or may not, do the dump
             // asynchronously.
-
             ICrashDumpFactory origFactory = CrashData.Instance.CrashDumpFactory;
-            MemoryCrashDumpFactory factory = new MemoryCrashDumpFactory {
+            MemoryCrashDumpFactory factory = new() {
                 IsSynchronous = false
             };
             CrashData.Instance.CrashDumpFactory = factory;
@@ -77,7 +76,7 @@
         {
             // Set up our test factory to allow asynchronous dumps
             ICrashDumpFactory origFactory = CrashData.Instance.CrashDumpFactory;
-            MemoryCrashDumpFactory factory = new MemoryCrashDumpFactory {
+            MemoryCrashDumpFactory factory = new() {
                 IsSynchronous = false
             };
             CrashData.Instance.CrashDumpFactory = factory;

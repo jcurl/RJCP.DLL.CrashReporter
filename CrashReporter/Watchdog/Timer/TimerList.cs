@@ -14,8 +14,8 @@
     internal class TimerList
     {
         private readonly ITimerSource m_TimerSource;
-        private readonly Dictionary<string, LinkedListNode<TimerItem>> m_Items = new Dictionary<string, LinkedListNode<TimerItem>>();
-        private readonly LinkedList<TimerItem> m_Sorted = new LinkedList<TimerItem>();
+        private readonly Dictionary<string, LinkedListNode<TimerItem>> m_Items = new();
+        private readonly LinkedList<TimerItem> m_Sorted = new();
 
         public TimerList() : this(new MonotonicTimerSource()) { }
 
@@ -34,8 +34,8 @@
             ThrowHelper.ThrowIfNull(item);
             if (m_Items.ContainsKey(item)) throw new ArgumentException("An element with the same name already exists", nameof(item));
 
-            TimerItem timerItem = new TimerItem(item);
-            LinkedListNode<TimerItem> timerNode = new LinkedListNode<TimerItem>(timerItem);
+            TimerItem timerItem = new(item);
+            LinkedListNode<TimerItem> timerNode = new(timerItem);
             m_Items.Add(item, timerNode);
             Add(timerNode, timeout);
         }
@@ -48,13 +48,13 @@
             LinkedListNode<TimerItem> node = m_Sorted.First;
             int currentTime = m_TimerSource.GetClock();
             unchecked {
-                while (node != null && (node.Value.Expiry - currentTime) <= timeout) {
+                while (node is not null && (node.Value.Expiry - currentTime) <= timeout) {
                     node = node.Next;
                 }
                 timerItem.Value.Expiry = currentTime + timeout;
             }
 
-            if (node == null) {
+            if (node is null) {
                 m_Sorted.AddLast(timerItem);
             } else {
                 m_Sorted.AddBefore(node, timerItem);
@@ -108,11 +108,11 @@
         {
             if (m_Sorted.Count == 0) return EmptyList;
 
-            List<string> expired = new List<string>();
+            List<string> expired = new();
             LinkedListNode<TimerItem> node = m_Sorted.First;
             int clock = m_TimerSource.GetClock();
             unchecked {
-                while (node != null && (node.Value.Expiry - clock) <= 0) {
+                while (node is not null && (node.Value.Expiry - clock) <= 0) {
                     LinkedListNode<TimerItem> cnode = node;
                     node = node.Next;
 

@@ -9,8 +9,8 @@
         [TestCase]
         public void UpdateNotSet()
         {
-            VirtualTimerSource vTimerSource = new VirtualTimerSource(-5);
-            VirtualSingleShotTimer vTimer = new VirtualSingleShotTimer(vTimerSource);
+            VirtualTimerSource vTimerSource = new(-5);
+            VirtualSingleShotTimer vTimer = new(vTimerSource);
 
             bool alarm = false;
             vTimer.AlarmEvent += (s, e) => { alarm = true; };
@@ -26,8 +26,8 @@
         [TestCase]
         public void CheckAlarm()
         {
-            VirtualTimerSource vTimerSource = new VirtualTimerSource(-5);
-            VirtualSingleShotTimer vTimer = new VirtualSingleShotTimer(vTimerSource);
+            VirtualTimerSource vTimerSource = new(-5);
+            VirtualSingleShotTimer vTimer = new(vTimerSource);
 
             bool alarm = false;
             vTimer.AlarmEvent += (s, e) => { alarm = true; };
@@ -40,8 +40,8 @@
         [TestCase]
         public void CheckAlarmWrapOver()
         {
-            VirtualTimerSource vTimerSource = new VirtualTimerSource(-5);
-            VirtualSingleShotTimer vTimer = new VirtualSingleShotTimer(vTimerSource);
+            VirtualTimerSource vTimerSource = new(-5);
+            VirtualSingleShotTimer vTimer = new(vTimerSource);
 
             bool alarm = false;
             vTimer.AlarmEvent += (s, e) => { alarm = true; };
@@ -58,8 +58,8 @@
         [TestCase]
         public void DisableAlarm()
         {
-            VirtualTimerSource vTimerSource = new VirtualTimerSource(-5);
-            VirtualSingleShotTimer vTimer = new VirtualSingleShotTimer(vTimerSource);
+            VirtualTimerSource vTimerSource = new(-5);
+            VirtualSingleShotTimer vTimer = new(vTimerSource);
 
             bool alarm = false;
             vTimer.AlarmEvent += (s, e) => { alarm = true; };

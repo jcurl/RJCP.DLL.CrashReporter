@@ -16,12 +16,12 @@
         {
             // this method is required for .NET Core, as the TraceSource doesn't read a .NET App.Config file to
             // instantiate itself.
-            TraceSource traceSource = new TraceSource(traceSourceName);
+            TraceSource traceSource = new(traceSourceName);
 #if NET6_0_OR_GREATER
             traceSource.Switch = new SourceSwitch(traceSourceName, "Verbose");
             traceSource.Listeners.Clear();
 
-            SimplePrioMemoryLog log = new SimplePrioMemoryLog() {
+            SimplePrioMemoryLog log = new() {
                 Critical = 100,
                 Error = 150,
                 Warning = 200,
@@ -30,7 +30,7 @@
                 Other = 100,
                 Total = 1500
             };
-            MemoryTraceListener listener = new MemoryTraceListener(log);
+            MemoryTraceListener listener = new(log);
             traceSource.Listeners.Add(listener);
 #endif
             return traceSource;
@@ -47,19 +47,19 @@
 
             MemoryTraceListener log1 = null;
             foreach (var listenerObject in source1.Listeners) {
-                if (log1 == null) log1 = listenerObject as MemoryTraceListener;
+                log1 ??= listenerObject as MemoryTraceListener;
             }
             Assert.That(log1, Is.Not.Null);
 
             MemoryTraceListener log2 = null;
             foreach (var listenerObject in source2.Listeners) {
-                if (log2 == null) log2 = listenerObject as MemoryTraceListener;
+                log2 ??= listenerObject as MemoryTraceListener;
             }
             Assert.That(log2, Is.Not.Null);
 
             // Now dump it. .NET will only instantiate the trace source once according to the app.config.
-            using (MemoryCrashDataDumpFile dumpFile = new MemoryCrashDataDumpFile()) {
-                MemoryTraceListenerAccessor accessor = new MemoryTraceListenerAccessor(log1);
+            using (MemoryCrashDataDumpFile dumpFile = new()) {
+                MemoryTraceListenerAccessor accessor = new(log1);
                 accessor.MemoryLogDump.Dump(dumpFile);
                 dumpFile.Flush();
 

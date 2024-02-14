@@ -8,12 +8,12 @@
     {
         public static string CompressFolder(string path)
         {
-            if (path == null) return null;
+            if (path is null) return null;
             if (!Directory.Exists(path)) return null;
 
-            DirectoryInfo sourceDir = new DirectoryInfo(path);
+            DirectoryInfo sourceDir = new(path);
             string zipFileName = string.Format("{0}.zip", path);
-            using (ZipFile zipFile = new ZipFile()) {
+            using (ZipFile zipFile = new()) {
                 ZipDirectoryTree(zipFile, sourceDir, Path.GetFileName(path));
                 zipFile.Save(zipFileName);
             }
@@ -32,7 +32,7 @@
             } catch (PathTooLongException) {
                 // Ignore, as it shouldn't happen
             }
-            if (files != null) {
+            if (files is not null) {
                 foreach (FileInfo file in files) {
                     zipFile.AddFile(file.FullName, zipDir);
                 }

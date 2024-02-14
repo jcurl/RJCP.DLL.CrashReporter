@@ -150,7 +150,7 @@
             if (!dir.Exists) return;
 
             FileInfo[] files = dir.GetFiles();
-            if (files != null) {
+            if (files is not null) {
                 foreach (FileInfo file in files) {
                     IOAction(() => { DeleteFile(file); }, throwOnError);
                 }
@@ -246,7 +246,7 @@
                 elapsed = unchecked(Environment.TickCount - tickCount);
             } while (elapsed < DeleteMaxTime);
 
-            if (lastException != null) {
+            if (lastException is not null) {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
                 lastException.Throw();
 #else
@@ -371,7 +371,7 @@
                 elapsed = unchecked(Environment.TickCount - tickCount);
             } while (elapsed < DeleteMaxTime);
 
-            if (lastException != null) {
+            if (lastException is not null) {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
                 lastException.Throw();
 #else
@@ -410,7 +410,7 @@
             } catch (PathTooLongException) {
                 // Ignore, as it shouldn't happen
             }
-            if (files != null) {
+            if (files is not null) {
                 foreach (FileInfo file in files) {
                     size += file.Length;
                 }

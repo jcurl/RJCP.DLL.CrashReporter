@@ -16,7 +16,7 @@
                 .GetEvent("FirstChanceException", BindingFlags.Instance | BindingFlags.Public);
         }
 
-        public bool IsSupported { get { return m_FirstChanceException != null; } }
+        public bool IsSupported { get { return m_FirstChanceException is not null; } }
 
         public bool SetFirstChanceException(EventHandler<FirstChanceExceptionEventArgs> handler)
         {

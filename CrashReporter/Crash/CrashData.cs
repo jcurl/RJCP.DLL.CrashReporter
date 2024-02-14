@@ -16,7 +16,7 @@
     public class CrashData
     {
         private static CrashData s_Instance;
-        private static readonly object s_SyncRoot = new object();
+        private static readonly object s_SyncRoot = new();
         private ICrashDumpFactory m_CrashFactory;
         private IList<ICrashDataExport> m_Providers;
 
@@ -32,11 +32,9 @@
         {
             get
             {
-                if (s_Instance == null) {
+                if (s_Instance is null) {
                     lock (s_SyncRoot) {
-                        if (s_Instance == null) {
-                            s_Instance = new CrashData();
-                        }
+                        s_Instance ??= new CrashData();
                     }
                 }
                 return s_Instance;
@@ -52,11 +50,9 @@
         {
             get
             {
-                if (m_CrashFactory == null) {
+                if (m_CrashFactory is null) {
                     lock (s_SyncRoot) {
-                        if (m_CrashFactory == null) {
-                            m_CrashFactory = new CrashDumpFactory();
-                        }
+                        m_CrashFactory ??= new CrashDumpFactory();
                     }
                 }
                 return m_CrashFactory;
@@ -81,9 +77,9 @@
         {
             get
             {
-                if (m_Providers == null) {
+                if (m_Providers is null) {
                     lock (s_SyncRoot) {
-                        if (m_Providers == null) {
+                        if (m_Providers is null) {
                             m_Providers = new CrashDataProviders() {
                                 new NetVersionDump(),
                                 new AssemblyDump(),
@@ -262,7 +258,7 @@
                     await dumper.DumpAsync(dump);
                 }
             } else {
-                List<Task> dumpers = new List<Task>(Providers.Count);
+                List<Task> dumpers = new(Providers.Count);
                 foreach (ICrashDataExport dumper in Providers) {
                     dumpers.Add(dumper.DumpAsync(dump));
                 }
