@@ -33,9 +33,7 @@
 
         private void AppendInternal(string line)
         {
-            if (string.IsNullOrEmpty(line)) {
-                return;
-            }
+            if (string.IsNullOrEmpty(line)) return;
 
             string[] lines = line.Split('\n');
             m_Line.Append(lines[0]);
