@@ -38,6 +38,7 @@
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <ProjectReference Include="..\..\environment\SysCompat\RJCP.Core.SysCompat.csproj" />
   </ItemGroup>
 
   <ItemGroup>
