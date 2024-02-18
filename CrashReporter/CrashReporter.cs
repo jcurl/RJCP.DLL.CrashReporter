@@ -361,6 +361,10 @@
                 crashDumpFile = Path.Combine(fileName, CrashData.Instance.CrashDumpFactory.FileName);
             }
 
+            // At any time, the contents of the crash may be deleted, perhaps by another process also using this
+            // assembly. Must capture all errors, and assume that when creating the core, data is removed,
+            // probably because `CleanUpDump` is being called from another process.
+
             string crashDumpPath;
             try {
                 if (crashDumpFile is null) {
@@ -368,7 +372,10 @@
                 } else {
                     crashDumpPath = CrashData.Instance.Dump(crashDumpFile);
                 }
-                if (crashDumpPath is null) return null;
+                if (crashDumpPath is null) {
+                    Log.CrashLog.TraceEvent(TraceEventType.Warning, "Crash Data not created");
+                    return null;
+                }
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(TraceEventType.Error, "Error creating dump: {0}", ex.ToString());
                 throw;
@@ -383,6 +390,7 @@
                 } else if (Directory.Exists(crashDumpPath)) {
                     coreDumpDir = crashDumpPath;
                 } else {
+                    Log.CrashLog.TraceEvent(TraceEventType.Warning, "Crash Data was removed: {0}", crashDumpPath ?? "(empty)");
                     return null;
                 }
 
@@ -400,6 +408,7 @@
                 dumpFileName = Compress.CompressFolder(coreDumpDir);
                 if (dumpFileName is not null && File.Exists(dumpFileName)) {
                     // Only delete if compression was successful.
+                    Log.CrashLog.TraceEvent(TraceEventType.Warning, $"CreateDump DeleteFolder {coreDumpDir}");
                     FileSystem.DeleteFolder(coreDumpDir);
 
                     if (Directory.Exists(coreDumpDir))
@@ -534,12 +543,16 @@
             IList<FileSystemInfo> remaining = new List<FileSystemInfo>();
             int candidateCount = candidates.Count;
             var created = from candidate in candidates orderby candidate.CreationTime select candidate;
+            DateTime now = DateTime.UtcNow;
             foreach (var candidate in created) {
-                if (candidateCount > count) {
-                    FileSystem.Delete(candidate);
-                    --candidateCount;
-                } else {
-                    remaining.Add(candidate);
+                // Keep all dumps that are less than 5 minutes old, so the user can still capture all relevant data.
+                if (now.Subtract(candidate.CreationTimeUtc).TotalMinutes > 5) {
+                    if (candidateCount > count) {
+                        FileSystem.Delete(candidate);
+                        --candidateCount;
+                    } else {
+                        remaining.Add(candidate);
+                    }
                 }
             }
             return remaining;
