@@ -116,6 +116,8 @@ Quality:
   DOTNET-942, DOTNET-944, DOTNET-945, DOTNET-952, DOTNET-959)
 - Clean up code (DOTNET-946)
 - Only delete old files if they're at least five minutes old (DOTNET-969)
+- Enable NetFX Runtime version informaiton on .NET 4.8, as well as .NET Core
+  (DOTNET-976)
 
 ### 7.2. Version 0.5.0
 
