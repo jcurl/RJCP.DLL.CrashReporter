@@ -35,7 +35,7 @@
                 table.DumpHeader(m_RowInstalled);
                 foreach (var version in netVersions) {
                     if (version.IsValid) {
-                        m_RowInstalled[NetInstalled] = version.Version;
+                        m_RowInstalled[NetInstalled] = version.FrameworkVersion.ToString();
                         m_RowInstalled[NetDescription] = version.Description;
                         table.DumpRow(m_RowInstalled);
                     }
@@ -47,7 +47,7 @@
                 table.DumpHeader(m_RowRunning);
                 foreach (var version in runningVersions) {
                     m_RowRunning[NetRunning] = version.Key;
-                    m_RowRunning[NetRunningVersion] = version.Value.Version;
+                    m_RowRunning[NetRunningVersion] = version.Value.FrameworkVersion.ToString();
                     m_RowRunning[NetDescription] = version.Value.Description;
                     table.DumpRow(m_RowRunning);
                 }
@@ -70,7 +70,7 @@
                 await table.DumpHeaderAsync(m_RowInstalled);
                 foreach (var version in netVersions) {
                     if (version.IsValid) {
-                        m_RowInstalled[NetInstalled] = version.Version;
+                        m_RowInstalled[NetInstalled] = version.FrameworkVersion.ToString();
                         m_RowInstalled[NetDescription] = version.Description;
                         await table.DumpRowAsync(m_RowInstalled);
                     }
@@ -83,7 +83,7 @@
 
                 foreach (var version in runningVersions) {
                     m_RowRunning[NetRunning] = version.Key;
-                    m_RowRunning[NetRunningVersion] = version.Value.Version;
+                    m_RowRunning[NetRunningVersion] = version.Value.FrameworkVersion.ToString();
                     m_RowRunning[NetDescription] = version.Value.Description;
                     await table.DumpRowAsync(m_RowRunning);
                 }
@@ -96,10 +96,10 @@
         {
             List<KeyValuePair<string, NetVersion.INetVersion>> running = new();
 
-            NetVersion.INetVersion fxRunTime = new NetVersion.Runtime.NetFx();
-            if (fxRunTime.IsValid) running.Add(new KeyValuePair<string, NetVersion.INetVersion>("netfx", fxRunTime));
-            NetVersion.INetVersion monoRunTime = new NetVersion.Runtime.Mono();
-            if (monoRunTime.IsValid) running.Add(new KeyValuePair<string, NetVersion.INetVersion>("mono", monoRunTime));
+            NetVersion.INetVersion fxRunTime = new NetVersion.Runtime.NetRuntime();
+            if (fxRunTime.IsValid) running.Add(new KeyValuePair<string, NetVersion.INetVersion>(fxRunTime.VersionType.ToString(), fxRunTime));
+            NetVersion.INetVersion monoRunTime = new NetVersion.Runtime.MonoRuntime();
+            if (monoRunTime.IsValid) running.Add(new KeyValuePair<string, NetVersion.INetVersion>(monoRunTime.VersionType.ToString(), monoRunTime));
 
             return running;
         }

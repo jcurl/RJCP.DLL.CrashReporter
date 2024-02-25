@@ -1,14 +1,16 @@
 ﻿namespace RJCP.Diagnostics.Crash.Dumpers.NetVersion.NetFx.Net45
 {
+    using System;
+
     internal sealed class NetFxVersion
     {
-        internal NetFxVersion(string version, string description)
+        internal NetFxVersion(Version version, string description)
         {
             Version = version;
             Description = description;
         }
 
-        public string Version { get; private set; }
+        public Version Version { get; private set; }
 
         public string Description { get; private set; }
     }

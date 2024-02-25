@@ -99,6 +99,9 @@
     <Compile Include="Config\WatchdogOverrides.cs" />
     <Compile Include="Config\WatchdogPingElement.cs" />
     <Compile Include="Config\XmlCrashDumper.cs" />
+    <Compile Include="Crash\Dumpers\NetVersion\DotNetVersionType.cs" />
+    <Compile Include="Crash\Dumpers\NetVersion\INetVersionMono.cs" />
+    <Compile Include="Crash\Dumpers\NetVersion\NetFx\Mono.cs" />
     <Compile Include="ProcessInfo.cs" />
     <None Include="Crash\Archive\CompressZipFile.cs" />
     <None Include="Crash\Archive\CompressZipArchive.cs" />
@@ -117,8 +120,8 @@
     <Compile Include="Crash\Dumpers\NetVersion\NetFx\NetFx45.cs" />
     <Compile Include="Crash\Dumpers\NetVersion\NetFx\NetFxLegacy.cs" />
     <Compile Include="Crash\Dumpers\NetVersion\NetVersions.cs" />
-    <Compile Include="Crash\Dumpers\NetVersion\Runtime\Mono.cs" />
-    <Compile Include="Crash\Dumpers\NetVersion\Runtime\NetFx.cs" />
+    <Compile Include="Crash\Dumpers\NetVersion\Runtime\MonoRuntime.cs" />
+    <Compile Include="Crash\Dumpers\NetVersion\Runtime\NetRuntime.cs" />
     <Compile Include="Crash\Dumpers\NetworkDump.cs" />
     <Compile Include="Crash\Dumpers\OSDump.cs" />
     <Compile Include="Crash\Dumpers\OSVersion\OSArchitecture.cs" />
