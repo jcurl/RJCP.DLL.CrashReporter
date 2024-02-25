@@ -162,7 +162,7 @@
                 }
             } else {
                 // WinNT
-                buildNumber = (int)((version & 0x7FFF0000) >> 16);
+                buildNumber = (version & 0x7FFF0000) >> 16;
                 PlatformId = OSPlatformId.WinNT;
             }
 

@@ -5,8 +5,8 @@
     using System.Collections.Generic;
     using System.Runtime.Versioning;
     using Microsoft.Win32;
-    using Runtime;
     using RJCP.Core.Environment;
+    using Runtime;
 
     /// <summary>
     /// A class to get the versions of .NET installed on the local computer. Only relevant for Windows.

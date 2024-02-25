@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Runtime.Versioning;
     using Export;
 
     /// <summary>
@@ -16,6 +17,8 @@
         private const string AssemblyVersion = "version";
         private const string AssemblyInfoVersion = "versioninfo";
         private const string AssemblyFileVersion = "versionfile";
+        private const string AssemblyTarget = "target";
+        private const string AssemblyConfig = "config";
         private const string AssemblyLocation = "location";
         private const string AssemblyProcessor = "processor";
 #if NETFRAMEWORK
@@ -27,10 +30,10 @@
         /// </summary>
 #if NETFRAMEWORK
         public AssemblyDump() : base(new DumpRow(AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
-            AssemblyFileVersion, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase))
+            AssemblyFileVersion, AssemblyTarget, AssemblyConfig, AssemblyProcessor, AssemblyLocation, AssemblyCodeBase))
 #else
         public AssemblyDump() : base(new DumpRow(AssemblyName, AssemblyVersion, AssemblyFullName, AssemblyInfoVersion,
-            AssemblyFileVersion, AssemblyProcessor, AssemblyLocation))
+            AssemblyFileVersion, AssemblyTarget, AssemblyConfig, AssemblyProcessor, AssemblyLocation))
 #endif
         { }
 
@@ -71,6 +74,8 @@
             row[AssemblyVersion] = item.GetName().Version.ToString();
             row[AssemblyInfoVersion] = GetAssemblyInformationalVersion(item);
             row[AssemblyFileVersion] = GetAssemblyFileVersion(item);
+            row[AssemblyTarget] = GetAssemblyTargetFramework(item);
+            row[AssemblyConfig] = GetAssemblyConfig(item);
             try {
                 row[AssemblyLocation] = item.Location;
 #if NET6_0_OR_GREATER
@@ -108,6 +113,20 @@
         {
             if (Attribute.GetCustomAttribute(assembly, typeof(AssemblyFileVersionAttribute))
                 is AssemblyFileVersionAttribute fileVersion) return fileVersion.Version;
+            return null;
+        }
+
+        private static string GetAssemblyTargetFramework(Assembly assembly)
+        {
+            if (Attribute.GetCustomAttribute(assembly, typeof(TargetFrameworkAttribute))
+                is TargetFrameworkAttribute target) return target.FrameworkName;
+            return null;
+        }
+
+        private static string GetAssemblyConfig(Assembly assembly)
+        {
+            if (Attribute.GetCustomAttribute(assembly, typeof(AssemblyConfigurationAttribute))
+                is AssemblyConfigurationAttribute cfg) return cfg.Configuration;
             return null;
         }
     }
