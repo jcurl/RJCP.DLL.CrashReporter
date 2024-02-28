@@ -6,6 +6,10 @@
     using System.Runtime.Versioning;
     using Export;
 
+#if NETCOREAPP || NET45_OR_GREATER
+    using System.Linq;
+#endif
+
     /// <summary>
     /// Dumps details of all loaded assemblies in the current domain.
     /// </summary>
@@ -98,7 +102,7 @@
                 row[AssemblyCodeBase] = "(Unknown)";
             }
 #endif
-            row[AssemblyProcessor] = item.GetName().ProcessorArchitecture.ToString();
+            row[AssemblyProcessor] = GetProcessorArchitecture(item);
             return true;
         }
 
@@ -128,6 +132,25 @@
             if (Attribute.GetCustomAttribute(assembly, typeof(AssemblyConfigurationAttribute))
                 is AssemblyConfigurationAttribute cfg) return cfg.Configuration;
             return null;
+        }
+
+        private static string GetProcessorArchitecture(Assembly assembly)
+        {
+#if NETCOREAPP || NET45_OR_GREATER
+            assembly.Modules.First().GetPEKind(out PortableExecutableKinds pekind, out ImageFileMachine machine);
+            if (pekind.HasFlag(PortableExecutableKinds.ILOnly))
+                return "MSIL";
+            switch (machine) {
+            case 0: return "<unknown>";
+            case ImageFileMachine.I386: return "x86";
+            case ImageFileMachine.AMD64: return "x64";
+            case ImageFileMachine.ARM: return "ARM";
+            case ImageFileMachine.IA64: return "IA64";
+            default: return $"{machine}";
+            }
+#else
+            return assembly.GetName().ProcessorArchitecture.ToString();
+#endif
         }
     }
 }

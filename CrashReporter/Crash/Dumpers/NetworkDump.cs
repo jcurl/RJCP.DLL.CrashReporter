@@ -2,12 +2,16 @@
 {
     using System.Collections.Generic;
     using System.Net.NetworkInformation;
+    using System.Runtime.Versioning;
     using System.Text;
     using Export;
+    using RJCP.Core.Environment;
 
     /// <summary>
     /// Dump network information to a dump file.
     /// </summary>
+    [SupportedOSPlatform("windows")]
+    [SupportedOSPlatform("linux")]
     internal sealed class NetworkDump : CrashDataExport<NetworkInterface>
     {
         private const string NetworkTable = "Network";
@@ -29,15 +33,29 @@
         private const string AdapterIpAnycast = "anycastaddr";
         private const string AdapterIpMulticastAddr = "multicastaddr";
 
+        private static DumpRow GetDumpRow()
+        {
+            // Not all features are available on Windows / Linux.
+            if (Platform.IsWinNT()) {
+                return new DumpRow(AdapterName, AdapterStatus, AdapterDescription, AdapterId,
+                    AdapterInterfaceType, AdapterSpeed, AdapterMulticastEnabled, AdapterMac,
+                    AdapterIpDnsSuffix, AdapterIpDnsEnabled, AdapterIpDynDnsEnabled,
+                    AdapterIpDhcp, AdapterIpUnicast, AdapterIpDns, AdapterIpGateway,
+                    AdapterIpAnycast, AdapterIpMulticastAddr);
+            } else if (Platform.IsUnix()) {
+                return new DumpRow(AdapterName, AdapterStatus, AdapterDescription, AdapterId,
+                    AdapterInterfaceType, AdapterSpeed, AdapterMulticastEnabled, AdapterMac,
+                    AdapterIpDnsSuffix, AdapterIpDnsEnabled, /* AdapterIpDynDnsEnabled, */
+                    AdapterIpDhcp, AdapterIpUnicast, AdapterIpDns, AdapterIpGateway,
+                    AdapterIpAnycast, AdapterIpMulticastAddr);
+            }
+            return new DumpRow();
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkDump"/> class.
         /// </summary>
-        public NetworkDump() : base(new DumpRow(AdapterName, AdapterStatus, AdapterDescription, AdapterId,
-            AdapterInterfaceType, AdapterSpeed, AdapterMulticastEnabled, AdapterMac,
-            AdapterIpDnsSuffix, AdapterIpDnsEnabled, AdapterIpDynDnsEnabled,
-            AdapterIpDhcp, AdapterIpUnicast, AdapterIpDns, AdapterIpGateway,
-            AdapterIpAnycast, AdapterIpMulticastAddr))
-        { }
+        public NetworkDump() : base(GetDumpRow()) { }
 
         /// <summary>
         /// Gets the name of the table.
@@ -74,6 +92,9 @@
         /// </returns>
         protected override bool UpdateRow(NetworkInterface item, DumpRow row)
         {
+            if (!Platform.IsWinNT() && !Platform.IsUnix())
+                return false;
+
             row[AdapterName] = GetField(() => item.Name);
             row[AdapterDescription] = GetField(() => item.Description);
             row[AdapterId] = GetField(() => item.Id);
@@ -85,7 +106,6 @@
 
             IPInterfaceProperties properties = item.GetIPProperties();
             row[AdapterIpDnsEnabled] = GetField(() => properties.IsDnsEnabled.ToString());
-            row[AdapterIpDynDnsEnabled] = GetField(() => properties.IsDynamicDnsEnabled.ToString());
             row[AdapterIpDnsSuffix] = GetField(() => properties.DnsSuffix);
             row[AdapterIpUnicast] = GetField(() => GetUnicastAddresses(properties.UnicastAddresses));
             row[AdapterIpDns] = GetField(() => GetIpAddresses(properties.DnsAddresses));
@@ -93,6 +113,10 @@
             row[AdapterIpAnycast] = GetField(() => GetIpInfoAddresses(properties.AnycastAddresses));
             row[AdapterIpMulticastAddr] = GetField(() => GetMulticastAddresses(properties.MulticastAddresses));
             row[AdapterIpDhcp] = GetField(() => GetIpAddresses(properties.DhcpServerAddresses));
+
+            if (Platform.IsWinNT()) {
+                row[AdapterIpDynDnsEnabled] = GetField(() => properties.IsDynamicDnsEnabled.ToString());
+            }
 
             return true;
         }

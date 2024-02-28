@@ -84,15 +84,16 @@
                                 new NetVersionDump(),
                                 new AssemblyDump(),
                                 new EnvironmentDump(),
-                                new NetworkDump(),
                                 new OSDump(),
                                 new ProcessDump(),
                                 new ModuleDump()
                             };
                             if (Platform.IsWinNT()) {
+                                m_Providers.Add(new NetworkDump());
                                 m_Providers.Add(new WinVerDump());
                                 m_Providers.Add(new ThreadDump());
                             } else if (Platform.IsUnix()) {
+                                m_Providers.Add(new NetworkDump());
                                 m_Providers.Add(new ThreadDump());
                             }
                         }
