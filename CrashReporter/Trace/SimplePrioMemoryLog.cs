@@ -25,6 +25,7 @@
         {
             public Log(int defaultMinimum)
             {
+                ThrowHelper.ThrowIfNegative(defaultMinimum);
                 Minimum = defaultMinimum;
             }
 
@@ -39,8 +40,7 @@
                 get { return m_Minimum; }
                 set
                 {
-
-                    if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "Buffer count is negative");
+                    ThrowHelper.ThrowIfNegative(value, nameof(Minimum));
                     if (value == 0) value = 1;
                     m_Minimum = value;
                 }
@@ -297,8 +297,7 @@
         /// </exception>
         public void CopyTo(LogEntry[] array, int arrayIndex)
         {
-            ThrowHelper.ThrowIfNull(array);
-            if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Array Index is less than 0");
+            ThrowHelper.ThrowIfArrayOutOfBounds(array, arrayIndex);
 
             int requiredLength = 0;
             foreach (var log in m_Log) {

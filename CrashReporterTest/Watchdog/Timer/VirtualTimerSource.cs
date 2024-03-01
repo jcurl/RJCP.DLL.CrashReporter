@@ -18,7 +18,7 @@
 
         public void UpdateClock(int time)
         {
-            if (time < 0) throw new ArgumentOutOfRangeException(nameof(time), "time must be positive or zero");
+            ThrowHelper.ThrowIfNegative(time);
 
             unchecked {
                 m_Time += time;

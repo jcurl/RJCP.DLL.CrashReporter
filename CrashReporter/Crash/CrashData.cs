@@ -59,7 +59,7 @@
             }
             set
             {
-                ThrowHelper.ThrowIfNull(value);
+                ThrowHelper.ThrowIfNull(value, nameof(CrashDumpFactory));
                 lock (s_SyncRoot) {
                     m_CrashFactory = value;
                 }
