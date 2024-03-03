@@ -114,10 +114,10 @@ Quality:
 - Update .NET 4.5 to 4.6.2 (DOTNET-827)
 - Update .NET Standard 2.1 to .NET 6.0 (DOTNET-833, DOTNET-936, DOTNET-938,
   DOTNET-942, DOTNET-944, DOTNET-945, DOTNET-952, DOTNET-959)
-- Update to .NET 8.0 (DOTNET-982, DOTNET-983)
+- Update to .NET 8.0 (DOTNET-982, DOTNET-983, DOTNET-989, DOTNET-990)
 - Clean up code (DOTNET-946)
 - Only delete old files if they're at least five minutes old (DOTNET-969)
-- Enable NetFX Runtime version informaiton on .NET 4.8, as well as .NET Core
+- Enable NetFX Runtime version information on .NET 4.8, as well as .NET Core
   (DOTNET-976)
 
 ### 7.2. Version 0.5.0

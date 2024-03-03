@@ -46,9 +46,9 @@
         /// </remarks>
         public override void DumpHeader(IEnumerable<string> header)
         {
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             ThrowHelper.ThrowIfNull(header);
             if (m_Rows.Count > 0) throw new InvalidOperationException("Dump header after dumping at least one row is invalid");
-            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             DumpHeaderInternal(header);
         }
 
@@ -94,8 +94,8 @@
         /// </remarks>
         public override void DumpRow(IDictionary<string, string> row)
         {
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             ThrowHelper.ThrowIfNull(row);
-            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
             DumpRowInternal(row);
         }
@@ -144,7 +144,7 @@
 
         public override void Flush()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (m_IsFlushed) throw new InvalidOperationException("Flushed twice, useless operation");
 
             /* Nothing to flush, as we're memory only */
@@ -154,16 +154,16 @@
 #if !NET40_LEGACY
         public override Task DumpHeaderAsync(IEnumerable<string> header)
         {
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             ThrowHelper.ThrowIfNull(header);
             if (m_Rows.Count > 0) throw new InvalidOperationException("Dump header after dumping at least one row is invalid");
-            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             return Task.Run(() => { DumpHeaderInternal(header); });
         }
 
         public override Task DumpRowAsync(IDictionary<string, string> row)
         {
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             ThrowHelper.ThrowIfNull(row);
-            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
             return Task.Run(() => { DumpRowInternal(row); });
         }

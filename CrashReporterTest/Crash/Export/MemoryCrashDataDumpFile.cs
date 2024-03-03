@@ -42,7 +42,7 @@
         {
             ThrowHelper.ThrowIfNull(tableName);
             ThrowHelper.ThrowIfNull(rowName);
-            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
 
             return DumpTableInternal(tableName, rowName);
@@ -82,7 +82,7 @@
 
         public void Flush()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (m_IsFlushed) throw new InvalidOperationException("Flushed twice, useless operation");
 
             /* Nothing to flush, as this is memory only */
@@ -94,7 +94,7 @@
         {
             ThrowHelper.ThrowIfNull(tableName);
             ThrowHelper.ThrowIfNull(rowName);
-            if (IsDisposed) throw new ObjectDisposedException(nameof(MemoryCrashDumpTable));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
 
             return Task.Run(() => { return DumpTableInternal(tableName, rowName); });
