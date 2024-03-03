@@ -33,10 +33,10 @@ generally done using the forward path specifier.
 
 This path is used when the following methods are called:
 
-* `Crash.Data.GetCrashDir(string prefix)`;
-* `Crash.Data.Dump()`;
-* `CrashReporter.CreateDump([CoreType coreType])`; and
-* `CrashReporter.CreateDump(string fileName[, CoreType coreType)])` when
+- `Crash.Data.GetCrashDir(string prefix)`;
+- `Crash.Data.Dump()`;
+- `CrashReporter.CreateDump([CoreType coreType])`; and
+- `CrashReporter.CreateDump(string fileName[, CoreType coreType)])` when
   `filename` is `null`.
 
 ### Environment Variables and Special Variables
@@ -49,17 +49,17 @@ environment variable of the program when it is started.
 Further, there are some special environment variables that allow for a string to
 work on multiple host operating systems:
 
-* `LOCALAPPDATA` would normally resolve to `%LOCALAPPDATA%` on Windows, but uses
+- `LOCALAPPDATA` would normally resolve to `%LOCALAPPDATA%` on Windows, but uses
   `Environment.LocalApplicationData` so that a path can be found on Linux
   environments;
-* `APPDATA` would normally resolve to `%APPDATA%` on Windows, but uses
+- `APPDATA` would normally resolve to `%APPDATA%` on Windows, but uses
   `Environment.ApplicationData` so that a path can be found on Linux
   environments;
-* `HOME` resolves to the home directory `%USERPROFILE%` on Windows and the
+- `HOME` resolves to the home directory `%USERPROFILE%` on Windows and the
   `HOME` environment variable on Linux.
-* `CWD` maps the the current directory of the program (at the time the
+- `CWD` maps the the current directory of the program (at the time the
   configuration is read in the program).
-* `APPDIR` resolves the the location where the program was started.
+- `APPDIR` resolves the the location where the program was started.
 
 ## Specifying the Clean Up Policy
 
@@ -75,12 +75,12 @@ age of 10 days, application B has an age of 45 days, only files of 10 days and
 newer are kept in the case when the more conservative application cleans up the
 dump directory.
 
-* `ageDays` specifies the age, in days, of the oldest crash dump. The age is
+- `ageDays` specifies the age, in days, of the oldest crash dump. The age is
   given by the create date of the crash dump, not of any implicate date of the
   crash dump that may be embedded into the file name.
-* `maxLogs` specifies the maximum number of logs to maintain in the crash dump
+- `maxLogs` specifies the maximum number of logs to maintain in the crash dump
   directory.
-* `freeGb` and `freePercent` are used with each other to determine how much
+- `freeGb` and `freePercent` are used with each other to determine how much
   reserve space on the current drive where logs are being stored should be
   maintained. Logs are removed until there is enough diskspace, given by
   `freeGb` (the number of GB that should be kept as reserve on the drive), or
@@ -89,7 +89,7 @@ dump directory.
   space is expected to be 10GB, or `freeGb` whichever is larger. Note, a reserve
   amount of space is always required when generating a log. The uncompressed
   data must first be written to disk before it is compressed.
-* `maxGb` specifies the maximum size of the log directory. If the maximum size
+- `maxGb` specifies the maximum size of the log directory. If the maximum size
   is exceeded, the oldest logs are removed, until the maximum size is under
   `maxGb` or there `minFiles` or less logs in the directory (so that not all
   logs are immediately removed as they may be required).

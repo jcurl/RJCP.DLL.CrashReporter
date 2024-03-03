@@ -33,11 +33,11 @@ the memory size. See [Crash Dump Config](dev-crashdumpconfig.md).
 The field `DumpDirectory` allows configures when dump files should be removed:
 when
 
-* the dump is older than `ageDays`; or
-* the number of logs exceeds `maxLogs`; or
-* there is less than `freeGb` disk space on the drive; or
-* there is less than `freePercent` disk space on the drive; or
-* the path given exceeds `maxGb` diskspace and there is more than `minLogs` on
+- the dump is older than `ageDays`; or
+- the number of logs exceeds `maxLogs`; or
+- there is less than `freeGb` disk space on the drive; or
+- there is less than `freePercent` disk space on the drive; or
+- the path given exceeds `maxGb` diskspace and there is more than `minLogs` on
   the drive.
 
 ## XML Crash Dumper

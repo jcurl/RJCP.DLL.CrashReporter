@@ -257,9 +257,9 @@ log level in the memory dump when using this library.
 
 Other minor details when logging using the `ILogger` in the crash dump are:
 
-* No thread information. The `TraceSource` provides this, but not the `ILogger`
+- No thread information. The `TraceSource` provides this, but not the `ILogger`
   interface.
-* The timestamp of the event is at the time of the logging by the library. The
+- The timestamp of the event is at the time of the logging by the library. The
   `TraceSource` provides this, but not the `ILogger` interface.
 
 ## Detailed Information
@@ -331,16 +331,16 @@ All errors when writing the XML crash dump file are logged to `RJCP.CrashReporte
 
 #### Crash Reporter
 
-* First Chance Exceptions are logged to the `CrashReporter.Source` property. The
+- First Chance Exceptions are logged to the `CrashReporter.Source` property. The
   default source is `RJCP.CrashReporter`.
-* Unhandled Exceptions are logged to the `CrashReporter.Source` property. The
+- Unhandled Exceptions are logged to the `CrashReporter.Source` property. The
   default source is `RJCP.CrashReporter`.
-* The actual creation of crash dumps (either success or failure) are logged to
+- The actual creation of crash dumps (either success or failure) are logged to
   `RJCP.CrashReporter`
-  * `Information`: Crash is created and its location
-  * `Warning`: If the crash dump directory couldn't be properly cleaned. This
+  - `Information`: Crash is created and its location
+  - `Warning`: If the crash dump directory couldn't be properly cleaned. This
     indicates a problem with the user account, which shouldn't occur.
-  * `Error`: Crash dump file couldn't be created (or the ZIP file can't be
+  - `Error`: Crash dump file couldn't be created (or the ZIP file can't be
     generated).
 
 #### Watchdog Logging

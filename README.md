@@ -32,24 +32,24 @@ This section lists the features supported by this library.
 
 Functionality which is available for all your software:
 
-* Supports .NET 4.0 and .NET 4.5 to 4.8, and .NET Core (.NET Standard 2.1)
-* Dump various types of information to an XML file, that the user can send in
+- Supports .NET 4.0 and .NET 4.5 to 4.8, and .NET Core (.NET Standard 2.1)
+- Dump various types of information to an XML file, that the user can send in
   addition to their bug reports.
-  * Collects OS information (mostly Windows)
-  * Collects all process environment variables
-  * Gets the current .NET version installed and running
-  * Lists all assemblies loaded into the program at the time of the crash
-  * Lists all DLLs (modules) mapped into the program
-  * Dump native thread information (there's no easy way to get .NET thread
+  - Collects OS information (mostly Windows)
+  - Collects all process environment variables
+  - Gets the current .NET version installed and running
+  - Lists all assemblies loaded into the program at the time of the crash
+  - Lists all DLLs (modules) mapped into the program
+  - Dump native thread information (there's no easy way to get .NET thread
     information)
-* Log information to a memory backed logger, that is only written to disk when
+- Log information to a memory backed logger, that is only written to disk when
   triggered by this library.
 
 ### 1.2. Windows Specific
 
 Functionality found on Windows only:
 
-* Be able to create a crash dump, which can be used to analyze the state of your
+- Be able to create a crash dump, which can be used to analyze the state of your
   program using WinDbg.
 
 ## 2. Data Collection

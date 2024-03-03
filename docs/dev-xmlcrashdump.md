@@ -3,25 +3,25 @@
 The default format is the XML Crash Dump (it is currently the only format
 implemented). When a crash dump is created, it generates two files:
 
-* The crash dump in XML format; and
-* An XSL file that can be used to convert the XML to readable HTML.
+- The crash dump in XML format; and
+- An XSL file that can be used to convert the XML to readable HTML.
 
 ## Providing Your Own XSL File
 
 You might need your own XSL file instead of the built in one, for at least one
 of the following reasons:
 
-* The XSL has CSS embedded, but you don't like the colors; or
-* You've provided your own CrashProvider and need special XSL transforms that
+- The XSL has CSS embedded, but you don't like the colors; or
+- You've provided your own CrashProvider and need special XSL transforms that
   knows how to display the information your custom CrashProvider classes
   generate; or
-* etc.
+- etc.
 
 To provide your own CSS you'll need to embed the CSS as a resource in your
 application. To do this in Visual Studio:
 
-* Add the XSL file to your project;
-* Set the `Build Action` to `Embedded Resource`.
+- Add the XSL file to your project;
+- Set the `Build Action` to `Embedded Resource`.
 
 When your software is compiled, an embedded resource will be created depending
 on where it is in your project.

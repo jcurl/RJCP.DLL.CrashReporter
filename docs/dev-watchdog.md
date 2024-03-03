@@ -89,32 +89,32 @@ file (it isn't read). See [dev-tracing](dev-tracing.md) for more information.
 
 Everything logged at this level includes:
 
-* `RJCP.CrashReporter.Watchdog`: Critical watchdog timeouts. Information about
+- `RJCP.CrashReporter.Watchdog`: Critical watchdog timeouts. Information about
   the name, the timeout that was configured, when and where it was registered,
   the last ping (and where the last ping occurred) and the current thread are
   logged.
-* `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`): If
+- `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`): If
   there was an error creating a dump on a critical watchdog timeout.
 
 #### TraceEventType.Warning
 
 Everything logged at this level includes:
 
-* `RJCP.CrashReporter.Watchdog`
-  * Registering a watchdog of the same name twice. The first watchdog is
+- `RJCP.CrashReporter.Watchdog`
+  - Registering a watchdog of the same name twice. The first watchdog is
     registered, but the second registration is ignored. Information about the
     name, when and were it was registered and the current callstack is logged.
-  * Unregistering a watchdog that was previously unregistered, or has never been
+  - Unregistering a watchdog that was previously unregistered, or has never been
     registered. Information about the name and the callstack is logged.
-  * Pinging a watchdog that was previously unregistered, or has never been
+  - Pinging a watchdog that was previously unregistered, or has never been
     registered. Information about the name and the callstack is logged.
-  * A watchdog warning has occurred. Every watchdog that has expired is only
+  - A watchdog warning has occurred. Every watchdog that has expired is only
     logged once, pinging the watchdog reactivates the watchdog timeout again.
     Information about the name of the watchdog, the warning timeout, when and
     where it was registered, and the time and location of the last ping, as well
     as the current managed thread.
-* `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`)
-  * If a watchdog critical dump could not be created, it is logged.
+- `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`)
+  - If a watchdog critical dump could not be created, it is logged.
 
 #### TraceEventType.Information
 
