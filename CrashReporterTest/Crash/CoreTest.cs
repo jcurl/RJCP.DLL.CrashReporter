@@ -20,7 +20,7 @@
                 Thread.Sleep(100);
                 pollCounter++;
             }
-            Assert.Fail("No minidump '{0}' was created", fileName);
+            Assert.Fail($"No minidump '{fileName}' was created");
         }
 
         [Platform(Include = "Win32NT")]
