@@ -15,13 +15,14 @@ application.
 - [5. Example Code](#5-example-code)
 - [6. Dependencies](#6-dependencies)
 - [7. Release History](#7-release-history)
-  - [7.1. Version 0.5.1](#71-version-051)
-  - [7.2. Version 0.5.0](#72-version-050)
-  - [7.3. Version 0.4.3](#73-version-043)
-  - [7.4. Version 0.4.2](#74-version-042)
-  - [7.5. Version 0.4.1](#75-version-041)
-  - [7.6. Version 0.4.0.1](#76-version-0401)
-  - [7.7. Version 0.4.0](#77-version-040)
+  - [7.1. Version 0.5.2](#71-version-052)
+  - [7.2. Version 0.5.1](#72-version-051)
+  - [7.3. Version 0.5.0](#73-version-050)
+  - [7.4. Version 0.4.3](#74-version-043)
+  - [7.5. Version 0.4.2](#75-version-042)
+  - [7.6. Version 0.4.1](#76-version-041)
+  - [7.7. Version 0.4.0.1](#77-version-0401)
+  - [7.8. Version 0.4.0](#78-version-040)
 
 
 ## 1. Functionality At a Glance
@@ -106,7 +107,13 @@ unified logging experience between .NET Framework and .NET Core, via the
 
 ## 7. Release History
 
-### 7.1. Version 0.5.1
+### 7.1. Version 0.5.2
+
+Quality:
+
+- Use `ConfigureAwait(false)` where appropriate (DOTNET-1012).
+
+### 7.2. Version 0.5.1
 
 Quality:
 
@@ -120,7 +127,7 @@ Quality:
 - Enable NetFX Runtime version information on .NET 4.8, as well as .NET Core
   (DOTNET-976)
 
-### 7.2. Version 0.5.0
+### 7.3. Version 0.5.0
 
 Feature:
 
@@ -153,7 +160,7 @@ Quality:
 - Ignore FirstChanceExceptions when dumping data (DOTNET-575)
 - Use a RJCP.Core.Environment for the platform (DOTNET-729)
 
-### 7.3. Version 0.4.3
+### 7.4. Version 0.4.3
 
 Quality:
 
@@ -164,7 +171,7 @@ Bugfixes:
 - Sanitise output to XML on output for async methods (HELIOS-1663)
 - Handle file system changes while cleaning (HELIOS-1664)
 
-### 7.4. Version 0.4.2
+### 7.5. Version 0.4.2
 
 Bugfixes:
 
@@ -177,7 +184,7 @@ Quality:
 - Update detection of .NET 4.8 on Windows 1909 (HELIOS-1370)
 - Print exception type in the log (HELIOS-1418)
 
-### 7.5. Version 0.4.1
+### 7.6. Version 0.4.1
 
 Features:
 
@@ -192,10 +199,10 @@ Quality:
 
 - Remove useless stylesheet set property (HELIOS-1349)
 
-### 7.6. Version 0.4.0.1
+### 7.7. Version 0.4.0.1
 
 - Update NuSpec
 
-### 7.7. Version 0.4.0
+### 7.8. Version 0.4.0
 
 - Initial Release

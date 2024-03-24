@@ -20,7 +20,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.CrashReporter</PackageProjectUrl>
     <Description>Library tools to allow developers to capture debug information.</Description>
-    <Version>0.5.1</Version>
+    <Version>0.5.2</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

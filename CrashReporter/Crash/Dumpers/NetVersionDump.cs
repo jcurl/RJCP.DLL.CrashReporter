@@ -66,28 +66,28 @@
             IEnumerable<NetVersion.INetVersion> netVersions = new NetVersion.NetVersions();
             IEnumerable<KeyValuePair<string, NetVersion.INetVersion>> runningVersions = GetRunTime();
 
-            using (IDumpTable table = await dumpFile.DumpTableAsync(NetVersionTable, "item")) {
-                await table.DumpHeaderAsync(m_RowInstalled);
+            using (IDumpTable table = await dumpFile.DumpTableAsync(NetVersionTable, "item").ConfigureAwait(false)) {
+                await table.DumpHeaderAsync(m_RowInstalled).ConfigureAwait(false);
                 foreach (var version in netVersions) {
                     if (version.IsValid) {
                         m_RowInstalled[NetInstalled] = version.FrameworkVersion.ToString();
                         m_RowInstalled[NetDescription] = version.Description;
-                        await table.DumpRowAsync(m_RowInstalled);
+                        await table.DumpRowAsync(m_RowInstalled).ConfigureAwait(false);
                     }
                 }
-                await table.FlushAsync();
+                await table.FlushAsync().ConfigureAwait(false);
             }
 
-            using (IDumpTable table = await dumpFile.DumpTableAsync(NetRunningTable, "item")) {
-                await table.DumpHeaderAsync(m_RowRunning);
+            using (IDumpTable table = await dumpFile.DumpTableAsync(NetRunningTable, "item").ConfigureAwait(false)) {
+                await table.DumpHeaderAsync(m_RowRunning).ConfigureAwait(false);
 
                 foreach (var version in runningVersions) {
                     m_RowRunning[NetRunning] = version.Key;
                     m_RowRunning[NetRunningVersion] = version.Value.FrameworkVersion.ToString();
                     m_RowRunning[NetDescription] = version.Value.Description;
-                    await table.DumpRowAsync(m_RowRunning);
+                    await table.DumpRowAsync(m_RowRunning).ConfigureAwait(false);
                 }
-                await table.FlushAsync();
+                await table.FlushAsync().ConfigureAwait(false);
             }
         }
 #endif

@@ -95,8 +95,8 @@
         /// <returns>An awaitable task.</returns>
         public async Task DumpAsync(ICrashDataDumpFile dumpFile)
         {
-            using (IDumpTable table = await dumpFile.DumpTableAsync(LogTable, "entry")) {
-                await table.DumpHeaderAsync(m_Row);
+            using (IDumpTable table = await dumpFile.DumpTableAsync(LogTable, "entry").ConfigureAwait(false)) {
+                await table.DumpHeaderAsync(m_Row).ConfigureAwait(false);
 
                 // We can't use awaitable inside a lock, so we need to first copy the data.
                 List<LogEntry> list = new();
@@ -107,9 +107,9 @@
                 }
 
                 foreach (var entry in list) {
-                    await table.DumpRowAsync(GetLogEntry(entry, m_Row));
+                    await table.DumpRowAsync(GetLogEntry(entry, m_Row)).ConfigureAwait(false);
                 }
-                await table.FlushAsync();
+                await table.FlushAsync().ConfigureAwait(false);
             }
         }
 #endif

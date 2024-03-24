@@ -135,8 +135,8 @@
         {
             if (!IsValid()) return;
 
-            using (IDumpTable table = await dumpFile.DumpTableAsync(TableName, RowName)) {
-                await table.DumpHeaderAsync(m_Row);
+            using (IDumpTable table = await dumpFile.DumpTableAsync(TableName, RowName).ConfigureAwait(false)) {
+                await table.DumpHeaderAsync(m_Row).ConfigureAwait(false);
                 foreach (T item in GetRows()) {
                     bool updated = false;
                     try {
@@ -145,9 +145,9 @@
                         Log.CrashLog.TraceEvent(TraceEventType.Error, "Couldn't dump row for {0}: {1}",
                             GetType().ToString(), ex.ToString());
                     }
-                    if (updated) await table.DumpRowAsync(m_Row);
+                    if (updated) await table.DumpRowAsync(m_Row).ConfigureAwait(false);
                 }
-                await table.FlushAsync();
+                await table.FlushAsync().ConfigureAwait(false);
             }
         }
 #endif

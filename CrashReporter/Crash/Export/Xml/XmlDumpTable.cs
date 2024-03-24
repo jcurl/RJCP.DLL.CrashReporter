@@ -61,21 +61,21 @@
         {
             if (m_IsFlushed) return;
 
-            await m_Writer.WriteStartElementAsync(null, m_RowName, null);
+            await m_Writer.WriteStartElementAsync(null, m_RowName, null).ConfigureAwait(false);
             try {
                 IEnumerable<string> fields = m_Fields ?? row.Keys;
                 foreach (string field in fields) {
-                    await m_Writer.WriteAttributeStringAsync(null, field, null, XmlExtensions.SanitizeXml10(row[field]));
+                    await m_Writer.WriteAttributeStringAsync(null, field, null, XmlExtensions.SanitizeXml10(row[field])).ConfigureAwait(false);
                 }
             } finally {
-                await m_Writer.WriteEndElementAsync();
+                await m_Writer.WriteEndElementAsync().ConfigureAwait(false);
             }
         }
 
         public async override Task FlushAsync()
         {
             if (!m_IsFlushed) {
-                await m_Writer.WriteEndElementAsync();
+                await m_Writer.WriteEndElementAsync().ConfigureAwait(false);
                 m_IsFlushed = true;
             }
         }

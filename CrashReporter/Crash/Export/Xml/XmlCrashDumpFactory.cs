@@ -102,7 +102,7 @@
         {
             XmlCrashDumper dumper = new();
             try {
-                await dumper.CreateFileAsync(fileName);
+                await dumper.CreateFileAsync(fileName).ConfigureAwait(false);
             } catch {
                 dumper.Dispose();
                 throw;
@@ -135,7 +135,7 @@
         {
             XmlCrashDumper dumper = new();
             try {
-                await dumper.CreateFileAsync(stream, path);
+                await dumper.CreateFileAsync(stream, path).ConfigureAwait(false);
             } catch {
                 dumper.Dispose();
                 throw;

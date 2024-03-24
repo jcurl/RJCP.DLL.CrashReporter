@@ -228,8 +228,8 @@
         /// </exception>
         public async Task<string> DumpAsync(string path)
         {
-            using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(path)) {
-                await DumpAsync(dump);
+            using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(path).ConfigureAwait(false)) {
+                await DumpAsync(dump).ConfigureAwait(false);
             }
             return path;
         }
@@ -247,8 +247,8 @@
         /// </exception>"
         public async Task DumpAsync(Stream stream, string path)
         {
-            using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(stream, path)) {
-                await DumpAsync(dump);
+            using (ICrashDataDumpFile dump = await CrashDumpFactory.CreateAsync(stream, path).ConfigureAwait(false)) {
+                await DumpAsync(dump).ConfigureAwait(false);
             }
         }
 
@@ -256,16 +256,16 @@
         {
             if (dump.IsSynchronous) {
                 foreach (ICrashDataExport dumper in Providers) {
-                    await dumper.DumpAsync(dump);
+                    await dumper.DumpAsync(dump).ConfigureAwait(false);
                 }
             } else {
                 List<Task> dumpers = new(Providers.Count);
                 foreach (ICrashDataExport dumper in Providers) {
                     dumpers.Add(dumper.DumpAsync(dump));
                 }
-                await Task.WhenAll(dumpers);
+                await Task.WhenAll(dumpers).ConfigureAwait(false);
             }
-            await dump.FlushAsync();
+            await dump.FlushAsync().ConfigureAwait(false);
         }
 #endif
     }

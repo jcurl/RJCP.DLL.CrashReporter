@@ -85,7 +85,7 @@
 
         private async Task DumpRowInternalAsync(DumpRow row)
         {
-            await DumpRowAsync(row.GetRow());
+            await DumpRowAsync(row.GetRow()).ConfigureAwait(false);
             row.Clear();
         }
 

@@ -209,8 +209,8 @@
         private async Task CreateFileInternalAsync(string fileName)
         {
             try {
-                m_Writer = await Task.Run(() => { return CreateFileInternal(fileName, true); });
-                await m_Writer.WriteStartElementAsync(null, RootName, null);
+                m_Writer = await Task.Run(() => { return CreateFileInternal(fileName, true); }).ConfigureAwait(false);
+                await m_Writer.WriteStartElementAsync(null, RootName, null).ConfigureAwait(false);
                 m_IsFlushed = false;
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(System.Diagnostics.TraceEventType.Error, "Error creating async crash file: {0}", ex.ToString());
@@ -234,8 +234,8 @@
         private async Task CreateFileInternalAsync(Stream stream, string path)
         {
             try {
-                m_Writer = await Task.Run(() => { return CreateFileInternal(stream, path, null, true); });
-                await m_Writer.WriteStartElementAsync(null, RootName, null);
+                m_Writer = await Task.Run(() => { return CreateFileInternal(stream, path, null, true); }).ConfigureAwait(false);
+                await m_Writer.WriteStartElementAsync(null, RootName, null).ConfigureAwait(false);
                 m_IsFlushed = false;
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(System.Diagnostics.TraceEventType.Error, "Error creating async crash stream: {0}", ex.ToString());
@@ -253,7 +253,7 @@
 
         private async Task<IDumpTable> DumpTableInternalAsync(string tableName, string rowName)
         {
-            await m_Writer.WriteStartElementAsync(null, tableName, null);
+            await m_Writer.WriteStartElementAsync(null, tableName, null).ConfigureAwait(false);
 
             // Update the variables after writing, so when we flush, we close that element. If writing the element would
             // raise an exception, we wouldn't close something that probably wasn't written.
@@ -263,9 +263,9 @@
         public async Task FlushAsync()
         {
             if (!m_IsFlushed) {
-                await m_Writer.WriteEndElementAsync();
-                await m_Writer.FlushAsync();
-                await m_Stream.FlushAsync();
+                await m_Writer.WriteEndElementAsync().ConfigureAwait(false);
+                await m_Writer.FlushAsync().ConfigureAwait(false);
+                await m_Stream.FlushAsync().ConfigureAwait(false);
                 m_IsFlushed = true;
             }
         }
