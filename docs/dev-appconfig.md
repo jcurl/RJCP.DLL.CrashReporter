@@ -54,7 +54,7 @@ Refer to [XML Crash Dump](dev-xmlcrashdump.md) for detailed information.
 
 This section allows you to:
 
-* Specify a custom XSL to copy along side a generated XML file containing the
+- Specify a custom XSL to copy along side a generated XML file containing the
   crash dump. This can then be loaded using most browser tools. Note that most
   browsers of today don't load XML files with XSL transforms unless served via a
   webserver to avoid possible security holes.
@@ -76,6 +76,6 @@ Refer to [Watchdog](dev-watchdog.md) for detailed information
 
 This section allows you to:
 
-* Override programmatic watchdog timeouts, as well as disable watchdog timeouts.
-* Disable the automatic recording of stack trace information on a watchdog ping
+- Override programmatic watchdog timeouts, as well as disable watchdog timeouts.
+- Disable the automatic recording of stack trace information on a watchdog ping
   (default is enabled).

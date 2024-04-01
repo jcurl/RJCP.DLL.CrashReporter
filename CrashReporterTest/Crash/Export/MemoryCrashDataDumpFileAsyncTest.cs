@@ -299,20 +299,54 @@
         }
 
         [Test]
+        public void AsynchronousDumpTable()
+        {
+            using (MemoryCrashDataDumpFile dump = new()) {
+                IDumpTable table1 = dump.DumpTable("element1", "item");
+
+                // Ensure that our test case will complain properly if we run two dumpers simultaneously. This should
+                // not occur, and if it does, an exception should be raised.
+                Assert.That(() => {
+                    _ = dump.DumpTable("element2", "item");
+                }, Throws.TypeOf<InvalidOperationException>());
+
+                // The first table will succeed. Ensure it is still properly disposed so we don't get an exception when
+                // disposing our table.
+                table1.Flush();
+                table1.Dispose();
+                dump.Flush();
+                Assert.That(dump.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
         public async Task AsynchronousDumpTableAsync()
         {
             using (MemoryCrashDataDumpFile dump = new()) {
-                dump.IsSynchronous = false;
                 Task<IDumpTable> table1Task = dump.DumpTableAsync("element1", "item");
                 Task<IDumpTable> table2Task = dump.DumpTableAsync("element2", "item");
-                await Task.WhenAll(table1Task, table2Task);
-                IDumpTable table1 = table1Task.Result;
-                IDumpTable table2 = table2Task.Result;
-                await Task.WhenAll(table1.FlushAsync(), table2.FlushAsync());
-                table1.Dispose();
-                table2.Dispose();
+
+                // Ensure that our test case will complain properly if we run two dumpers simultaneously. This should
+                // not occur, and if it does, an exception should be raised. Note, we don't have a race condition, as
+                // the `MemoryCrashDataDumpFile.DumpTableAsync` will check for tables that haven't been disposed of yet
+                // (which they can't be, that's done later in the test).
+                await Assert.ThatAsync(async () => {
+                    await Task.WhenAll(table1Task, table2Task);
+                }, Throws.TypeOf<InvalidOperationException>());
+
+                // One will succeed. Ensure it is still properly disposed so we don't get an exception when disposing
+                // our table.
+                if (!table1Task.IsFaulted) {
+                    IDumpTable table1 = table1Task.Result;
+                    await table1.FlushAsync();
+                    table1.Dispose();
+                }
+                if (!table2Task.IsFaulted) {
+                    IDumpTable table2 = table2Task.Result;
+                    await table2.FlushAsync();
+                    table2.Dispose();
+                }
                 await dump.FlushAsync();
-                Assert.That(dump.Count, Is.EqualTo(2));
             }
         }
 

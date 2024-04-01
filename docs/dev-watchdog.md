@@ -120,23 +120,23 @@ Everything logged at this level includes:
 
 Everything logged at this level includes:
 
-* `RJCP.CrashReporter.Watchdog`
-  * First time registration of a watchdog. The name, warning timeout and
+- `RJCP.CrashReporter.Watchdog`
+  - First time registration of a watchdog. The name, warning timeout and
     critical timeout are logged.
-  * Unregistering a previously registered watchdog. The name of the watchdog is
+  - Unregistering a previously registered watchdog. The name of the watchdog is
     logged.
-* `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`)
-  * If a watchdog warning could not be created, it is logged.
-  * The location of a watchdog timeout (critical time expired).
+- `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`)
+  - If a watchdog warning could not be created, it is logged.
+  - The location of a watchdog timeout (critical time expired).
 
 #### TraceEventType.Verbose
 
 Everything logged at this level includes:
 
-* `RJCP.CrashReporter.Watchdog`
-  * When pinging a watchdog. The name of the watchdog is logged.
-* `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`)
-  * Logs the location of a watchdog warning log.
+- `RJCP.CrashReporter.Watchdog`
+  - When pinging a watchdog. The name of the watchdog is logged.
+- `RJCP.CrashReporter` (or the category defined by `CrashReporter.Source`)
+  - Logs the location of a watchdog warning log.
 
 ## Advanced Techniques
 

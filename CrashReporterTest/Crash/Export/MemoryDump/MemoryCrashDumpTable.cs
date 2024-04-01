@@ -59,12 +59,10 @@
                 foreach (string field in header) {
                     if (string.IsNullOrEmpty(field)) throw new ArgumentException("Field provided that is null or empty", nameof(header));
                     if (!CheckField(field)) {
-                        string message = string.Format("Field '{0}' contains invalid character", field);
-                        throw new ArgumentException(message, nameof(header));
+                        throw new ArgumentException($"Field '{field}' contains invalid character", nameof(header));
                     }
                     if (fields.Contains(field)) {
-                        string message = string.Format("Field '{0}' specified multiple times", field);
-                        throw new ArgumentException(message);
+                        throw new ArgumentException($"Field '{field}' specified multiple times");
                     }
                     fields.Add(field);
                     m_Fields.Add(field);
@@ -105,14 +103,12 @@
             lock (m_SyncRoot) {
                 IFields newRow = new Fields(new Dictionary<string, string>());
                 foreach (KeyValuePair<string, string> property in row) {
-                    if (string.IsNullOrEmpty(property.Key)) throw new ArgumentException("Property provided that is null or empty", nameof(row));
+                    if (string.IsNullOrEmpty(property.Key)) throw new ArgumentException("Property provided that key is null or empty", nameof(row));
                     if (!CheckField(property.Key)) {
-                        string message = string.Format("Property '{0}' contains invalid character", property.Key);
-                        throw new ArgumentException(message, nameof(row));
+                        throw new ArgumentException($"Property '{property.Key}' contains invalid character", nameof(row));
                     }
                     if (m_Fields.Count > 0 && !m_Fields.Contains(property.Key)) {
-                        string message = string.Format("Field not defined: {0}", property.Key);
-                        throw new ArgumentException(message, nameof(row));
+                        throw new ArgumentException($"Field not defined: {property.Key}", nameof(row));
                     }
                     newRow.Field.Add(property.Key, property.Value);
                 }
@@ -120,8 +116,7 @@
                 if (m_Fields.Count > 0) {
                     foreach (string field in m_Fields) {
                         if (!newRow.Field.ContainsKey(field)) {
-                            string message = string.Format("Missing property for field: {0}", field);
-                            throw new ArgumentException(message, nameof(row));
+                            throw new ArgumentException($"Missing property for field: {field}", nameof(row));
                         }
                     }
                 }

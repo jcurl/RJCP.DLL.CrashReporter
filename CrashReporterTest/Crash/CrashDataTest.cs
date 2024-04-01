@@ -33,13 +33,8 @@
         [Test]
         public void AsynchronousDump()
         {
-            // Set up our test factory to allow asynchronous dumps. The implementation may, or may not, do the dump
-            // asynchronously.
             ICrashDumpFactory origFactory = CrashData.Instance.CrashDumpFactory;
-            MemoryCrashDumpFactory factory = new() {
-                IsSynchronous = false
-            };
-            CrashData.Instance.CrashDumpFactory = factory;
+            CrashData.Instance.CrashDumpFactory = new MemoryCrashDumpFactory();
 
             try {
                 string path = CrashData.Instance.Dump();
@@ -76,10 +71,7 @@
         {
             // Set up our test factory to allow asynchronous dumps
             ICrashDumpFactory origFactory = CrashData.Instance.CrashDumpFactory;
-            MemoryCrashDumpFactory factory = new() {
-                IsSynchronous = false
-            };
-            CrashData.Instance.CrashDumpFactory = factory;
+            CrashData.Instance.CrashDumpFactory = new MemoryCrashDumpFactory();
 
             try {
                 string path = await CrashData.Instance.DumpAsync();

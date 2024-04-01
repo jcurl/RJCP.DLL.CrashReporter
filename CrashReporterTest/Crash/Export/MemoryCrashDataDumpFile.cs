@@ -11,22 +11,6 @@
     public sealed class MemoryCrashDataDumpFile : ICrashDataDumpFile
     {
         private readonly Dictionary<string, List<MemoryCrashDumpTable>> m_Blocks = new();
-
-        /// <summary>
-        /// Gets a value indicating if this instance can support writing blocks asynchronously.
-        /// </summary>
-        /// <value>
-        /// Returns <see langword="true"/> if this instance is synchronous; otherwise, <see langword="false"/>.
-        /// </value>
-        /// <remarks>
-        /// If this object is synchronous (the value of this property is <see langword="true"/>), obtaining and using
-        /// the <see cref="IDumpBlock"/> returned by <see cref="ICrashDataDumpFile.DumpBlock(String)"/> must by
-        /// synchronous (the previous block must be disposed prior to obtaining a new one). For example, if the
-        /// underlying implementing writes directly to disk, this would be typically a synchronous implementation.
-        /// <para>This property can be written to for the purposes of testing.</para>
-        /// </remarks>
-        public bool IsSynchronous { get; set; } = true;
-
         private ScratchPad m_Scratch;
 
         public string Path
@@ -52,8 +36,13 @@
         {
             MemoryCrashDumpTable block = new(tableName, rowName);
             lock (m_Blocks) {
-                if (IsSynchronous && CheckIncomplete(out string _))
-                    throw new InvalidOperationException("DumpBlock requested while another DumpBlock is active in synchronous mode");
+                // Ensures that all tables in the file are already disposed. This means that the `CrashData` is dumping
+                // the `ICrashDataExport` objects serially (it can collect them if it wants in parallel, but dumping
+                // must still be done serially).
+                if (CheckIncomplete(out string _))
+                    throw new InvalidOperationException("DumpBlock requested while another DumpBlock is active");
+
+                // The user may dump multiple tables of the same name.
                 if (!m_Blocks.TryGetValue(tableName, out List<MemoryCrashDumpTable> blockList)) {
                     blockList = new List<MemoryCrashDumpTable>();
                     m_Blocks.Add(tableName, blockList);
@@ -69,7 +58,7 @@
                 for (int i = 0; i < blockList.Count; i++) {
                     MemoryCrashDumpTable knownBlock = blockList[i];
                     if (!knownBlock.IsDisposed) {
-                        name = string.Format("{0}[{1}]", knownBlock.TableName, i);
+                        name = $"{knownBlock.TableName}[{i}]";
                         return true;
                     }
                 }
@@ -97,15 +86,15 @@
             ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (m_IsFlushed) throw new InvalidOperationException("Object flushed, writing is not allowed");
 
+            // Start a task that it is started immediately on the thread-pool. This promotes testing if multiple blocks
+            // are being dumped simultaneously, that will result in an exception in the task.
             return Task.Run(() => { return DumpTableInternal(tableName, rowName); });
         }
-
-        private readonly static Task Completed = Task.FromResult(true);    // .NET 4.6 and later has Task>Completed
 
         public Task FlushAsync()
         {
             Flush();
-            return Completed;
+            return Task.CompletedTask;
         }
 #endif
 
@@ -124,8 +113,7 @@
                     if (m_Blocks.TryGetValue(table, out var tableEntry))
                         return new TableEntry(tableEntry);
                 }
-                string message = string.Format("Table '{0}' not found", table);
-                throw new KeyNotFoundException(message);
+                throw new KeyNotFoundException($"Table '{table}' not found");
             }
         }
 
@@ -143,16 +131,16 @@
         {
             foreach (IList<MemoryCrashDumpTable> tableList in m_Blocks.Values) {
                 foreach (MemoryCrashDumpTable table in tableList) {
-                    Console.WriteLine("Table: {0}", table.TableName);
+                    Console.WriteLine($"Table: {table.TableName}");
                     foreach (IFields row in table) {
-                        Console.Write("  {0}:", table.RowName);
+                        Console.Write($"  {table.RowName}:");
                         bool first = true;
                         foreach (string field in table.Headers) {
                             if (first) {
-                                Console.Write(" {0}={1}", field, row.Field[field]);
+                                Console.Write($" {field}={row.Field[field]}");
                                 first = false;
                             } else {
-                                Console.Write(", {0}={1}", field, row.Field[field]);
+                                Console.Write($", {field}={row.Field[field]}");
                             }
                         }
                         Console.WriteLine(string.Empty);
@@ -174,7 +162,7 @@
             bool properlyDisposed = true;
             lock (m_Blocks) {
                 if (CheckIncomplete(out string name)) {
-                    Console.WriteLine("Dispose called with table '{0}' not disposed.", name);
+                    Console.WriteLine($"Dispose called with table '{name}' not disposed.");
                     properlyDisposed = false;
                 }
             }

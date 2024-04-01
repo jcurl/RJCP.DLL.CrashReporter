@@ -105,18 +105,6 @@
             };
         }
 
-        /// <summary>
-        /// Gets a value indicating if this instance can support writing blocks asynchronously.
-        /// </summary>
-        /// <value>
-        /// Returns <see langword="true"/> if this instance is synchronous; otherwise, <see langword="false"/>.
-        /// </value>
-        /// <remarks>
-        /// This is a synchronous implementation - it writes directly to the XML file when dumping rows, rather than
-        /// caching them first.
-        /// </remarks>
-        public bool IsSynchronous { get { return true; } }
-
         public string Path { get; private set; }
 
         public IDumpTable DumpTable(string tableName, string rowName)

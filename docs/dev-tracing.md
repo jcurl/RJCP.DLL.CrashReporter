@@ -121,7 +121,7 @@ then messages will be discarded later.
 Use the `<sharedListeners>` for each `<source>` in the `App.config`. Logging
 will be placed into a single block.
 
-### .NET Core (.NET Standard 2.1)
+### .NET Core
 
 The .NET Core framework doesn't read the `app.config` file. While `TraceSource`
 is part of the sources and is available, there is no singleton initializing the
@@ -222,7 +222,7 @@ console.
 
 There isn't a one-to-one mapping between the `TraceEventType` and the
 `LogLevel`. This results in some loss of information as logging from `LogSource`
-(which uses the `TraceEventType` is mapped to the `ILogger` (which uses the
+(which uses the `TraceEventType`) is mapped to the `ILogger` (which uses the
 `LogLevel`), which is mapped back again to the memory log. This is because a
 user is no longer restricted to using the `LogSource` if they instantiate and
 use the `ILogger` direct.

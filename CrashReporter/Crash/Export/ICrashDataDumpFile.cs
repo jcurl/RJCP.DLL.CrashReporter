@@ -11,20 +11,6 @@
     public interface ICrashDataDumpFile : IDisposable
     {
         /// <summary>
-        /// Gets a value indicating if this instance can support writing blocks asynchronously.
-        /// </summary>
-        /// <value>
-        /// Returns <see langword="true"/> if this instance is synchronous; otherwise, <see langword="false"/>.
-        /// </value>
-        /// <remarks>
-        /// If this object is synchronous (the value of this property is <see langword="true"/>), obtaining and using
-        /// the <see cref="IDumpTable"/> returned by <see cref="DumpTable(string, string)"/> must by synchronous (the
-        /// previous block must be disposed prior to obtaining a new one). For example, if the underlying implementing
-        /// writes directly to disk, this would be typically a synchronous implementation.
-        /// </remarks>
-        bool IsSynchronous { get; }
-
-        /// <summary>
         /// Gets the directory path to where data is being written.
         /// </summary>
         /// <value>

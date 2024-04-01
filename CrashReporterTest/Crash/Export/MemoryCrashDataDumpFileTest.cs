@@ -15,7 +15,6 @@
         public void Default()
         {
             using (MemoryCrashDataDumpFile dump = new()) {
-                Assert.That(dump.IsSynchronous, Is.True);
                 Assert.That(dump.Count, Is.EqualTo(0));
                 dump.Flush();
             }
@@ -315,22 +314,6 @@
                 table.Dispose();
                 dump.Flush();
                 Assert.That(dump.Count, Is.EqualTo(1));
-            }
-        }
-
-        [Test]
-        public void AsynchronousDumpTable()
-        {
-            using (MemoryCrashDataDumpFile dump = new()) {
-                dump.IsSynchronous = false;
-                IDumpTable table1 = dump.DumpTable("element1", "item");
-                IDumpTable table2 = dump.DumpTable("element2", "item");
-                table1.Flush();
-                table1.Dispose();
-                table2.Flush();
-                table2.Dispose();
-                dump.Flush();
-                Assert.That(dump.Count, Is.EqualTo(2));
             }
         }
 

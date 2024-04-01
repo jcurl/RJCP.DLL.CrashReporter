@@ -1,0 +1,186 @@
+@startuml RJCP.Diagnostics.CrashData
+class CrashData {
+    {static} Instance: CrashData
+    CrashDumpFactory: ICrashDumpFactory
+    Providers: IList<ICrashDataExport>
+    --
+    {static} GetCrashDir(prefix: string): string
+    .. <<Synchronous>> ..
+    Dump(): string
+    Dump(path: string): string
+    Dump(stream: Stream, path: string): void
+    .. <<Asynchronous>> ..
+    DumpAsync(): Task<string>
+    DumpAsync(path: string): Task<string>
+    DumpAsync(stream: Stream, path: string): Task
+}
+
+class "Collection<ICrashDataExport>" as Collection_ICrashDataExport
+
+class CrashDataProviders <<internal>> {
+    #InsertItem(index: int, item: ICrashDataExport): void
+    #SetItem(index: int, item: ICrashDataExport): void
+    #RemoveItem(index: int): void
+}
+
+Collection_ICrashDataExport <|-d- CrashDataProviders
+
+CrashData *-r- CrashDataProviders
+' note right {
+'     Is the 'Providers' property, ensuring
+'     no duplicate dumpers are present.
+' }
+
+interface ICrashDumpFactory {
+    FileName: string
+    --
+    .. <<Synchronous>> ..
+    Create(fileName: string): ICrashDataDumpFile
+    Create(stream: Stream, path: string): ICrashDataDumpFile
+    .. <<Aynchronous>> ..
+    CreateAsync(fileName: string): Task<ICrashDataDumpFile>
+    CreateAsync(stream: Stream, path: string): Task<ICrashDataDumpFile>
+}
+
+class XmlCrashDumpFactory
+
+ICrashDumpFactory <|.r. XmlCrashDumpFactory
+
+interface ICrashDataDumpFile {
+    Path: string
+    --
+    .. <<Synchronous>> ..
+    DumpTable(tableName: string, rowName: string): IDumpTable
+    Flush(): void
+    .. <<Asynchronous>> ..
+    DumpTableAsync(tableName: string, rowName: string): Task<IDumpTable>
+    FlushAsync(): Task
+}
+
+class XmlCrashDumper
+
+ICrashDataDumpFile <|.r. XmlCrashDumper
+XmlCrashDumpFactory -d-> XmlCrashDumper : <<creates>>
+
+interface IDumpTable {
+    .. <<Synchronous>> ..
+    DumpHeader(row: DumpRow): void
+    DumpHeader(header: IEnumerable<string>): void
+    DumpRow(row: DumpRow): void
+    DumpRow(IDictionary<string, string> row): void
+    Flush(): void
+    .. <<Asynchronous>> ..
+    DumpHeaderAsync(row: DumpRow): Task
+    DumpHeaderAsync(header: IEnumerable<string>): Task
+    DumpRowAsync(row: DumpRow): Task
+    DumpRowAsync(IDictionary<string, string> row): Task
+    FlushAsync(): Task
+}
+
+class XmlDumpTable
+
+IDumpTable <|.r. XmlDumpTable
+XmlCrashDumper -d-> XmlDumpTable : <<creates>>
+
+CrashData -d-> ICrashDumpFactory
+ICrashDumpFactory -d-> ICrashDataDumpFile
+ICrashDataDumpFile -d-> IDumpTable
+@enduml
+
+
+@startuml RJCP.Diagnostics.CrashDataExport
+interface ICrashDataExport {
+    Dump(dumpFile: ICrashDataDumpFile): void
+    DumpAsync(dumpFile: ICrashDataDumpFile): Task
+}
+
+abstract class CrashDataExport<T> {
+    #CrashDataExport(row: DumpRow)
+    --
+    {abstract} #TableName: string
+    {abstract} #RowName: string
+    --
+    {abstract} #GetRows(): IEnumerable<T>
+    {abstract} #UpdateRow(item: T, row: DumpRow)
+    #IsValid(): bool = true
+    #GetField(fieldAccess: Func<string>): string
+    +Dump(dumpFile: ICrashDataDumpFile): void
+    +DumpAsync(dumpFile: ICrashDataDumpFile): Task
+}
+
+class DumpRow {
+    DumpRow(header: string[])
+    --
+    this[key: string]: string
+    --
+    GetHeader(): IEnumerable<string>
+    GetRow(): IDictionary<string, string>
+    Clear(): void
+}
+
+class AssemblyDump<Assembly>
+class EnvironmentDump<KeyValuePair<string, string>>
+
+ICrashDataExport <|.d. CrashDataExport
+CrashDataExport o-r- DumpRow
+CrashDataExport <|.d. AssemblyDump
+CrashDataExport <|.d. EnvironmentDump
+@enduml
+
+@startuml RJCP.Diagnostics.DumpSequence
+actor User
+participant CrashData
+participant ICrashDumpFactory
+participant ICrashDataDumpFile
+participant ICrashDataExport
+participant IDumpTable
+
+User -> CrashData : string\n path = Dump()
+activate CrashData
+
+CrashData -> CrashData : GetCrashPath()
+CrashData -> ICrashDumpFactory : ICrashDataDumpFile\n dump = Create(path)
+activate ICrashDumpFactory
+
+ICrashDumpFactory -> ICrashDataDumpFile : new(...)
+activate ICrashDataDumpFile
+
+ICrashDataDumpFile --> ICrashDumpFactory
+ICrashDumpFactory --> CrashData : return dump
+deactivate ICrashDumpFactory
+
+loop foreach ICrashDataExport dumper in Providers
+    CrashData -> ICrashDataExport : dumper.Dump(dump)
+    activate ICrashDataExport
+    ICrashDataExport -> ICrashDataDumpFile : IDumpTable\n table = DumpTable()
+
+    ICrashDataDumpFile -> IDumpTable : new(...)
+    activate IDumpTable
+        IDumpTable --> ICrashDataDumpFile
+        ICrashDataDumpFile --> ICrashDataExport : return table
+        ICrashDataExport -> IDumpTable : table.DumpHeader()
+        IDumpTable --> ICrashDataExport
+
+        loop foreach T item in GetRows()
+            ICrashDataExport -> IDumpTable : table.DumpRow(item)
+            IDumpTable --> ICrashDataExport
+        end loop
+        ICrashDataExport -> IDumpTable : table.Flush()
+        IDumpTable --> ICrashDataExport
+
+        ICrashDataExport -> IDumpTable : table.Dispose()
+    destroy IDumpTable
+
+    ICrashDataExport --> CrashData
+    deactivate ICrashDataExport
+end loop
+
+CrashData -> ICrashDataDumpFile : dump.Flush()
+ICrashDataDumpFile --> CrashData
+
+CrashData -> ICrashDataDumpFile : dump.Dispose()
+destroy ICrashDataDumpFile
+
+CrashData --> User : return path
+deactivate CrashData
+@enduml
