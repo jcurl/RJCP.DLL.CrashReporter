@@ -19,18 +19,9 @@
 
         public void CreateFile(string fileName)
         {
-            ThrowHelper.ThrowIfNull(fileName);
-            if (m_Writer is not null) throw new InvalidOperationException("File is already created, cannot create twice");
-
-            if (Directory.Exists(fileName)) {
-                Path = fileName;
-                fileName = System.IO.Path.Combine(fileName, DefaultFileName);
-            } else {
-                Path = System.IO.Path.GetDirectoryName(fileName);
-            }
-
+            fileName = CheckCreateFile(fileName);
             try {
-                m_Writer = CreateFileInternal(fileName, false);
+                m_Writer = CreateFileInternal(fileName);
                 m_Writer.WriteStartElement(RootName);
                 m_IsFlushed = false;
             } catch (Exception ex) {
@@ -42,16 +33,9 @@
 
         public void CreateFile(Stream stream, string path)
         {
-            ThrowHelper.ThrowIfNull(stream);
-            ThrowHelper.ThrowIfNull(path);
-
-            if (m_Writer is not null) throw new InvalidOperationException("File is already created, cannot create twice");
-
-            m_Stream = stream;
-            Path = path;
-
+            CheckCreateFile(stream, path);
             try {
-                m_Writer = CreateFileInternal(stream, path, null, false);
+                m_Writer = CreateFileInternal(stream, path, null);
                 m_Writer.WriteStartElement(RootName);
                 m_IsFlushed = false;
             } catch (Exception ex) {
@@ -61,7 +45,31 @@
             }
         }
 
-        private XmlWriter CreateFileInternal(string fileName, bool isAsync)
+        private string CheckCreateFile(string fileName)
+        {
+            ThrowHelper.ThrowIfNull(fileName);
+            if (m_Writer is not null) throw new InvalidOperationException("File is already created, cannot create twice");
+
+            if (Directory.Exists(fileName)) {
+                Path = fileName;
+                fileName = System.IO.Path.Combine(fileName, DefaultFileName);
+            } else {
+                Path = System.IO.Path.GetDirectoryName(fileName);
+            }
+            return fileName;
+        }
+
+        private void CheckCreateFile(Stream stream, string path)
+        {
+            ThrowHelper.ThrowIfNull(stream);
+            ThrowHelper.ThrowIfNull(path);
+            if (m_Writer is not null) throw new InvalidOperationException("File is already created, cannot create twice");
+
+            m_Stream = stream;
+            Path = path;
+        }
+
+        private XmlWriter CreateFileInternal(string fileName)
         {
             string directory = System.IO.Path.GetDirectoryName(fileName);
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
@@ -72,17 +80,17 @@
 
             m_OwnsStream = true;
             m_Stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
-            return CreateFileInternal(m_Stream, directory, styleSheetName, isAsync);
+            return CreateFileInternal(m_Stream, directory, styleSheetName);
         }
 
-        private static XmlWriter CreateFileInternal(Stream stream, string dirPath, string styleSheet, bool isAsync)
+        private static XmlWriter CreateFileInternal(Stream stream, string dirPath, string styleSheet)
         {
             if (!Directory.Exists(dirPath)) {
                 string message = string.Format("Directory '{0}' not found", dirPath);
                 throw new DirectoryNotFoundException(message);
             }
 
-            XmlWriter xmlWriter = XmlWriter.Create(stream, SaveXmlSettings(isAsync));
+            XmlWriter xmlWriter = XmlWriter.Create(stream, SaveXmlSettings());
             if (styleSheet is not null) {
                 string stylesheetInstruction = string.Format("type=\"text/xsl\" href=\"{0}\"", styleSheet);
                 xmlWriter.WriteProcessingInstruction("xml-stylesheet", stylesheetInstruction);
@@ -90,12 +98,9 @@
             return xmlWriter;
         }
 
-        private static XmlWriterSettings SaveXmlSettings(bool isAsync)
+        private static XmlWriterSettings SaveXmlSettings()
         {
             return new XmlWriterSettings {
-#if NET45_OR_GREATER || NET6_0_OR_GREATER
-                Async = isAsync,     // Defined in .NET 4.5 and later only.
-#endif
                 CloseOutput = false,
                 ConformanceLevel = ConformanceLevel.Document,
                 Encoding = Encoding.UTF8,
@@ -187,17 +192,11 @@
         }
 
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
-        public Task CreateFileAsync(string fileName)
+        public async Task CreateFileAsync(string fileName)
         {
-            ThrowHelper.ThrowIfNull(fileName);
-            Path = System.IO.Path.GetDirectoryName(fileName);
-            return CreateFileInternalAsync(fileName);
-        }
-
-        private async Task CreateFileInternalAsync(string fileName)
-        {
+            fileName = CheckCreateFile(fileName);
             try {
-                m_Writer = await Task.Run(() => { return CreateFileInternal(fileName, true); }).ConfigureAwait(false);
+                m_Writer = await CreateFileInternalAsync(fileName).ConfigureAwait(false);
                 await m_Writer.WriteStartElementAsync(null, RootName, null).ConfigureAwait(false);
                 m_IsFlushed = false;
             } catch (Exception ex) {
@@ -207,28 +206,57 @@
             }
         }
 
-        public Task CreateFileAsync(Stream stream, string path)
+        public async Task CreateFileAsync(Stream stream, string path)
         {
-            ThrowHelper.ThrowIfNull(stream);
-            ThrowHelper.ThrowIfNull(path);
-            if (m_Writer is not null) throw new InvalidOperationException("File is already created, cannot create twice");
-
-            m_Stream = stream;
-            Path = path;
-
-            return CreateFileInternalAsync(stream, path);
-        }
-
-        private async Task CreateFileInternalAsync(Stream stream, string path)
-        {
+            CheckCreateFile(stream, path);
             try {
-                m_Writer = await Task.Run(() => { return CreateFileInternal(stream, path, null, true); }).ConfigureAwait(false);
+                m_Writer = await CreateFileInternalAsync(stream, path, null).ConfigureAwait(false);
                 await m_Writer.WriteStartElementAsync(null, RootName, null).ConfigureAwait(false);
                 m_IsFlushed = false;
             } catch (Exception ex) {
                 Log.CrashLog.TraceEvent(System.Diagnostics.TraceEventType.Error, "Error creating async crash stream: {0}", ex.ToString());
                 Close();
                 throw;
+            }
+        }
+
+        private async Task<XmlWriter> CreateFileInternalAsync(string fileName)
+        {
+            string directory = System.IO.Path.GetDirectoryName(fileName);
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+
+            string styleSheetName = string.Format("{0}.xsl", System.IO.Path.GetFileNameWithoutExtension(fileName));
+            string styleSheetPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(fileName), styleSheetName);
+            await CopyTransformAsync(styleSheetPath).ConfigureAwait(false);
+
+            m_OwnsStream = true;
+            m_Stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+            return await CreateFileInternalAsync(m_Stream, directory, styleSheetName).ConfigureAwait(false);
+        }
+
+        private static async Task<XmlWriter> CreateFileInternalAsync(Stream stream, string dirPath, string styleSheet)
+        {
+            if (!Directory.Exists(dirPath)) {
+                string message = string.Format("Directory '{0}' not found", dirPath);
+                throw new DirectoryNotFoundException(message);
+            }
+
+            XmlWriterSettings settings = SaveXmlSettings();
+            settings.Async = true;
+
+            XmlWriter xmlWriter = XmlWriter.Create(stream, settings);
+            if (styleSheet is not null) {
+                string stylesheetInstruction = string.Format("type=\"text/xsl\" href=\"{0}\"", styleSheet);
+                await xmlWriter.WriteProcessingInstructionAsync("xml-stylesheet", stylesheetInstruction).ConfigureAwait(false);
+            }
+            return xmlWriter;
+        }
+
+        private static async Task CopyTransformAsync(string outFileName)
+        {
+            using (Stream stream = GetStyleSheetResource())
+            using (FileStream fileCopyStream = new(outFileName, FileMode.Create, FileAccess.Write, FileShare.None)) {
+                await stream.CopyToAsync(fileCopyStream).ConfigureAwait(false);
             }
         }
 
