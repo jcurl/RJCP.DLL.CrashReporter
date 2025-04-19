@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>DotNetZip</AssemblyName>
+        <Id>DotNetZip</Id>
+        <RootNamespace>Ionic.Zip</RootNamespace>
+        <OutputType>Library</OutputType>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <DefineConstants>AESCRYPTO;BZIP</DefineConstants>
+      <SignAssembly>true</SignAssembly>
+      <AssemblyOriginatorKeyFile>..\Ionic.snk</AssemblyOriginatorKeyFile>
+      <DelaySign>false</DelaySign>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="..\BZip2\BitWriter.cs" Link="BZip2\BitWriter.cs" />
+        <Compile Include="..\BZip2\BZip2Compressor.cs" Link="BZip2\BZip2Compressor.cs" />
+        <Compile Include="..\BZip2\BZip2InputStream.cs" Link="BZip2\BZip2InputStream.cs" />
+        <Compile Include="..\BZip2\BZip2OutputStream.cs" Link="BZip2\BZip2OutputStream.cs" />
+        <Compile Include="..\BZip2\ParallelBZip2OutputStream.cs" Link="BZip2\ParallelBZip2OutputStream.cs" />
+        <Compile Include="..\BZip2\Rand.cs" Link="BZip2\Rand.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="BZip2\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="..\SolutionInfo.cs" Link="SolutionInfo.cs" />
+    </ItemGroup>
+
+    <Import Project="..\Zlib.Shared\Zlib.Shared.projitems" Label="Shared" />
+
+    <Import Project="..\Zip.Shared\Zip.Shared.projitems" Label="Shared" />
+
+    <Import Project="..\..\.paket\Paket.Restore.targets" />
+
+</Project>
