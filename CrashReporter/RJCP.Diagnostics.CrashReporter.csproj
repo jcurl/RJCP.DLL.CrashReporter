@@ -12,7 +12,7 @@
     <RootNamespace>RJCP.Diagnostics</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2019-2024, Jason Curl</Copyright>
+    <Copyright>(C) 2019-2025, Jason Curl</Copyright>
     <Company></Company>
     <PackageId>RJCP.Diagnostics.CrashReporter</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -54,7 +54,12 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="DotNetZip" Version="1.16.0" />
+    <!-- <PackageReference Include="DotNetZip" Version="1.16.0" /> -->
+    <Reference Include="DotNetZip\RJCP.DotNetZip.dll"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DotNetZip\RJCP.DotNetZip.dll" Pack="true" PackagePath="lib\net40"/>
+    <None Include="DotNetZip\RJCP.DotNetZip.pdb" Pack="true" PackagePath="lib\net40"/>
   </ItemGroup>
 
   <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net462'))">
