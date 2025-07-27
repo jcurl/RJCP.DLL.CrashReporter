@@ -9,7 +9,7 @@
     using Trace;
 
     /// <summary>
-    /// A provider for a <see cref="MemoryLogger"/> with simple prioritised queues.
+    /// A provider for a <c>MemoryLogger</c> with simple prioritised queues.
     /// </summary>
     [ProviderAlias("SimplePrioMemoryLogger")]
     [CLSCompliant(false)]
